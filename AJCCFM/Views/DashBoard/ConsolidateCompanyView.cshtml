@@ -1,0 +1,45 @@
+﻿@model IEnumerable<AJCCFM.Models.Stock.ConsolidateCompanyView>
+
+@{
+                /**/
+
+                ViewBag.Title = "_ConsolidateCompanyView";
+}
+
+
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-3 col-md-6">
+                <div class="panel" style="background:linear-gradient(60deg, #5580EB , #5580EB); color:white; box-shadow: 0 1px 2px 0 lightgray, 0 2px 20px 0 lightgray;">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a href=@Url.Action("ConsolidateCashOnhand","Dashboard",new {CompanyID=item.CompanyID })><b style="color:yellow">@item.Name</b></a>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+
+                                <div class="">
+                                    OP.Bal :
+                                    <b>@item.OB.ToString("N2")</b>
+                                </div>
+                                <div class="">
+                                    Cash on hand :
+                                    <b>@item.Amount.ToString("N2")</b>
+                                </div>
+
+                                <div class="">
+                                    UnPaid Claims :
+                                    @item.ClaimsUnPaid.ToString("N2")
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        }

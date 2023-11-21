@@ -1,0 +1,78 @@
+﻿<html>
+<body>
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <title>AJC - Expense Management Portal</title>
+    <my-app ng-version="4.4.7">
+        <div class="loader full" id="loader"></div>
+        <router-outlet></router-outlet><ng-component>
+            <div windowscroll="" class="new-brand">
+                <login-header>
+                    <header>
+                     
+                        <div class="button-holder brand-arabic">
+                            <!----><a href="https://ess.aje.ae">
+                                ESS
+                            </a>
+                            <!---->
+                        </div>
+                    </header>
+                </login-header>
+                <div class="container-fluid login-body">
+                    <div class="row">
+                        <div class="col-md-7 vertical login-content-wrapper">
+                            <div>
+                                <h1><span>Welcome to Al Jaber Group</span></h1>
+                                <h2><b> Expense Management System</b></h2>
+                            </div>
+                        </div>
+                        <!---<div class="col-md-5 vertical login-content-wrapper" style="top: 80px;left:10px" >
+    <div class="right-col-content login-width" style="background:#C5C7C4" >
+        <h2><b></b></h2>-->
+                        @RenderBody()
+
+
+
+                        <!--</div>
+
+
+        </div>-->
+                    </div>
+                    <login-footer>
+                        <div class="row footer-container">
+                            <p class="footer col-md-12">Copyright (c) 2018 Al Jaber Group. All Rights Reserved.</p>
+                        </div>
+                    </login-footer>
+                </div>
+            </div>
+            <sessiontimer-component>
+                <div aria-labelledby="extendSessionTimer" class="modal fade" id="extendSessionTimer" role="dialog" tabindex="-1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body tabs">
+                                <div class="col-md-12 container">
+                                    <div class="row changeUnamePwd-success-view">
+                                        <div class="col-md-12">
+                                            <p class="center margin-bottom-20 countdown">You will be logged out from online Expense Management Portal <span>{{value}}</span> seconds. Would you like to stay logged in?</p>
+                                            <div class="form-group">
+                                                <a class="button btn-md text-only cancel-transfer float-left" href="javascript:void(0);">NO</a>
+                                                <a class="button btn-md btn-blue float-right" href="javascript:void(0);">YES</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </sessiontimer-component>
+        </ng-component>
+    </my-app>
+    <input type="hidden" id="dna" name="dna" value="{&quot;VERSION&quot;:&quot;2.1.2&quot;,&quot;MFP&quot;:{&quot;Browser&quot;:{&quot;UserAgent&quot;:&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36&quot;,&quot;Vendor&quot;:&quot;Google Inc.&quot;,&quot;VendorSubID&quot;:&quot;&quot;,&quot;BuildID&quot;:&quot;20030107&quot;,&quot;CookieEnabled&quot;:true},&quot;IEPlugins&quot;:{},&quot;NetscapePlugins&quot;:{&quot;Chrome PDF Plugin&quot;:&quot;&quot;,&quot;Chrome PDF Viewer&quot;:&quot;&quot;,&quot;Native Client&quot;:&quot;&quot;},&quot;Screen&quot;:{&quot;FullHeight&quot;:768,&quot;AvlHeight&quot;:728,&quot;FullWidth&quot;:1366,&quot;AvlWidth&quot;:1366,&quot;ColorDepth&quot;:24,&quot;PixelDepth&quot;:24},&quot;System&quot;:{&quot;Platform&quot;:&quot;Win32&quot;,&quot;systemLanguage&quot;:&quot;en-US&quot;,&quot;Timezone&quot;:-240}},&quot;ExternalIP&quot;:&quot;&quot;,&quot;MESC&quot;:{&quot;mesc&quot;:&quot;mi=2;cd=150;id=30;mesc=202774;mesc=332497&quot;}}">
+    <script src="app/assets/js/dna.js"></script><div id="arcotuserdataDiv" display="none" style="display: none;"></div><div id="arcotuserdataDiv" display="none" style="display: none;"></div><div id="arcotuserdataDiv" display="none" style="display: none;"></div>
+    <script type="text/javascript" src="inline.aaa7d671169078bbc928.bundle.js"></script>
+    <script type="text/javascript" src="polyfills.ab1fef9c7362b3f4b5c8.bundle.js"></script>
+    <script type="text/javascript" src="scripts.b99a992e17169870348b.bundle.js"></script>
+    <script type="text/javascript" src="vendor.332961126d7976e23a02.bundle.js"></script>
+    <script type="text/javascript" src="main.b4d16994b265d3883553.bundle.js"></script>
+</body>
+</html>

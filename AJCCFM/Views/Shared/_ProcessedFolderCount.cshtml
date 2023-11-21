@@ -1,0 +1,45 @@
+﻿@model IEnumerable<AJCCFM.Models.GroupRequest.SharefolderModel.ProcessedServiceCount>
+
+
+@{
+    Layout = null;
+}
+
+
+
+
+<div class="panel-body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                  
+                    <th>Total</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Project)
+                        </td>
+                      
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Total)
+                        </td>
+
+                          
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

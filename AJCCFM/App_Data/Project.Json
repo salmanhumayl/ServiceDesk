@@ -1,0 +1,64 @@
+﻿[
+
+  {
+    "Code": "SO",
+    "Name": "Support Office"
+  },
+  {
+    "Code": "Adnoc-OAM",
+    "Name": "Adnoc-OAM"
+  },
+
+  {
+    "Code": "Adnoc-CMS",
+    "Name": "Adnoc-CMS"
+
+  },
+
+  {
+    "Code": "ADP-Sila",
+    "Name": "ADP-Sila"
+
+  },
+
+  {
+    "Code": "EPC-Maqta",
+    "Name": "EPC-Maqta"
+
+  },
+  {
+    "Code": "ECW5-HG",
+    "Name": "ECW5-HG"
+
+  },
+
+  {
+    "Code": "ECW-TDP",
+    "Name": "ECW-TDP"
+
+  },
+
+  {
+    "Code": "EPC-Flareheaders",
+    "Name": "EPC-Flareheaders"
+
+  },
+  {
+    "Code": "FBMA",
+    "Name": "FBMA"
+
+  },
+  {
+    "Code": "Satah-Gas",
+    "Name": "Satah-Gas"
+
+  },
+  {
+    "Code": "EPC-NPB",
+    "Name": "EPC-NPB"
+
+  }
+
+
+
+]

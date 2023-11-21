@@ -1,0 +1,150 @@
+﻿@using System.DirectoryServices.AccountManagement
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+@{
+    var context = new PrincipalContext(ContextType.Domain);
+    var principal = UserPrincipal.FindByIdentity(context, User.Identity.Name);
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>AJES - Service Desk</title>
+
+    @Scripts.Render("~/bundles/modernizr")
+    <!-- Bootstrap Core CSS -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="~/css/sb-admin.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    @*<style>
+            /* Style the buttons */
+            .btn {
+                border: none;
+                outline: none;
+                padding: 10px 16px;
+                background-color: #f1f1f1;
+                cursor: pointer;
+                font-size: 18px;
+            }
+
+                /* Style the active class, and buttons on mouse-over */
+                .active, .btn:hover {
+                    background-color: #666;
+                    color: white;
+                }
+        </style>*@
+</head>
+
+@*<script>
+    // Add active class to the current button (highlight it)
+    var header = document.getElementById("myDIV");
+    var btns = header.getElementsByClassName("btn");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function() {
+      var current = document.getElementsByClassName("active");
+      if (current.length > 0) {
+        current[0].className = current[0].className.replace(" active", "");
+      }
+      this.className += " active";
+      });
+    }
+    </script>*@
+
+
+<body>
+    <div id="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-header" style="width:100%;background-color:lightgray;box-shadow:0 1px 5px 0 rgba(0,0,0,.2);">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <a href="@Url.Action("Index", "Dashboard")">
+                            <img alt="AJC" src="~/Content/Images/logo.png" style="padding-left:15px;">
+                        </a>
+                        <img src="~/Content/Images/servicedesk.png" style="width:75px;height:auto" />
+                        <span style="color: #003087; font-size: xx-large">Service Desk</span>
+
+                    </div>
+                    <div>
+                        <span style="color:black;font-size:x-large">Hi,@principal.DisplayName!</span>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- /.navbar-collapse -->
+            <div class="colla pse navbar-collapse navbar-ex1-collapse" id="myDIV">
+                <ul class="nav navbar-nav side-nav" style="margin-top:15px;padding-left:10px">
+                    <li>
+                        <a href="@Url.Action("Index", "Dashboard")"><i class="glyphicon glyphicon-dashboard"></i> Dashboard</a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("Index", "GroupRequest")"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;Share Folder Access Request</a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("Index", "Services")"><i class="glyphicon glyphicon-briefcase"></i> Service Catalog</a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("CashierActivity", "Dashboard")"><i class="glyphicon glyphicon-search"></i> Enquiry</a>
+                    </li>
+
+
+
+
+                </ul>
+
+
+
+
+
+            </div>
+        </nav>
+        <hr />
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                <div class="row">
+
+                    @RenderBody()
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery
+    <script src="~/js/jquery1.js"></script>-->
+    <!-- Bootstrap Core JavaScript
+    <script src="~/js/bootstrap1.min.js"></script>-->
+
+
+    @Scripts.Render("~/bundles/jqueryui")
+    @RenderSection("scripts", required: false)
+
+
+
+
+
+
+
+</body>
+</html>

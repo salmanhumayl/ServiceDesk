@@ -1,0 +1,252 @@
+﻿@{
+    ViewBag.Title = "NewClaim";
+    Layout = null;
+}
+
+@*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />*@
+<link href="~/Content/AJCbootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+
+<style>
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        /* add padding to account for vertical scrollbar */
+        padding-right: 20px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#divProcessingFolder").hide();
+      //  $("#Remarks").attr("disabled", "disabled");
+
+
+        $('#cmbprojects').change(
+            function () {
+                var EmpCode = $('#EmpCode').val();
+                var CID = $('#cmbprojects').val();
+                
+                if (CID == "") {
+                    var option = "<option value=''>Select Folder</option>";
+
+                    $('#cmbgroup').html(option);
+
+                    $("#divProcessingFolder").hide();
+                    return;
+                }
+                $("#divProcessingFolder").show();
+                $.ajax
+                    (
+                    {
+                        type: "GET",
+                            url: '@Url.Action("GetFolders", "GroupRequest")' + "?ProjectID=" + CID + " +&EmpCode=" + EmpCode
+                                ,
+                        dataType: "json",
+                        data: {},
+                        success: function (response) {
+                            var option = "<option value=''>Select Folder</option>"
+                            $.each
+                                (
+                                    response, function (index, item) {
+                                        
+                                        option += "<option value='" + item.ProcessOwner + "'>" + item.FolderName + "</option>"
+                                }
+                                   
+                                );
+                            if (option != null && option != "" && option != "<option value=''>Select Item</option>") {
+                                $('#cmbgroup').html(option);
+                                $("#divProcessingFolder").hide();
+                            }
+                            else {
+                                var option = "<option value=''>Select Folder</option>";
+                                $('#cmbgroup').html(option);
+                                $("#divProcessingFolder").hide();
+                            }
+
+                        }
+                        }
+                         
+                    );
+            })
+
+
+      //  $('#cmbgroup').change(
+
+         //   function () {
+
+
+           //     if ($('#cmbgroup :selected').text() == "OTHERS") {
+       //             $("#Remarks").removeAttr("disabled", "disabled");
+           //     }
+   //             else  {
+                 //   $("#Remarks").attr("disabled", "disabled");
+             //   }
+
+           //         });
+
+        $("#dialogpo")
+            .dialog({
+                autoOpen: false,
+                resizable: false,
+                width: 800,
+                height: 500,
+                modal: true,
+                title: 'Invoice Detail',
+                buttons: [
+                    {
+                        text: "OK",
+                        click: function () {
+                            fnsave();
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "Cancel", click: function () { $(this).dialog("close"); }
+                    }
+                ]
+
+            });
+
+         table = $('#tblCFM_Claims').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "bFilter": false
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }); //document load Finish Here
+
+
+
+
+
+
+</script>
+
+
+
+
+<style>
+    a.print {
+        height: 24px;
+        width: 24px;
+        background: url("../../Content/images/printer24.png") no-repeat center right;
+        display: block;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+<div id="newclaim" data-request-url="@Url.Action("SaveClaim", "GroupRequest")">
+</div>
+
+<div class="row">
+
+
+
+    <div class="col-sm-12">
+        <table class="table" border="0">
+            <tr>
+                <td colspan="2">
+                    <span id="message" style="color:red;font-size:x-large"></span>
+                   
+                </td>
+            </tr>
+
+            <tr>
+                <td class="btn-danger">Select Project </td>
+                <td>@Html.DropDownList("cmbprojects", ViewBag.Projects as SelectList, "Please Select Project", new { @class = "form-control" })</td>
+
+            </tr>
+
+            <tr>
+                <td class="btn-warning">Select Folder </td>
+                <td>@Html.DropDownList("cmbgroup", new SelectList(string.Empty, "Value", "Text"), "", new { style = "width:100%;", @class = "form-control" })
+
+            </tr>
+
+
+            <tr>
+                <td>Required Access </td>
+                <td>
+                    <input type="radio" name="rdoAccess" value="R" checked><strong>Read Only</strong> &nbsp;&nbsp;
+
+                    <input type="radio" name="rdoAccess" value="F"><strong>Full Access</strong>&nbsp;&nbsp;
+                </td>
+            </tr>
+
+            <tr>
+                <td>Remarks</td>
+                <td>@Html.TextBox("Remarks", null, new { @class = "form-control" })</td>
+            </tr>
+            <tr>
+                <td> Reason of Access</td>
+                <td>@Html.TextBox("Reason", null, new { @class = "form-control" })</td>
+
+
+
+            </tr>
+
+        </table>
+    </div>
+
+
+   
+
+
+</div>
+
+
+<div class="col-lg-8">
+    <div style="text-align:center">
+
+        
+        
+        <div style="text-align:center;display:none" id="divProcessingFolder">
+            <p style="color:red">Please wait Folders is being loading.....</p>
+            <img src="~/Content/Images/Spinner.gif" style="width:80px;height:auto"  />
+            
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+

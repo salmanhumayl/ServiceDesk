@@ -1,0 +1,123 @@
+﻿@model IEnumerable<Core.Domain.Cart>
+<script>
+    $(document).ready(function () {
+        $('.deleteClaimLine').attr('href', 'javascript://');
+
+        $('.deleteClaimLine').click(function () {
+            var url = $('#deleteitem').data('request-url');
+            var nRecordID = $(this).attr('RecordID');
+            var $dialog = $('<div/>')
+                .html("Warning: <br/><br/>Do you wish to continue?")
+                .dialog({
+
+                    autoOpen: open,
+                    resizable: false,
+                    height: 250,
+                    modal: true,
+                    title: 'Delete Line Item',
+                    buttons: [
+                        {
+                            text: "Continue",
+                            id: "continuebtn",
+                            click: function () {
+                                var _parameters = { RecordID: nRecordID };
+                                $.ajax({
+                                    url: url,
+                                    type: "POST",
+                                    data: _parameters,
+                                    success: function (data, textStatus, jqXHR) {
+                                        if (data == 1) {
+                                        //    location.href = "/GroupRequest";
+                                           
+                                            $("#row_" + nRecordID).remove();
+
+                                        }
+                                        else {
+                                            alert("Error while deleting Line Item....!!");
+                                        }
+                                    }
+                                });
+                                $(this).dialog('close');
+                            }
+                        },
+                        {
+                            text: "Cancel",
+                            id: "cancelbtn",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }]
+                });
+        });
+    });
+</script>
+
+<div id="deleteitem" data-request-url="@Url.Action("DeleteLineItemReturnPartialView", "GroupRequest")"></div>
+
+
+
+
+<div class="panel-body">
+    <div class="table-responsive">
+
+        <table class="table table-striped table-hover table-bordered table-condensed" id="ClaimitemDetail">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>
+                        Folder
+                    </th>
+
+                    <th>
+                        Required Access
+                    </th>
+                    <th>
+                        Process Owner
+                    </th>
+                    <th>
+                        Remarks
+                    </th>
+                    <th>
+                        Reason of Access
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            @if (Model != null)
+            {
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.RecordId">
+                            <td>@Html.DisplayFor(modelItem => item.SNo)</td>
+                            <td>
+                                @item.Group_Name
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RequiredAccess)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProcessOwner)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remarks)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Reason)
+                            </td>
+                            <td>
+                                <a class="deleteClaimLine glyphicon glyphicon-remove" Recordid="@item.RecordId"></a>
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            }
+        </table>
+    </div>
+</div>

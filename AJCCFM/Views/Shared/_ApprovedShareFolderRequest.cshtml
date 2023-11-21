@@ -1,0 +1,133 @@
+﻿@model IEnumerable<AJCCFM.Models.GroupRequest.SharefolderModel.ShareFolderPending>
+
+
+<script>
+    $(document).ready(function () {
+        $('.archiveFolder').attr('href', 'javascript://');
+
+        $('.archiveFolder').click(function () {
+            var url = $('#deleteitem').data('request-url');
+            var nRecordID = $(this).attr('RecordID');
+           
+            // var ClaimID = $(this).attr("ClaimID");
+            $("#dialogClosing")
+                .dialog({
+                    autoOpen: true,
+                    resizable: false,
+                    width: 300,
+                    height: 200,
+                    modal: true,
+                    title: 'Assets No',
+
+                    buttons: [
+                        {
+                            text: "Continue",
+                            id: "continuebtn",
+                            click: function () {
+
+                                if ($('#txtAssestNo').val() == '') {
+                                    alert("Enter Assyst No");
+                                    ('#txtAssestNo').focus();
+                                    return;
+                                }
+
+
+                                var mAssetsNo = $("#txtAssestNo").val();
+
+                                var _parameters = { AssetsNo: mAssetsNo, RecordID:  nRecordID };
+
+                                $.ajax({
+                                    url: '@Url.Action("ArchiveFolderReturnPartialView", "GroupRequest")',
+                                    type: "post",
+                                    data: _parameters,
+                                    success: function (data, textStatus, jqXHR) {
+
+                                        $("#row_" + nRecordID).remove();
+                                    }
+                                });
+                                $(this).dialog('close');
+                            }
+                        },
+                        {
+                            text: "Cancel",
+                            id: "cancelbtn",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }]
+
+                });
+        });
+    
+    });
+</script>
+@{
+    Layout = null;
+}
+
+
+
+<div id="deleteitem" data-request-url="@Url.Action("ArchiveFolderReturnPartialView", "GroupRequest")"></div>
+
+
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+
+<div class="panel-body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped" id="CustomerGrid">
+            <thead>
+                <tr>
+                    <th>RefNo</th>
+                    <th>EmpNo</th>
+                    <th>Name</th>
+
+                    <th>Process Owner</th>
+                    @*<th>Project</th>*@
+                    @*<th>Requested On</th>
+                        <th>Approved On</th>*@
+                    <th>Document</th>
+                    <th>Archive</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="row_@item.ID">
+
+
+                        <td>
+                            @Html.ActionLink(item.RefNo, "ViewRequest", "GroupRequest", new { TransactionID = item.ID, Mode = "V" }, new { @class = "btn btn-link btn-sm" })
+
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmpCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProcessOwner)
+                        </td>
+
+                        <td>@Html.ActionLink("Download", "GeneratePDF", "GroupRequest", new { RecordID = item.ID }, new { @class = "btn btn-success btn-sm" })</td>
+
+                        <td>
+                            <a class="archiveFolder" Recordid="@item.ID"><img src="~/Content/images/archive-icon.png" style="width:40px;height:40px" /></a>
+                        </td>
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="dialogClosing" style="display:none">
+
+    <p>Assyst No : <input type="text" id="txtAssestNo" /></p>
+</div>

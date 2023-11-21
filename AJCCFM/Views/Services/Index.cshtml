@@ -1,0 +1,274 @@
+﻿@using AJCCFM.Control
+@using Core.Domain
+
+@model AJCCFM.Core.EmployeeDetail
+
+@{
+    string ForemanCode = ViewBag.ForemanCode;
+    string EmpCode = ViewBag.EmpCode;
+    ViewBag.Title = "Folder ";
+}
+
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/AJCJS/ClaimIndex.js"></script>
+
+
+<style>
+
+    .modal-dialog {
+        width: 500px;
+        top: 50px;
+    }
+
+    a.print {
+        height: 24px;
+        width: 24px;
+        background: url(/Content/images/printer24.png) no-repeat center right;
+        display: block;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    a.pdfview {
+        height: 28px;
+        width: 36px;
+        background: url(/Content/images/pdf.png) no-repeat center right;
+        display: block;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    a.Add {
+        height: 40px;
+        width: 25px;
+        background: url(/Content/images/ApprovedIcon.jpg);
+        display: block;
+    }
+</style>
+
+
+
+
+
+<script>
+
+    $(document).ready(function () {
+        $("#divProcessing").hide();
+
+        $('#btnprocess').click(
+
+            function () {
+                $('#AdjustmentModal').modal("show");
+                $('#btnprocess').attr("disabled", "disabled");
+                $('#btnprocess').attr("value", "Processing....");
+
+            });
+
+    });
+
+    var Cancel = function () {
+        $('#btnprocess').removeAttr("disabled", "disabled");
+        $('#btnprocess').attr("value", "Submit");
+        $('#AdjustmentModal').modal("hide");
+    }
+
+    var Save = function () {
+
+        if ($('#SubmitTo :selected').text() == "Please Select") {
+            alert("Please select a name from list");
+            return;
+        }
+
+        $('#loaderDiv').show();
+        $('.cancelbtn').attr("disabled", "disabled");
+        $('.submitBtn').attr("disabled", "disabled");
+        $('#forwardto').val($('#SubmitTo').val());
+        $('#forwardName').val($('#SubmitTo :selected').text());
+
+      
+
+      //  alert($('#forwardName').val());
+       
+        $('#ShowForm').submit();
+
+
+    }
+</script>
+
+
+<div id="map" data-request-url="@Url.Action("NewServiceItem", "Services")">
+</div>
+
+
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Service Item Request - <u>Employee / Site Administrator  - Project Manager / Department Head - IT Manager - IT HELPDESK</u></h3>
+            <h3 class="panel-title">
+            </h3>
+        </div>
+        @using (Html.BeginForm("GetEmployee", "Services", FormMethod.Post))
+        {
+            <table class="table">
+                <tr>
+                    <td>@Html.EmployeeCode(EmpCode) </td>
+                    @if(ViewBag.IsEmployeeExist == false)
+                    { 
+                        <td style="color:red;font-size:large;font:bold" class="alert alert-danger">Employee Does Not Exist</td>
+                    }
+                </tr>
+                
+            </table>
+        }
+        @using (Html.BeginForm("SubmitRequest", "Services", FormMethod.Post, new { id = "ShowForm" }))
+        {
+            <div class="panel-body">
+                <div class="table-responsive">
+
+                    <table class="table table-bordered">
+
+                        @Html.HiddenFor(modelItem => Model.EmpCode)
+                        @Html.HiddenFor(modelItem => Model.EmpName)
+                        @Html.HiddenFor(modelItem => Model.Department)
+                        @Html.HiddenFor(modelItem => Model.Position)
+                        @Html.HiddenFor(modelItem => Model.Project)
+                        @Html.HiddenFor(modelItem => Model.ProjectCode)
+
+                        <input type="hidden" id="forwardto" name="forwardto" />
+                        <input type="hidden" id="forwardName" name="forwardName" />
+
+
+                        
+                        @if (Model != null)
+                        {
+                            @Html.Partial("_EmpInformation", Model)
+                        }
+                        else
+                        {
+                            @Html.Partial("_EmpInformation")
+                        }
+                    </table>
+
+                </div>
+
+            </div>
+        }
+    </div>
+</div>
+
+
+<div class="col-lg-6">
+    <div class="col-sm-1">
+        <a class="btnAddNewService"><img src="~/Content/images/AddIcon.jpg" style="width:40px;height:60px" /></a>
+        <img id="divProcessing" src="~/Content/Images/ng-loader.gif">
+    </div>
+
+</div>
+
+
+
+
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background-color:#056cd5;color:White;">
+            <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>Service Item Detail</h3>
+        </div>
+        @{ Html.RenderAction("GetServiceDetails"); }
+
+    </div>
+</div>
+
+
+<div class="col-lg-6 pull-right">
+
+    <input type="button" id="btnprocess" value="Submit" class="btn btn-success " />
+
+</div>
+
+
+
+
+
+
+<div id="dialogService"></div>
+
+
+
+
+
+
+<div class="modal fade" id="AdjustmentModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick="Cancel()">  &times;</button>
+                <h3 class="modal-title">Confirm Save </h3>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+               
+                @if (ViewBag.EmpCode != null)
+                {
+                <table class="table">
+
+                    <tr>
+                        <td>Submit to</td>
+
+                    </tr>
+                    @if (ViewBag.ADUser != null)
+
+                    {
+                <tr>
+                    <td colspan="2">@Html.AJESADDropdownList("SubmitTo", ViewBag.ADUser as List<UserDetail>,  ForemanCode) </td>
+                   
+                </tr>
+                    }
+
+
+
+                </table>
+                }
+                <div style="text-align:center;display:none" id="loaderDiv">
+                    <img src="~/Content/Images/Spinner.gif" width="150" />
+                    <p style="color:red">Please wait.....</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning cancelbtn" data-dismiss="modal" onclick="Cancel()">Close</button>
+                <button type="button" class="btn btn-success submitBtn" onclick="Save()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ErrorModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick="Cancel()">  &times;</button>
+                <h3 class="modal-title">Invalid Employee </h3>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <h4></h4>
+
+                <div style="text-align:center">
+
+                    <p style="color:red;font-size:large">Please Select Employee No.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+

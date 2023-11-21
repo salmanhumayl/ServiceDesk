@@ -1,0 +1,52 @@
+﻿@model IEnumerable<AJCCFM.Models.Service.ServicePending>
+
+@{
+    Layout = null;
+}
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped" id="CustomerGrid">
+                    <thead>
+                        <tr>
+                            <th>RefNo</th>
+                            <th>Service</th>
+                            <th>Name</th>
+                            <th>Requested On</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+
+
+                            <td>
+                                <b>@Html.DisplayFor(modelItem => item.RefNo)</b>
+                            </td>
+                            <td>
+                                <b>@Html.DisplayFor(modelItem => item.ServiceName)</b>
+                            </td>
+                            
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+
+                            <td>
+                                @item.CreatedOn.ToString("dd-MM-yyyy")
+                            </td>
+                            <td>
+                                @Html.ActionLink("Click here to Approve", "ViewRequest", "Services", new { TransactionID = item.ID ,Service = item.ServiceCode,Status= item.Status, Mode = "E" }, new { @class = "btn btn-danger btn-sm" })
+                            </td>
+
+
+
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+ 

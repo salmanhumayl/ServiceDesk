@@ -1,0 +1,10 @@
+﻿a.add {
+    height: 48px;
+    width: 48px;
+    background: url("../../images/new_24.png") no-repeat center right;
+    display: block;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+}

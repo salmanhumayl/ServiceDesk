@@ -1,0 +1,556 @@
+﻿@{
+    ViewBag.Title = "NewClaim";
+    Layout = null;
+}
+
+@*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />*@
+<link href="~/Content/AJCbootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#SupplierName').autocomplete({
+            minLength: 1,
+            source: function (request, response) {
+                $.ajax({
+                     url: '@Url.Action("GetSupplier", "Claim")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+
+
+
+                            return { label: item.SupplierName, value: item.SupplierName };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+
+
+         $('#CostCode').autocomplete({
+            minLength: 2,
+            source: function (request, response) {
+                $.ajax({
+                     url: '@Url.Action("GetCostCode", "Claim")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+
+
+
+                            return { label: item.CostCode, value: item.CostCode };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+
+
+        // Inizilization 
+        $("#tblNLPO").hide();
+        
+        $('.Addnew').attr('href', 'javascript://');
+        $('.Addnew').hide();
+
+        $('.Addnew').click
+            (
+            function () {
+                $('#cmbCateogry').removeAttr("disabled", "disabled");
+             //   $('#InvoiceNo').val('');
+                $('#CashPaid').val('');
+                $('#Remarks').val('');
+                $('#message').html('');
+
+                var inputs = document.getElementsByTagName('input');
+                for (var i = 0; i < inputs.length; ++i) {
+                    if (inputs[i].id.substring(0, 3) == "__H") {
+                        inputs[i].value = "";
+
+                    }
+                }
+                $("#__HClaimID").val(0);
+                //alert($('#nreqid').val());
+
+                if ($('#nreqid').val() != null) {
+                    $('#ClaimDetailID').val(0);
+                    // alert("salman");
+                }
+
+            });
+
+        $("#dialogpo")
+            .dialog({
+                autoOpen: false,
+                resizable: false,
+                width: 800,
+                height: 500,
+                modal: true,
+                title: 'Invoice Detail',
+                buttons: [
+                    {
+                        text: "OK",
+                        click: function () {
+                            fnsave();
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "Cancel", click: function () { $(this).dialog("close"); }
+                    }
+                ]
+
+            });
+
+         table = $('#tblCFM_Claims').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "bFilter": false
+        });
+
+        $('#claimDate').datetimepicker({
+            defaultDate: new Date(),
+            //  minDate: new Date(),
+            // maxDate: new Date(new Date().setDate(todayDate + 30)),
+            //format: "DD/MM/YYYY"
+            format: 'DD MMM YYYY',
+
+        });
+
+        $('#invoiceDate').datetimepicker({
+            defaultDate: new Date(),
+            // format: "DD/MM/YYYY"
+            // minDate: moment(), // Current day
+            //  maxDate: moment().add(30, 'days'), // 30 days from the current day
+            // viewMode: 'days',
+            format: 'DD MMM YYYY',
+            // dayViewHeaderFormat: 'MMMM YYYY',
+        });
+
+        // Inizilization End 
+
+
+     
+
+        $('#nClaimHeaderID').val(@ViewBag.ClaimID);
+        $('#ClaimDetailID').val(@ViewBag.ClaimDetailID);
+        $('#nreqid').val('@ViewBag.ReqNo');
+      //  $('#nreqamt').val(@ViewBag.ReqAmount)
+        
+        if ($('#nClaimHeaderID').val() > 0 && $('#ClaimDetailID').val() > 0 ) //Edit Record
+        {
+            var item1 = '@Html.Raw(Json.Encode(@ViewBag.ClaimDetailData))';  //json String
+            
+           
+           // if (item1 != null) {
+              
+            var item = JSON.parse(item1);
+               
+            //$.each(JSON.parse(ClaimDetail), function (index, item) {
+                    $("#LineItemStatus").val(item.LineItemStatus);
+                    $('#InvoiceNo').val(item.InvoiceNo);
+                    $('#invoiceDate').data("DateTimePicker").date(parseMSDate(item.InvoiceDate))
+                    $('#Remarks').val(item.Remarks);
+                    $('#VatAmount').val(item.VatAmount);    
+                    $('#CashPaid').val(item.CashPaid);
+                    $('#SupplierName').val(item.SupplierName);
+                    $('#CostCode').val(item.CostCode);
+                    $('input[name="rdoLPOType"]').filter("[value=" + item.LPOType + "]").attr('checked', true);
+                    $('#cmbCateogry').val(item.CategoryID);
+                   // if (item.CashReqHeaderID > 0) {
+                   // $('.Addnew').show();
+                   //     $('#cmbCateogry').attr("disabled", "disabled");
+                   // }
+                  if (item.CashReqHeaderID > 0) {
+                        $('.Addnew').show();
+                     // $('#cmbCateogry').attr("disabled", "disabled");
+                }
+
+                    if (item.LPOType == "N") {
+                        $('#btnPO').attr("disabled", "disabled");
+                        $("#tblNLPO").show();
+                        $.ajax
+                            (
+                            {
+                                type: "GET",
+                                    url: '@Url.Action("Test", "Home")' + "?CategoryID=" + item.CategoryID + " &ClaimID=" + $('#ClaimDetailID').val(),
+                                dataType: "json",
+                                data: {},
+                                success: function (response) {
+                                    $('#dtemplate').html(response);
+                                    if (item.CategoryID == 31) {
+                                        $('#CashPaid').attr("disabled", "disabled")
+                                    }
+
+
+
+
+                                  
+                                }
+                            }
+                            );
+                    }
+                    else {
+                        $("#tblPoInvoice").show();
+                        $('#JDCOM').val(item.JD_Co_No);
+                        $('#cmbtype').val(item.OP_PO_Type);
+                        $('#PONum').val(item.PO_Num);
+                        var ClaimPODetail = '@Html.Raw(Json.Encode(@ViewBag.ClaimPODetail))';  //json String
+                        if (ClaimPODetail.length > 0) {
+                           
+                            $.each(JSON.parse(ClaimPODetail), function (index, val) {
+                                $("#showInvoice").show();
+                                          table.row.add([
+                                              val.Purchase_Order,
+                                              val.Doc_Co,
+                                              val.SupplierName,
+                                              val.InvoiceNumber,
+                                              val.InvoiceDate,
+                                              val.GrossAmount,
+                                              "<input type='button' value='Remove' class='btnRemove btn btn-danger btn-xs'/>"
+                                ]).draw();
+
+                                 // Add Obect into arry 
+
+                                var objDetail = new AddInvoice(val.Purchase_Order, val.Doc_Co, val.SupplierName, val.InvoiceNumber, val.ID, val.GrossAmount)
+                                POItemsDetail.push(objDetail);
+
+                                   });
+                        }
+                      
+                        
+                   // }
+               // });
+
+            }
+           
+        }
+ 
+      
+        //EVENTS
+        // Removing Rows
+        table.on('click', '.btnRemove', function () {
+            
+            var tr = $(this).closest("tr");
+            var rowindex = tr.index();
+            if (typeof POItemsDetail[rowindex].ID === "undefined") {
+            }
+            else {
+                   
+                   //alert(POItemsDetail[rowindex].GrossAmount);
+                   // alert("Call db");
+                $.post("/Claim/RemoveClaimInvoice", { "id": POItemsDetail[rowindex].ID, "ClaimDetailID": $('#ClaimDetailID').val(), "GrossAmount": POItemsDetail[rowindex].GrossAmount },
+                        function (data) {
+                           // alert($('#CashPaid').val());
+                           // alert(data);
+
+                            $('#CashPaid').val(parseFloat($('#CashPaid').val()) - parseFloat(data));
+                          
+                        // Successful requests get here
+                        // Update the page elements
+                    });
+            }
+
+            POItemsDetail.splice(rowindex, 1); //removing rows from array
+            table.row($(this).parents('tr')).remove().draw();
+
+        });
+             
+
+         $('#cmbCateogry').change(
+             function () {
+                 if ($('input[name=rdoLPOType]:checked').val() == "P") {
+                  
+                     return;
+                 }
+                 var CID = $('#cmbCateogry').val();
+                 $('#CashPaid').removeAttr("disabled", "disabled")
+               
+                $.ajax
+                    (
+                    {
+                        type: "GET",
+                            url: '@Url.Action("Test", "Home")' + "?CategoryID=" + CID,
+                        dataType: "json",
+                        data: {},
+                            success: function (response) {
+                                $("#tblNLPO").show();
+                                $('#dtemplate').html(response);
+                                if (CID == 31) {
+                                    $('#CashPaid').attr("disabled", "disabled")
+                                }
+
+                        }
+                    }
+                    );
+            })
+
+
+
+
+
+        $('#btnPO').click
+            (
+            function () {
+                // var $dialog = $("<div id='dialog2'/>")
+                var Doc_Co=$('#JDCOM').val();
+                var PurchaseOrder = $('#PONum').val();
+                var PoType = $('#cmbtype').val();
+                var _parameters = { PurchaseOrder: PurchaseOrder, Doc_Co: Doc_Co, PoType: PoType };
+                
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("JDInvoiceInterface", "Claim")",
+
+                    data: JSON.stringify(_parameters),
+                  
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (response) {
+                        //$dialog.html(response);
+                        ///  $dialog.dialog('open');
+                        $("#dialogpo").html(response);
+                        $("#dialogpo").dialog('open');
+
+                    }
+                });
+
+            });
+
+
+
+        //Radio option
+        $("input[name=rdoLPOType]:radio").click(function () {
+            if ($('input[name=rdoLPOType]:checked').val() == "N") {
+                $('#cmbCateogry').val(-1);
+                $('#btnPO').attr("disabled", "disabled");
+                $("#tblPoInvoice").hide();
+                $("#showInvoice").hide();
+                $('#cmbCateogry').removeAttr("disabled", "disabled");
+               
+                
+            }
+            else {
+
+                $('#btnPO').removeAttr("disabled", "disabled");
+                $("#tblPoInvoice").show();
+                $("#showInvoice").show();
+                $("#tblNLPO").hide();
+                $('#cmbCateogry').val(31);
+                $('#cmbCateogry').attr("disabled", "disabled");
+                $("#JDCOM").focus();
+            }
+        });
+
+
+
+
+
+
+    }); //document load Finish Here 
+
+
+
+    function AddInvoice(Purchase_Order, Doc_Co, SupplierName, InvoiceNumber, InvoiceDate, GrossAmount) {
+
+        var DetailJason = {
+
+            "Purchase_Order": Purchase_Order,
+            "Doc_Co": Doc_Co,
+            "SupplierName": SupplierName,
+            "InvoiceNumber": InvoiceNumber,
+            "ID": InvoiceDate,
+            "GrossAmount": GrossAmount
+
+        }
+        return DetailJason;
+
+    }
+
+
+</script>
+
+
+
+
+<style>
+    a.print {
+        height: 24px;
+        width: 24px;
+        background: url("../../Content/images/printer24.png") no-repeat center right;
+        display: block;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+<div id="newclaim" data-request-url="@Url.Action("SaveClaim", "Claim")">
+</div>
+
+<div class="row">
+
+    <input type="hidden" id="nClaimHeaderID" />
+    <input type="text" id="ClaimDetailID" />
+    <input type="text" id="nreqid" />
+    <input type="text" id="nreqamt" value="@ViewBag.ReqAmount" />
+    <input type="text" id="nTDCashRequisitionID" value="@ViewBag.TDCashRequisitionFormID" />
+    <input type="hidden" id="LineItemStatus" value="0" />
+    <div class="col-sm-12">
+        <table class="table">
+
+            <tr>
+                <td class="btn-danger">Type of Line Item</td>
+                <td>
+
+                    <input type="radio" name="rdoLPOType" value="P"><strong>JDE</strong>
+                </td>
+
+                <td>
+                    <input type="radio" name="rdoLPOType" value="N" checked><strong>NON JDE</strong>
+
+
+                </td>
+                <td>
+                    <span id="message" style="color:red"></span>
+                    <a class="Addnew"><img src="~/Content/Images/new_24.png" /></a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Category</td>
+                <td colspan="3">@Html.DropDownList("cmbCateogry", ViewBag.Cateogry as SelectList, null, new { @class = "form-control" })</td>
+
+            </tr>
+            <tr>
+                <td>Remarks</td>
+                <td colspan="4">@Html.TextBox("Remarks", null, new { @class = "form-control" })</td>
+
+
+
+            </tr>
+
+        </table>
+    </div>
+    <div class="col-sm-12" id="tblNLPO" style="display: none">
+        <table class="table">
+
+            <tr>
+                <td>Invoice</td>
+                <td>@Html.TextBox("InvoiceNo", null, new { @class = "form-control" })</td>
+                <td>Invoice Date</td>
+                <td>
+
+                    <div class='input-group date' id="invoiceDate" style="width:50px">
+                        <input type='text' class="form-control" style="width:150px" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>VAT 5%</td>
+                <td>@Html.TextBox("VatAmount", null, new { @class = "form-control", style = "width:50%;" })</td>
+
+
+                <td>Total Cash Paid</td>
+                <td>
+                    @Html.TextBox("CashPaid", null, new { @class = "form-control", style = "width:50%;" })
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>Supplier Name</td>
+                <td>@Html.TextBox("SupplierName", null, new { @class = "form-control" })</td>
+                <td>Cost Code</td>
+                <td>@Html.TextBox("CostCode", null, new { @class = "form-control" })</td>
+
+
+            </tr>
+
+
+            <tr>
+                <td colspan="4"><div id="dtemplate"></div></td>
+            </tr>
+        </table>
+    </div>
+
+ 
+
+
+        <div id="tblPoInvoice" style="display: none">
+            <table class="table alert-info">
+               
+                <tr>
+                    <td>OP/PO Num</td>
+                    <td>@Html.TextBox("PONum", null, new { @class = "form-control",@style= "width:120px" })
+                    </td>
+                    <td>JD Co.No</td>
+                    <td>@Html.TextBox("JDCOM", null, new { @class = "form-control", @style = "width:75px" })</td>
+                    <td>Type</td>
+                    <td>@Html.DropDownList("cmbtype", ViewBag.type as SelectList, "Select Type", new { @class = "form-control", @style = "width:125px" })</td>
+                
+                   
+                    <td>
+                        <input type="button" id="btnPO" style="height:25px;width:30px; background-image: url('@Url.Content("~/Content/images/View.jpg")'); text-decoration: none; border: none; cursor: pointer;" title="click here to get Invoice Information" />
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+</div>
+    
+<hr />
+<div class="row">
+    <div class="col-sm-12" style="display: none" id="showInvoice" >
+        <table id="tblCFM_Claims" class="table table-striped table-hover table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Purchase_Order</th>
+                    <th>Doc-Co</th>
+                    <th>Supplier Name</th>
+                    <th>Invoice Number</th>
+                    <th>Invoice Date</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+
+
+<div id="dialogpo">
+</div>
+
+
+
+

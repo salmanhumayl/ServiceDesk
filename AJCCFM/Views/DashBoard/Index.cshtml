@@ -1,0 +1,117 @@
+﻿
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+
+
+
+
+@if (User.IsInRole("ITShareFolder"))
+{
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-green">
+                <div class="panel panel-heading">
+
+                    <h3 class="panel-title"><b>ShareFolder Approved Request</b></h3>
+                </div>
+
+                @{Html.RenderAction("ApprovedShareFolderRequest", "Dashboard");}
+            </div>
+        </div>
+
+
+        <div class="col-lg-6">
+            <div class="panel panel-green">
+                <div class="panel panel-heading">
+
+                    <h3 class="panel-title"><b>Service Catalog Approved Request</b></h3>
+                </div>
+
+                @{Html.RenderAction("ApprovedServices", "Dashboard");}
+            </div>
+        </div>
+
+
+    </div>
+
+}
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+
+                <h3 class="panel-title"><b>ShareFolder Access Request In Progress</b></h3>
+            </div>
+
+            @{Html.RenderAction("ShareFolderProgress", "Dashboard");}
+        </div>
+    </div>
+
+
+    <div class="col-lg-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+
+                <h3 class="panel-title"><b>Access Services In Progress</b></h3>
+            </div>
+
+            @{Html.RenderAction("ServiceProgress", "Dashboard");}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><b>ShareFolder Access Request Pending Approval</b></h3>
+            </div>
+
+            @{Html.RenderAction("ShareFolderPending", "Dashboard");}
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><b>Access Services Pending Approval</b></h3>
+            </div>
+
+            @{Html.RenderAction("ServicePending", "Dashboard");}
+        </div>
+    </div>
+
+</div>
+
+
+@if (User.IsInRole("ITShareFolder"))
+{
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel panel-green">
+            <div class="panel panel-heading">
+
+                <h3 class="panel-title"><b>Service Processed</b></h3>
+            </div>
+            @{Html.RenderAction("ServiceProcessCount", "Dashboard");}
+
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="panel panel-green">
+            <div class="panel panel-heading">
+
+                <h3 class="panel-title"><b>Folder Processed</b></h3>
+            </div>
+            @{Html.RenderAction("FolderProcessCount", "Dashboard");}
+
+        </div>
+    </div>
+
+
+</div>
+
+ }

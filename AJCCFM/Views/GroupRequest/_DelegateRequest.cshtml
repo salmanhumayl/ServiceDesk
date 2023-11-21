@@ -1,0 +1,89 @@
+﻿
+@{
+
+    Layout = null;
+}
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+
+
+<script type="text/javascript">
+    var ConfirmSubmit = function () {
+        var url;
+        var data;
+       
+        var x = confirm("Are you sure you want to Continue...?");
+
+        if (x == false)
+            return false;
+
+        var nRecordID = $('#RID').val();
+        var RefNo = $('#RefNo').val();
+        var ProcessOwner = $('#cmbProcessOwner :selected').text();
+        var Remarks = $('#Remarks').val()
+
+            url = '@Url.Action("PostDelegateRequest", "GroupRequest")'
+        data = JSON.stringify({ 'ID': nRecordID, 'ProcessOwner': ProcessOwner, 'Remarks': Remarks, 'RefNo': RefNo })
+      
+        $.ajax
+            ({
+            type: "POST",
+                url: url,
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    window.location.href = response.Result;
+
+
+                }
+            });
+
+
+    }
+</script>
+<div class="row">
+
+
+
+    <div class="col-sm-12">
+        <table class="table" border="0">
+            <tr>
+                <td colspan="2">
+                    <span id="message" style="color:red;font-size:x-large"></span>
+                    <input type="hidden" id="RID" name="RID" value="@ViewBag.RecordID" />
+                    <input type="hidden" id="RefNo" name="RefNo" value="@ViewBag.RefNo" />
+                    RefNo: <span style="font-size:large;color:red">@ViewBag.RefNo</span>
+                </td>
+            </tr>
+
+            <tr>
+
+                <td class="btn-danger">Select ProcessOwner </td>
+                <td>@Html.DropDownList("cmbProcessOwner", (IEnumerable<SelectListItem>)ViewBag.ProcessOwner)</td>
+
+            </tr>
+
+
+
+            <tr>
+                <td>Remarks</td>
+                <td>@Html.TextBox("Remarks", null, new { @class = "form-control" })</td>
+            </tr>
+
+
+        </table>
+    </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+

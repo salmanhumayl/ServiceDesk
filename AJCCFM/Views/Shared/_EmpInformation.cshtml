@@ -1,0 +1,24 @@
+﻿@model AJCCFM.Core.EmployeeDetail
+
+
+<table class="table table-bordered">
+    <tr>
+        <td colspan="6" class="alert alert-dark" role="alert">
+            <b>PERSONAL INFORMATION :</b>
+            <span style="color:red">
+                <b>@Html.DisplayFor(model => Model.EmpCode)</b>
+              
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color:lightgray">Name</td>
+        <td><b>@Html.DisplayFor(model => Model.EmpName)</b></td>
+        <td style="background-color:lightgray">Position</td>
+        <td><b>@Html.DisplayFor(model => Model.Position)</b></td>
+        <td style="background-color:lightgray">Project</td>
+        <td> <span style="color:green"><b>@Html.DisplayFor(model => Model.Project)</b></span></td>
+    </tr>
+    
+
+</table>

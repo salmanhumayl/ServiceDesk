@@ -1,0 +1,80 @@
+﻿@using AJCCFM.Action_Filters
+@model decimal
+@{
+    ViewBag.Title = "DashBoard";
+}
+
+
+
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+
+<div class="row">
+    <div class="col-lg-3 col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-comments fa-5x"></i>
+                    </div>
+                    <div class="col-xs-12 text-right">
+                        @if (ViewContext.Controller.HasRole("VIPData"))
+                        {
+                            <div>Petty Cash Fund!<span style="color:white;font-size:35px">@Model.ToString("N2")</span></div>
+                            <div>Private Fund!<span style="color:white;font-size:35px">@{Html.RenderAction("GetPeronnelBalance", "Dashboard");}</span></div>
+                            decimal pf = Convert.ToDecimal(TempData["PFBalance"]);
+                            <hr />
+                            <div>Avaliable Balance!<span style="color:white;font-size:35px">@(Model + pf ) </span></div>
+                        }
+                        else
+                        {
+                            <div>Available Balance!  <span style="color:white;font-size:35px">@Model.ToString("N2")</span></div>
+                        }
+
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @if (ViewContext.Controller.HasRole("Cashier"))
+    {
+        using (Html.BeginForm("RefreshLedger", "DashBoard", FormMethod.Post))
+        {
+            <div class="row">
+                <div class="col-lg-8">
+                    @Html.DropDownList("cmbCompany", ViewBag.Company as SelectList, "Select Company", new { style = "width:100%;", @class = "form-control" })
+                </div>
+                <div class="col-lg-3">
+                    <input type="submit" value="Show" class="btn btn-info" id="btnSave" />
+                </div>
+
+            </div>
+        }
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-8">
+                @Html.DropDownList("cmbCompany", ViewBag.Company as SelectList, "Select Company", new { style = "width:100%;", @class = "form-control", disabled = "disabled" })
+            </div>
+
+        </div>
+    }
+
+</div>
+
+<hr />
+@{ Html.RenderAction("GetLedger", new { CompanyID = ViewBag.CompanyID });}
+
+<hr />
+
+@if (ViewContext.Controller.HasRole("VIPData"))
+{
+    { Html.RenderAction("GetPersonnelLedger");}
+}

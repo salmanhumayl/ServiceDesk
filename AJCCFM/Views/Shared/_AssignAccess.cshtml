@@ -1,0 +1,52 @@
+﻿@model IEnumerable<AJCCFM.Models.Folder>
+@{
+    ViewBag.Title = "Main";
+
+}
+
+<link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<!-- Begin Page Content -->
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+
+            
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped" id="tblOutStanding">
+                                <thead>
+                                    <tr>
+                                       <th>SNo</th>
+                                        <th>
+                                            Folder Name >> Description
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.srno</td>
+                                            <td>@item.FolderName</td>
+                                            
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+

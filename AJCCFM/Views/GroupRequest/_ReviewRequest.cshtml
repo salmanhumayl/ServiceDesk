@@ -1,0 +1,134 @@
+﻿
+@{
+   
+    Layout = null;
+}
+
+@*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />*@
+<link href="~/Content/AJCbootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+
+
+<script type="text/javascript">
+
+
+    $('#cmbgroup').change(
+        function () {   
+            $('#powner').html($('#cmbgroup').val());
+
+        });
+
+    var ConfirmReview = function () {
+        var url;
+        var data;
+        var ID = $('#ID').val();
+
+        var x = confirm("Are you sure you want to Continue...?");
+
+        if (x == false)
+            return false;
+
+        var Raccess = $('input[name=rdoAccess]:checked').val();
+        var ISOthers = $('#Group_Name').val();
+
+
+        if (ISOthers == "OTHERS") {
+
+            url = '@Url.Action("ConfirmReviewIT", "GroupRequest")'
+            data = JSON.stringify({ 'ID': ID, 'Access': Raccess, 'Folder': $('#cmbgroup :selected').text(), 'ProcessOwner': $('#cmbgroup').val() })
+        }
+        else {
+
+            url = '@Url.Action("ConfirmReview", "GroupRequest")'
+            data = JSON.stringify({ 'ID': ID, 'Access': Raccess })
+        }
+
+
+        $.ajax
+            ({
+            type: "POST",
+                url: url,
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    window.location.href = response.Result;
+
+
+                }
+            });
+
+
+    }
+</script>
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <table class="table" border="0">
+
+                <tr>
+                    <td>Requested Access</td>
+                    <td>
+                        <span id="message" style="color:red;font-size:x-large">@ViewBag.RequiredAccess</span>
+                    </td>
+                </tr>
+                @if (ViewBag.ISOthers=="OTHERS")
+                {
+                    <tr>
+                        <td>Remarks</td>
+                        <td>
+                            <span style="color:black;font-size:large">@ViewBag.Remarks</span>
+                        </td>
+                    </tr>
+                }
+                <tr>
+
+                    <td>Review Required Access </td>
+                    <td>
+
+                        <input type="radio" name="rdoAccess" value="R" checked><strong>Read Only</strong> &nbsp;&nbsp;
+
+                        <input type="radio" name="rdoAccess" value="F"><strong>Full Access</strong>&nbsp;&nbsp;
+                    </td>
+                </tr>
+                @if (ViewBag.ISOthers== "OTHERS")
+                {
+                    <tr>
+                        <td>Folder</td>
+                        <td>@Html.DropDownList("cmbgroup", ViewBag.Groups as SelectList, null, new { @class = "form-control" })</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Process Owner:</td>
+                        <td><span id="powner" style="color:red"></span></td>
+
+                    </tr>
+                }
+
+
+
+
+            </table>
+    </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+

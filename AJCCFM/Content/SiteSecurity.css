@@ -1,0 +1,400 @@
+﻿/*----------------------------------------------------------
+The base color for this template is #5c87b2. If you'd like
+to use a different color start by replacing all instances of
+#5c87b2 with your new color.
+----------------------------------------------------------*/
+body {
+    background-color: white;
+    font-size: 0.8em;
+    font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
+    margin-top: 10px;
+    color: #696969;
+    width: 90%;
+}
+
+a img {
+    border: none;
+}
+
+a:link {
+    color: #034af3;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #505abc;
+}
+
+a:hover {
+    color: #1d60ff;
+    text-decoration: none;
+}
+
+a:active {
+    color: #12eb87;
+}
+
+ul {
+    margin-bottom: 20px;
+    line-height: 2.5em;
+    font-size: 98%;
+}
+
+p {
+    margin-bottom: 20px;
+    line-height: 3.8em;
+}
+
+header, footer, nav, section {
+    display: block;
+}
+
+
+/* TABLE
+----------------------------------------------------------*/
+
+table {
+    border: solid 1px white;
+    border-collapse: collapse;
+    color: white;
+}
+
+    table td {
+        padding: 5px;
+        border: solid 1px white;
+        color: #696969;
+    }
+
+    table th {
+        padding: 6px 5px;
+        text-align: left;
+        background-color: Black;
+        border: solid 1px white;
+    }
+
+
+/* MISC  
+----------------------------------------------------------*/
+.clear {
+    clear: both;
+}
+
+.error {
+    color: Red;
+}
+
+nav, #menucontainer {
+    margin-top: 0px;
+    width: 100%;
+    display: block;
+    float: right;
+    text-align: left;
+    vertical-align: middle;
+}
+
+div#title {
+    display: block;
+    float: left;
+    text-align: left;
+    vertical-align: middle;
+}
+
+#logindisplay {
+    font-size: 1.1em;
+    text-align: right;
+    float: right;
+}
+
+    #logindisplay a:link {
+        color: white;
+        text-decoration: underline;
+    }
+
+    #logindisplay a:visited {
+        color: white;
+        text-decoration: underline;
+    }
+
+    #logindisplay a:hover {
+        color: white;
+        text-decoration: none;
+    }
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error {
+    color: #ff0000;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.input-validation-error {
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+
+.validation-summary-errors {
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/* Styles for editor and display helpers
+----------------------------------------------------------*/
+.display-label, .editor-label {
+    margin: 1em 0 0 0;
+}
+
+.display-field, .editor-field {
+    margin: 0.5em 0 0 0;
+}
+
+.text-box {
+    width: 30em;
+}
+
+    .text-box.multi-line {
+        height: 6.5em;
+    }
+
+.tri-state {
+    width: 6em;
+}
+
+#totalrecords {
+    float: right;
+    font-style: italic;
+    font-size: 0.8em;
+}
+
+.gradientClass {
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='White', endColorstr='Black'); /* IE6 & IE7 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='White', endColorstr='Black')"; /* IE8 */
+}
+
+/* WebGrid */
+.gridTable {
+    margin: 5px;
+    padding: 10px;
+    border: 1px #c8c8c8 solid;
+    border-collapse: collapse;
+    min-width: 550px;
+    background-color: #fff;
+    color: #fff;
+}
+
+.gridHead th {
+    font-weight: bold;
+    background-color: black;
+    color: #fff;
+    padding: 10px;
+}
+
+.gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+    color: #fff;
+}
+
+.gridHead a:hover {
+    text-decoration: underline;
+}
+
+.gridTable tr.gridAltRow {
+    background-color: #efeeef;
+}
+
+.gridTable tr:hover {
+    background-color: #f6f70a;
+}
+
+.gridAltRow td {
+    padding: 10px;
+    margin: 5px;
+    color: #333;
+}
+
+.gridRow td {
+    padding: 10px;
+    color: #333;
+}
+
+.gridFooter td {
+    padding: 10px;
+    background-color: #c7d1d6;
+    color: #999;
+    font-size: 12pt;
+    text-align: center;
+}
+
+.gridFooter a {
+    font-weight: bold;
+    color: #333;
+    border: 1px #333 solid;
+}
+
+.userTable, th, td {
+    border-color: White;
+    margin: 0px;
+}
+
+.multilinetextinput {
+    width: 80%;
+    height: 80px;
+    background-color: white;
+    font-size: 1.2em;
+    font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
+    margin-top: 10px;
+    color: #696969;
+}
+
+.singlelinetextinput {
+    width: 80%;
+    background-color: white;
+    font-size: 1.2em;
+    font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
+    margin-top: 10px;
+    color: #696969;
+}
+
+
+
+
+
+
+/* Styles for dropdown menu
+----------------------------------------------------------*/
+
+/* top level
+--------------------------------------------*/
+.menuTemplate3 {
+    margin: 0;
+    width: 100%;
+    float: right;
+    position: relative;
+    background: Black;
+    border: 1px solid #111;
+    list-style: none;
+    padding: 0;
+    font-size: .90em;
+    font-family: Verdana, Helvetica, Sans-Serif;
+}
+
+    .menuTemplate3 li {
+        padding: 0;
+        float: right;
+        position: relative; /*delete it if you want submenu to be positioned relative to the whole menu instead of this li element*/
+        color: #EEE;
+        background-color: black;
+    }
+
+        .menuTemplate3 li:hover, .menuTemplate3 li.onhover {
+            border-top: 0;
+        }
+
+    .menuTemplate3 a {
+        padding: 0 20px;
+        font-weight: normal;
+        display: inline-block;
+        outline: 0;
+        text-decoration: none;
+        color: White;
+        position: relative;
+    }
+
+    .menuTemplate3 li:hover a, .menuTemplate3 li.onhover a {
+        background-color: silver;
+        color: black;
+    }
+
+    .menuTemplate3 a.arrow {
+        background: url(Images/arrow.gif) no-repeat right center;
+    }
+
+
+    /*Used to align a top-level item to the right*/
+    .menuTemplate3 li.menuRight {
+        float: right;
+        margin-right: 0px;
+    }
+
+
+    /* sub level
+--------------------------------------------*/
+
+    .menuTemplate3 .drop {
+        position: absolute;
+        z-index: 5;
+        left: -9999px;
+        border: 1px solid #000;
+        background: black;
+        text-align: left;
+        padding: 5px;
+        top: 29px;
+    }
+
+        .menuTemplate3 .drop a {
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+
+    .menuTemplate3 li:hover .drop, .menuTemplate3 li.onhover .drop {
+        left: -1px; /*Use this property to change offset of the dropdown*/
+    }
+
+    .menuTemplate3 li:hover .dropToLeft, .menuTemplate3 li.onhover .dropToLeft {
+        left: auto;
+        right: -1px;
+    }
+
+    /* Elements within the drop down sub-menu
+--------------------------------------------*/
+    .menuTemplate3 div.drop div a {
+        color: white;
+        background: none;
+    }
+
+        .menuTemplate3 div.drop div a:hover {
+            cursor: pointer;
+            color: black;
+            background-color: silver;
+            padding: 0px 6px;
+            width: 92%;
+            float: right;
+        }
+
+
+
+/* CSS3 effects
+--------------------------------------------*/
+
+.cb {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.colimg {
+    vertical-align: middle;
+    float: right;
+}
+
+
+a.classbin {
+    background: url(Images/bin.png) no-repeat left center;
+    display: block;
+    width: 20px;
+    height: 20px;
+    text-indent: -9999px; /* hides the link text */
+}
+
+a.classpen {
+    background: url(Images/pen.png) no-repeat left center;
+    display: block;
+    width: 20px;
+    height: 20px;
+    text-indent: -9999px; /* hides the link text */
+}

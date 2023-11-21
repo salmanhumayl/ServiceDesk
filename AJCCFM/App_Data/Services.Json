@@ -1,0 +1,80 @@
+﻿[
+
+  {
+    "Name": "VPN Access",
+    "Code": "SD_VPN"
+
+  },
+  {
+    "Name": "Internet Access",
+    "Code": "SD_IA"
+
+  },
+  {
+    "Name": "USB Access",
+    "Code": "SD_USBACC"
+
+  },
+  {
+    "Name": "Specific URL access",
+    "Code": "SD_SUA"
+  },
+
+  {
+    "Name": "New Share Folder Creation ",
+    "Code": "SD_SFC"
+  },
+
+  {
+    "Name": "Data Backup / Restore ",
+    "Code": "SD_DBR"
+  },
+
+  {
+    "Name": "Increase Receipients Limit",
+    "Code": "SD_IRL"
+  },
+
+  {
+    "Name": "Personal - Computer",
+    "Code": "SD_PC"
+  },
+
+  {
+    "Name": "Monitor",
+    "Code": "SD_Monitor"
+  },
+
+  {
+    "Name": "Keyboard",
+    "Code": "SD_Keyboard"
+  },
+
+  {
+    "Name": "Mouse",
+    "Code": "SD_Mouse"
+  },
+
+  {
+    "Name": "USB",
+    "Code": "SD_USB"
+  },
+  {
+    "Name": "Software",
+    "Code": "SD_Soft"
+  },
+  {
+    "Name": "Miscellaneous",
+    "Code": "SD_Misc"
+  }
+
+
+
+
+
+
+
+]
+
+
+

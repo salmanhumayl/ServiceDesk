@@ -1,0 +1,163 @@
+﻿
+@{
+    ViewBag.Title = "CashRegister";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery-1.8.0.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#FromDate').datetimepicker({
+            defaultDate: new Date(),
+            //  minDate: new Date(),
+            // maxDate: new Date(new Date().setDate(todayDate + 30)),
+            //format: "DD/MM/YYYY"
+            format: 'DD MMM YYYY',
+
+        });
+
+
+        $('#ToDate').datetimepicker({
+            defaultDate: new Date(),
+            //  minDate: new Date(),
+            // maxDate: new Date(new Date().setDate(todayDate + 30)),
+            //format: "DD/MM/YYYY"
+            format: 'DD MMM YYYY',
+
+        });
+    });
+
+
+    function GenericPrint1(Report) {
+
+
+        var url = "";
+        var Parameters = { "mFromDate": "", "mToDate": "" }
+        Parameters.mFromDate = $('#FromDate').data('date');
+        Parameters.mToDate = $('#ToDate').data('date')
+
+        url = "CashRegister";
+
+
+        $.ajax({
+
+            url: url, //set cretiria in session
+            data: JSON.stringify(Parameters),
+            type: 'POST',
+            contentType: 'application/json;',
+            dataType: 'json',
+            success: function () {
+                window.open("../DisciplinaryReportViewer/ShowGenericRpt", null, "dialogWidth:900px;dialogHeight:800px");
+            }
+        });
+    }
+    function PrintElem(divId) {
+        var content = document.getElementById(divId).innerHTML;
+        var mywindow = window.open('', 'Print Cash Register', 'height=600,width=800');
+
+        mywindow.document.write('<html><head><title>rint Cash Register</title>');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(content);
+        mywindow.document.write('</body></html>');
+
+        mywindow.document.close();
+        mywindow.focus()
+        mywindow.print();
+        mywindow.close();
+        return true;
+    }
+
+    function GenericPrint() {
+
+        
+        var url = "";
+        var Parameters = { "mFromDate": "", "mToDate": "" }
+        Parameters.mFromDate = $('#FromDate').data('date');
+        Parameters.mToDate = $('#ToDate').data('date')
+
+        url = "CashRegisterProcess?mFromDate=" + Parameters.mFromDate + "&mToDate=" + Parameters.mToDate;
+
+        $("#load").attr("src", url);
+
+
+    }
+</script>
+
+
+
+<div class="col-lg-12">
+    <div class="panel panel-default" >
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>Cash Register
+            <i class="pull-right"><input type="button" value="Print" onclick="PrintElem('DivDisciplinary')" /></i>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive table table-striped">
+
+                @using (Ajax.BeginForm("ShowCashRegister", "Report",
+
+                   new AjaxOptions
+                   {
+                       HttpMethod = "Post",
+                       InsertionMode = InsertionMode.Replace,
+                       UpdateTargetId = "DivDisciplinary",
+                       LoadingElementId = "divloading"
+
+                   }, new { id = "ShowForm" }))
+                {
+                    <table class="table table-striped" style="height:275px" >
+                        <tr>
+                            <td>From Date: </td>
+                            <td>
+                                <div class='input-group date' id="FromDate" style="width:50px">
+                                    <input type='text' class="form-control" style="width:150px" name="mFromDate" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </td>
+
+                            <td>To Date:</td>
+                            <td>
+                                <div class='input-group date' id="ToDate" style="width:50px">
+                                    <input type='text' class="form-control" style="width:150px" name="mToDate" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                <input type="submit" value="Show" id="btnProcess" class="btn btn-primary" name="ButtonType" />
+                                <input type="button" value="Print" id="btnShowReport" class="btn btn-primary" name="ButtonType" onclick="GenericPrint()" />
+                            </td>
+
+
+                         
+                        </tr>
+
+                    </table>
+                }
+                <div id="divloading" style="display: none">
+                    <img src="~/Content/Images/Spinner.gif" runat="server" />
+                </div>
+                <div id="DivDisciplinary"></div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<iframe id="load" src="" height="500" width="100%"></iframe>

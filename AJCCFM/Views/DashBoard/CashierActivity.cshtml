@@ -1,0 +1,51 @@
+﻿
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+<style>
+    .modal-dialog {
+        width: 800px;
+    }
+
+    .modal-header {
+        background-color: #337AB7;
+        padding: 16px 16px;
+        color: #FFF;
+        border-bottom: 2px dashed #337AB7;
+    }
+</style>
+
+@if (User.IsInRole("ITShareFolder"))
+{
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i></h3>
+            </div>
+            @Html.ActionLink("Folder Request Across Projects", "ProjectFolderActivity", "Dashboard", null, new { @class = "btn btn-warning" })
+            @Html.ActionLink("Service Request Across Projects", "ProjectServiceActivity", "Dashboard", null, new { @class = "btn btn-primary" })
+           
+        </div>
+    </div>
+}
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><b>My Share Folder Request - (Approved / Rejected)</b></h3>
+        </div>
+        @{Html.RenderAction("MyFolders", "GroupRequest");}
+    </div>
+</div>
+
+
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><b>My Service Request - (Approved / Rejected)</b></h3>
+
+        </div>
+
+        @{Html.RenderAction("MyService", "Services");}
+    </div>
+</div>
+

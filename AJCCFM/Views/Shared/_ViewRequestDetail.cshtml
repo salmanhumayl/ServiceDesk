@@ -1,0 +1,168 @@
+﻿@model  AJCCFM.Models.GroupRequest.SharefolderModel.GroupRequestModel
+
+
+<div id="ViewTemplate" data-request-url="@Url.Action("ShowTemplate", "Home")"></div>
+<div id="ViewInvoice" data-request-url="@Url.Action("ClaimItemInvoice", "Claim")"></div>
+<div id="deleteitem" data-request-url="@Url.Action("DeleteLineItemReturnPartialView", "Claim")"></div>
+
+
+
+@if (Model != null)  {
+
+
+
+
+<div class="panel-body">
+        <div class="table-responsive">
+
+            <table class="table table-striped table-hover table-bordered table-condensed" id="ClaimitemDetail">
+                @if (Model.Status == -1 && User.IsInRole("ITShareFolder"))
+                {
+                    <tr>
+
+                        <td>@Html.ActionLink("Download", "GeneratePDF", "GroupRequest", new { RecordID = Model.ID }, new { @class = "btn btn-success btn-sm" })</td>
+                        <td><span style="color:green;font-size:larger;font-weight:600"> Approved On : @Model.ApprovedOn.ToString("dd/MMM/yyyy hh:mm:ss")</span></td>
+                    </tr>
+                }
+                <tr>
+                </tr>
+                <tr>
+
+                    <td class="btn-warning">
+                        Folder
+                        <input type="hidden" id="Access" name="Access" value="@Model.RequiredAccess" />
+                        <input type="hidden" id="remarks" name="remarks" value="@Model.Remarks" />
+                    </td>
+                    <td>
+                        <span style="font-size:x-large">
+                            @Model.Group_Name
+                        </span>
+                    </td>
+
+                </tr>
+                <tr>
+
+                    <td> Required Access</td>
+                    <td>
+                        <span style="font-size:x-large">
+                            @Model.RequiredAccess
+                        </span>
+                    </td>
+
+                </tr>
+                <tr>
+
+                    <td>  Process Owner</td>
+                    <td>
+                        <span style="font-size:x-large">
+                            @Model.ProcessOwner
+                        </span>
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>  Remarks</td>
+                    <td>
+                        <span style="font-size:x-large">
+                            @Model.Remarks
+                        </span>
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>  Reason of Access</td>
+                    <td>
+                        <span style="font-size:x-large">
+                            @Model.Reason
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td>  Created By</td>
+                    <td>
+                        <span style="font-size:x-large">
+                            @Model.Createdby
+                        </span>
+
+                    </td>
+                </tr>
+                <tr>
+
+                    <td>  Created On</td>
+                    <td>
+                        <span style="font-size:x-large">
+                            @Model.CreatedOn.ToString("dd/MMM/yyyy hh:mm:ss")
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+
+                    <td>  IsDelegated</td>
+                    <td>
+                        <span style="font-size:x-large">
+                            @Model.IsReview
+                        </span>
+                    </td>
+                </tr>
+                @if (Model.IsReview)
+                {
+                    <tr>
+
+                        <td>  Delegated To</td>
+                        <td>
+                            <span style="font-size:x-large;color:red">
+                                @Model.ProcessOwnerLoginID
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td>  Delegated On</td>
+                        <td>
+                            <span style="font-size:x-large;color:red">
+                                @Model.ReviewedOn.ToString("dd/MMM/yyyy hh:mm:ss")
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td>  Delegation Remarks</td>
+                        <td>
+                            <span style="font-size:x-large">
+                                @Model.ReviewRemarks
+                            </span>
+                        </td>
+                    </tr>
+                }
+
+                @if (Model.RejectedOn != DateTime.MinValue)
+                {
+                    <tr>
+
+                        <td>  Rejected On</td>
+                        <td>
+                            <span style="font-size:x-large;color:red">
+                                @Model.RejectedOn.ToString("dd/MMM/yyyy hh:mm:ss")
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td>  Rejected Remarks</td>
+                        <td>
+                            <span style="font-size: x-large; color: red; text-decoration: underline">
+                                @Model.RejectedRemarks
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </table>
+</div>
+</div>
+}

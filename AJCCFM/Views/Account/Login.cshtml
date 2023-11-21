@@ -1,0 +1,84 @@
+﻿@model AJCCFM.Models.LoginViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+
+
+
+<div class="col-lg-3 col-md-6" style="top:425px">
+
+
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "frm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div>
+            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { placeholder = "Username", @class = "form-control" } })
+        </div>
+        <br />
+        <div>
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { placeholder = "Password", @class = "form-control" } })
+        </div>
+        <hr />
+        <div>
+            <span>
+                <a href="/PersonalWeb/forgotPassword">Forgot Password?</a>
+            </span>
+            <button class="btn btn-primary pull-right" type="submit" id="btnLogin">LOGIN</button>
+            <p style="color:red">
+                @Html.ValidationMessage("ConfimationMsg")
+            </p>
+        </div>
+
+
+
+        @Html.HiddenFor(m => m.hdrandomSeed)
+
+
+    }
+
+
+</div>
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/md5.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnLogin').click(function () {
+            if ($('#Password').val() != "") {
+                var seed = $('#hdrandomSeed');
+                return md5auth(seed.val());
+            }
+            $("#frm").submit();
+        });
+    });
+
+    $(function () {
+        var controls = $(".disable");
+        controls.bind("paste", function () {
+            return false;
+        });
+        controls.bind("drop", function () {
+            return false;
+        });
+        controls.bind("cut", function () {
+            return false;
+        });
+        controls.bind("copy", function () {
+            return false;
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    function md5auth(seed) {
+        var password1 = $('#Password');
+        var password = password1.val();
+        //  var hash = calcMD5(seed + calcMD5(password).toUpperCase());
+        var hash = calcMD5(seed + password).toUpperCase();
+        // var hash = calcMD5(password).toUpperCase();
+        password1.val(hash.toUpperCase());
+        return true;
+    }
+</script>

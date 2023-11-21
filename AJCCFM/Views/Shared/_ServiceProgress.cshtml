@@ -1,0 +1,57 @@
+﻿@model IEnumerable<AJCCFM.Models.Service.ServiceProgress>
+
+@{
+    Layout = null;
+}
+
+
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped" id="CustomerGrid">
+                    <thead>
+                        <tr>
+                            <th>RefNo</th>
+                            <th>Service</th>
+                            <th>Requested On</th>
+                            <th></th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+
+
+                            <td>
+                                <b>
+                                    @Html.DisplayFor(modelItem => item.RefNo)
+                                </b>
+                            </td>
+                            <td>
+                                <b>
+                                    @Html.DisplayFor(modelItem => item.ServiceName)
+                                </b>
+                            </td>
+                            <td>
+                                @item.CreatedOn.ToString("dd-MM-yyyy")
+                            </td>
+
+
+
+                            <td>
+
+                                @Html.ActionLink("View", "ViewRequest", "Services", new { TransactionID = item.ID, Service = item.ServiceCode, Status = item.Status,Mode="V" }, new { @class = "btn btn-primary btn-sm" })
+                            </td>
+
+
+
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+

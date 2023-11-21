@@ -1,0 +1,247 @@
+﻿
+@model IEnumerable<AJCCFM.Models.GroupRequest.SharefolderModel.ShareFolderPending>
+@{
+
+    Layout = null;
+}
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+
+
+<script src="~/Scripts/bootstrap.js"></script>
+
+<script src="~/Scripts/AJCDataTables/jquery.dataTables.min.js"></script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#divProcessing").hide();
+        $('.btnAddNew').attr('href', 'javascript://');
+        $('#tblOutStanding').DataTable({
+            "iDisplayLength": 50,
+            "aaSorting": [[0,"desc"]]
+        });
+        $("#dialogpoaDD")
+            .dialog({
+                autoOpen: false,
+                resizable: false,
+                width: 550,
+                height: 400,
+                modal: true,
+                title: 'Delegate ',
+                buttons: [
+                    {
+                        text: "Save",
+                        click: function () {
+                            ConfirmSubmit();
+                            //$(this).dialog("close"); // Refresh Page then no use of close
+
+                        }
+                    },
+                    {
+                        text: "Close", click: function () {
+                            // location.href = "/GroupRequest/Index";
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+
+            });
+
+
+        $('.btnAddNew').click
+            (
+                function () {
+
+                    $("#divProcessing").show();
+                    var nRecordID = $(this).attr('RecordID');
+                    var RefNo = $(this).attr('RefNo');
+                    var url = $('#map').data('request-url');
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: JSON.stringify({ 'RecordID': nRecordID, 'RefNo': RefNo }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+
+                            if (data.Response != '') {
+                                $('#errdec').text(data.Response);
+                                  $('#ErrorModal').modal('show');
+                                  $("#divProcessing").hide();
+                                  return;
+                            }
+                            $('#dialogpoaDD').html(data.PartialView);
+                            $("#dialogpoaDD").dialog('open');
+                            $("#divProcessing").hide();
+                        }
+                    });
+
+                });
+
+
+    });
+
+
+
+
+</script>
+
+
+
+
+
+
+<div id="map" data-request-url="@Url.Action("DelegateRequest", "GroupRequest")">
+</div>
+<div class="panel-body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped" id="tblOutStanding">
+            <thead>
+                <tr>
+
+                    <th>
+                        Ref No
+                    </th>
+                   
+                        <th>Delegate</th>
+                  
+                    <th>
+                        Emp No
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Poject
+                    </th>
+
+                    <th>
+                        Process Owner
+                    </th>
+                    <th>
+                        Created On
+                    </th>
+                    <th>
+                        Created by
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Assyst No
+                    </th>
+                   
+                    <th>
+                        IsDelegated
+                    </th>
+                    
+                   
+                    <th>
+                        Delegated To
+                    </th>
+                   
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+
+                <tr id="row_@item.ID" style='background-color: @(item.Status == "Pending" ? "red" : "white");'>
+                    <td>
+                        @Html.ActionLink(item.RefNo, "ViewRequest", "GroupRequest", new { TransactionID = item.ID, Mode = "V" }, new { @class = "btn btn-success btn-sm" })
+                    </td>
+
+                    <td>
+                        @if (item.Status == "Pending")
+                        {
+                            <a class="btnAddNew" Recordid="@item.ID" RefNo="@item.RefNo"><img src="~/Content/images/delegate.png" style="width:45px;height:50px" /></a>
+
+                        }
+                    </td>
+
+                    <td>
+                        <b>@Html.DisplayFor(modelItem => item.EmpCode)</b>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Project)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProcessOwner)
+                    </td>
+
+                    <td>
+                        @item.CreatedOn.ToString("dd/MMM/yyyy")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Createdby)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AssystNo)
+                    </td>
+
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsReview)
+                    </td>
+                    <td>
+                        @if (item.IsReview == "True")
+                        {
+
+                            @Html.DisplayFor(modelItem => item.ProcessOwnerLoginID)
+
+                        }
+                    </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+<div id="dialogpoaDD"></div>
+<img id="divProcessing" src="~/Content/Images/ng-loader.gif">
+
+
+<div class="modal fade" id="ErrorModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick="Cancel()">  &times;</button>
+                <h3 class="modal-title"> </h3>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <span id="errdec" style="font:xx-large"></span>
+
+                <div style="text-align:center">
+
+                    <p style="color:red;font-size:large"></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

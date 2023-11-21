@@ -1,0 +1,108 @@
+﻿@model AJCCFM.Models.LoginViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+
+
+
+
+<div class="alert alert-danger" role="alert">
+    @Html.ValidationMessage("ConfimationMsg")
+</div>
+
+@using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "frm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="well">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="warning">
+                        <td colspan="2">
+                            User Login
+
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>User Name</td>
+                        <td>
+                            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+
+
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                        <td>
+                            @Html.PasswordFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                        </td>
+                    </tr>
+
+                    <tr class="warning">
+                        <td></td>
+                        <td>
+                            <input id="btnLogin" class="btn btn-warning" type="submit" value="Login" />
+
+
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+
+            @Html.HiddenFor(m => m.hdrandomSeed)
+
+
+
+
+        </div>
+    </div>
+}
+
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/md5.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnLogin').click(function () {
+            if ($('#Password').val() != "") {
+                var seed = $('#hdrandomSeed');
+                return md5auth(seed.val());
+            }
+            $("#frm").submit();
+        });
+    });
+
+    $(function () {
+        var controls = $(".disable");
+        controls.bind("paste", function () {
+            return false;
+        });
+        controls.bind("drop", function () {
+            return false;
+        });
+        controls.bind("cut", function () {
+            return false;
+        });
+        controls.bind("copy", function () {
+            return false;
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    function md5auth(seed) {
+        var password1 = $('#Password');
+        var password = password1.val();
+      //  var hash = calcMD5(seed + calcMD5(password).toUpperCase());
+        var hash = calcMD5(seed + password).toUpperCase();
+       // var hash = calcMD5(password).toUpperCase();
+        password1.val(hash.toUpperCase());
+        return true;
+    }
+</script>
