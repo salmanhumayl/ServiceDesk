@@ -98,12 +98,25 @@
                     </li>
 
                     <li>
-                        <a href="@Url.Action("Index", "Services")"><i class="glyphicon glyphicon-briefcase"></i> Service Catalog</a>
+                        <a href="@Url.Action("Index", "Services")"><i class="glyphicon glyphicon-share"></i> Service Catalog</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="@Url.Action("Index", "Services")"><i class="glyphicon glyphicon-briefcase"></i> Service Catalog</a>
-                    </li>
+                    <ul style="margin-top:165px;padding-left:14px">
+                        <i class="glyphicon glyphicon-briefcase"></i>
+                        Social Networking
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="@Url.Action("Index", "GroupRequest")"><i class="glyphicon glyphicon-l"></i>Linkedin Post</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "GroupRequest")"><i class="glyphicon glyphicon-zoom-in"></i>WahtsApp Post</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "GroupRequest")"><i class="glyphicon glyphicon-link"></i>WahtsApp Group</a>
+                            </li>
+                        </ul>
+
+                    </ul>
 
                     <li>
                         <a href="@Url.Action("CashierActivity", "Dashboard")"><i class="glyphicon glyphicon-search"></i> Enquiry</a>
