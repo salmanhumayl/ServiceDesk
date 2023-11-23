@@ -192,8 +192,10 @@
     </Compile>
     <Compile Include="Controllers\GroupRequestController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
+    <Compile Include="Controllers\LinkedinController.cs" />
     <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\UnauthorisedController.cs" />
+    <Compile Include="Controllers\WhatsAppController.cs" />
     <Compile Include="Control\AJESHelper.cs" />
     <Compile Include="EmailManager.cs" />
     <Compile Include="FolderComparer.cs" />
@@ -739,6 +741,8 @@
     <Content Include="Views\Shared\AllService.cshtml" />
     <Content Include="Views\Shared\_ProcessedServiceCount.cshtml" />
     <Content Include="Views\Shared\_ProcessedFolderCount.cshtml" />
+    <Content Include="Views\Linkedin\Add.cshtml" />
+    <Content Include="Views\WhatsApp\Add.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />

@@ -532,13 +532,13 @@ namespace Services.GroupRequest
 
 
 
-        public IEnumerable<T> FolderProcessCount<T>()
+        public  IEnumerable<T> FolderProcessCount<T>()
         {
             string sql = " Select Project, Count(*) as Total From SD_GroupRequest Where Status=-1 group by Project order by Project";
 
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
             {
-                var obj = connection.Query<T>(sql);
+                var obj =  connection.Query<T>(sql);
                 return obj.ToList();
             }
         }

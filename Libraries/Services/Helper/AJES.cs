@@ -365,6 +365,32 @@ namespace AJESActiveDirectoryInterface
 
         }
 
+        public static string GetEmpNo(string strLoginName)
+        {
+            string sPath = System.Configuration.ConfigurationManager.ConnectionStrings["ADConnectionString"].ConnectionString;
+            DirectorySearcher search = new DirectorySearcher();
+            DirectoryEntry entry = new DirectoryEntry(sPath);
+            search.SearchRoot = entry;
+            search.Filter = String.Format("(sAMAccountName={0})", strLoginName);
+            search.PropertiesToLoad.Add("ipPhone");
+            search.SearchScope = SearchScope.Subtree;
+            SearchResult result = search.FindOne();
+            if (result != null)
+            {
+                int groupCount = result.Properties["ipPhone"].Count;
+                if (groupCount > 0)
+                {
+                    if (result.Properties["ipPhone"].Count > 0)
+                    {
+                        return result.Properties["ipPhone"][0].ToString();
+                    }
+                }
+            }
+            search.Dispose();
+            entry.Dispose();
+            return "";
+
+        }
 
         public static string Mid(string s, int a, int b)
 

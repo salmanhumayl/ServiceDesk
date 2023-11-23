@@ -110,7 +110,7 @@ namespace AJCCFM.Controllers
         {
             _GroupRequest = new GroupRequestService();
 
-            var obj = _GroupRequest.FolderProcessCount<ProcessedServiceCount>();
+            var obj =  _GroupRequest.FolderProcessCount<ProcessedServiceCount>();
 
             return View("_ProcessedFolderCount", obj);
         }

@@ -33,6 +33,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,9 +46,11 @@
     <Compile Include="Domain\GroupRequest\EmployeeDetail.cs" />
     <Compile Include="Domain\GroupRequest\GroupDetail.cs" />
     <Compile Include="Domain\GroupRequest\GroupRequest.cs" />
+    <Compile Include="Domain\LinkedInPost\LinkedInPost.cs" />
     <Compile Include="Domain\Services\CartService.cs" />
     <Compile Include="Domain\Services\ServiceRequestModel-SD_VPN.cs" />
     <Compile Include="Domain\Services\UserDetail.cs" />
+    <Compile Include="Domain\WhatsApp\WhatsApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
