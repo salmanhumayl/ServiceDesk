@@ -51,6 +51,7 @@
     <Compile Include="Domain\Services\ServiceRequestModel-SD_VPN.cs" />
     <Compile Include="Domain\Services\UserDetail.cs" />
     <Compile Include="Domain\WhatsApp\WhatsApp.cs" />
+    <Compile Include="Domain\WhatsApp\WhatsAppGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

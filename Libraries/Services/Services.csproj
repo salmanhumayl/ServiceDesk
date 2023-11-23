@@ -59,6 +59,9 @@
     <Compile Include="GroupRequest\IGroupRequest.cs" />
     <Compile Include="Helper\AJES.cs" />
     <Compile Include="Helper\Common.cs" />
+    <Compile Include="LinkedInPost\ILinkedInPost.cs" />
+    <Compile Include="LinkedInPost\LinkedInPostRepository.cs" />
+    <Compile Include="LinkedInPost\LinkedInPostService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkFlow\IWorkFlow.cs" />
     <Compile Include="WorkFlow\WorkFlowRepository.cs" />

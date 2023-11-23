@@ -1,4 +1,4 @@
-﻿@model Core.Domain.WhatsApp
+﻿@model Core.Domain.WhatsAppGroup
 
 @{
     ViewBag.Title = "NewPost";
@@ -7,7 +7,7 @@
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3>Request Post on WhatsApp  -   <u>Employee  - Department Head /Project Manager - HR - IT Administrator</u></h3>
+            <h3>Request WhatsApp Group -   <u>Employee  - Department Head /Project Manager - HR - IT Administrator</u></h3>
             <h3 class="panel-title">
             </h3>
         </div>
@@ -57,27 +57,25 @@
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading" style="background-color:#056cd5;color:White;">
-            <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>WhatsApp Post Detail</h3>
+            <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>WhatsApp Group</h3>
         </div>
         <div class="col-sm-8">
             <table class="table" border="0">
                 <tr>
-                    <td style="color:#003087;font-size:xx-large">Post</td>
-                    <td>@Html.TextAreaFor(model => Model.Post, new { rows = 4, columns = 20, @class = "form-control" })</td>
+                    <td style="color:#003087;font-size:xx-large">Would you like to Join group</td>
+                    <td>@Html.CheckBoxFor(model => Model.IsJoined, new { @class = "form-control" })</td>
                 </tr>
 
-                <tr>
-                    <td style="color:#003087;font-size:xx-large">Attachment</td>
-                    <td>
-                       
-                        @Html.TextBoxFor(model => model.PostDocument, "", new { @type = "file", @multiple = "multiple" })
+                <td style="color:#003087;font-size:xx-large">Phone</td>
+                <td>
 
-                    </td>
-        </tr>
+                    @Html.TextBoxFor(model => model.Phone, "", new { @class = "form-control" })
+
+                </td>
 
 
 
-        </table>
+            </table>
     </div>
         <div class="col-lg-6 pull-right">
 

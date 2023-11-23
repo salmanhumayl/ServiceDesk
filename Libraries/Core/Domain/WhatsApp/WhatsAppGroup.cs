@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Core.Domain
 {
-    public class LinkedInPost
+    public class WhatsAppGroup
     {
         public int ID { get; set; }
 
@@ -21,19 +19,9 @@ namespace Core.Domain
         public string Project { get; set; }
         public string Remarks { get; set; }
 
-        public string Email { get; set; }
+        public string Phone { get; set; }
 
-        public string SubmittedTo { get; set; }
-        public string SubmittedToEmail { get; set; }
-
-        public string Post { get; set; }
-        public bool IsAttachment { get; set; }
-
-       
-        public HttpPostedFileBase[] PostDocument{ get; set; }
-
-        public string Createdby { get; set; }
-
-
+        public bool IsJoined { get; set; }
+        public string JoinedOn { get; set; }
     }
 }
