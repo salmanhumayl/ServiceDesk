@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Dapper;
 using Services.Helper;
 
@@ -19,13 +20,16 @@ namespace Services.LinkedInPost
             int RequestID = 0;
             using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
             {
+                if (model.PostDocument!=null)
+                {
+                    model.IsAttachment = true;
+                }
 
-
-                string RefNo = Common.GetDocumentNumber("MR");
+                    string RefNo = Common.GetDocumentNumber("MR");
                 model.RefNo = RefNo;
                 sql = " Insert into SD_LinkedInPost " +
-                      " (RefNo,Status,Name,EmpCode,Position,ProjectCode,Project,Createdby,Email,SubmittedTo,Post) " +
-                      " Values (@RefNo,0,@Name,@EmpCode,@Position,@ProjectCode,@Project,@Createdby,@Email,@SubmittedTo,@Post)" +
+                      " (RefNo,Status,Name,EmpCode,Position,ProjectCode,Project,Createdby,Email,SubmittedTo,Post,IsAttachment) " +
+                      " Values (@RefNo,0,@Name,@EmpCode,@Position,@ProjectCode,@Project,@Createdby,@Email,@SubmittedTo,@Post,@IsAttachment)" +
                       " Select Cast(SCOPE_IDENTITY() AS int)";
 
 
@@ -38,13 +42,14 @@ namespace Services.LinkedInPost
                     model.ProjectCode,
                     model.Project,
                     model.Post,
+                    model.IsAttachment,
                     model.Createdby,
                     model.Email,
                     model.SubmittedTo
 
                 });
 
-                if (model.PostDocument !=null)
+                if (model.PostDocument!=null)
                 {
                     string DirectoryPath = @"\\ajes-fs02\e-Attachments\" + model.RefNo;
                   
@@ -52,7 +57,18 @@ namespace Services.LinkedInPost
 
                     if (Directory.Exists(DirectoryPath))
                     {
-                        model.PostDocument[0].SaveAs(Path.Combine(DirectoryPath, "dsadasa"));
+                        int Count = 1;
+                        foreach (HttpPostedFileBase file in model.PostDocument)
+                        {
+                            if (file != null)
+                            {
+                                var InputFileName = "File_" + Count +  Path.GetExtension(file.FileName) ;
+                                 
+                                file.SaveAs(Path.Combine(DirectoryPath, InputFileName));
+                                Count= Count  + 1;
+                            }
+                        }
+                     
                     }
 
                 }

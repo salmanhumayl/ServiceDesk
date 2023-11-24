@@ -46,5 +46,10 @@ namespace AJCCFM.Controllers
 
         }
 
-    }
+
+        public ActionResult ViewRequest()
+        {
+            return View("View");
+        }
+        }
 }

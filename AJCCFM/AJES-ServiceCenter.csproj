@@ -745,6 +745,7 @@
     <Content Include="Views\Linkedin\Add.cshtml" />
     <Content Include="Views\WhatsApp\Add.cshtml" />
     <Content Include="Views\WhatsAppgroup\Add.cshtml" />
+    <Content Include="Views\Linkedin\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />

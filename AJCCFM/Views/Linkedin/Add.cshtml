@@ -3,16 +3,17 @@
 @{
     ViewBag.Title = "NewPost";
 }
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
 
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3>Request Post on LinkeIn  -   <u>Employee  - HR - IT Administrator</u></h3>
+            <h3>Request Post on LinkeIn  -   <u>Employee  - HR - Linkedin Administrator</u></h3>
             <h3 class="panel-title">
             </h3>
         </div>
         <div class="panel-body">
-            @using (Html.BeginForm("SubmitRequest", "LinkedIn", FormMethod.Post, new { id = "ShowForm",enctype="multipart/form-data" }))
+            @using (Html.BeginForm("SubmitRequest", "LinkedIn", FormMethod.Post, new { id = "ShowForm", enctype = "multipart/form-data" }))
             {
 
                 <div class="table-responsive">
@@ -45,22 +46,26 @@
                     </table>
 
                 </div>
-                 <div class="panel panel-default">
+                <div class="panel panel-default">
                     <div class="panel-heading" style="background-color:#056cd5;color:White;">
                         <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>Linkedin Post Detail</h3>
                     </div>
                     <div class="col-sm-8">
                         <table class="table" border="0">
                             <tr>
-                                <td style="color:#003087;font-size:xx-large">Post</td>
+                                <td style="color:#003087;font-size:xx-large">
+                                    Post
+                                  
+                                </td>
                                 <td>@Html.TextAreaFor(model => Model.Post, new { rows = 4, columns = 20, @class = "form-control" })</td>
+                                <td>  @Html.ValidationMessageFor(model => model.Post, "", new { @class = "text-danger" })</td>
                             </tr>
 
                             <tr>
                                 <td style="color:#003087;font-size:xx-large">Attachment</td>
                                 <td>
 
-                                    @Html.TextBoxFor(model => model.PostDocument, "", new { Type = "file", @multiple = "multiple" })
+                                    @Html.TextBoxFor(model => model.PostDocument, new { Type = "file", @multiple = "multiple" })
 
                                 </td>
                             </tr>
@@ -82,3 +87,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

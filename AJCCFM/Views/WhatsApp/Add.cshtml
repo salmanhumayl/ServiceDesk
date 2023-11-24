@@ -4,48 +4,153 @@
     ViewBag.Title = "NewPost";
 }
 
+<style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+  
+
+    .b-example-divider {
+      width: 100%;
+      height: 3rem;
+      background-color: rgba(0, 0, 0, .1);
+      border: solid rgba(0, 0, 0, .15);
+      border-width: 1px 0;
+      box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
+
+    .b-example-vr {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 100vh;
+    }
+
+    .bi {
+      vertical-align: -.125em;
+      fill: currentColor;
+    }
+
+    .nav-scroller {
+      position: relative;
+      z-index: 2;
+      height: 2.75rem;
+      overflow-y: hidden;
+    }
+
+    .nav-scroller .nav {
+      display: flex;
+      flex-wrap: nowrap;
+      padding-bottom: 1rem;
+      margin-top: -1px;
+      overflow-x: auto;
+      text-align: center;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .btn-bd-primary {
+      --bd-violet-bg: #712cf9;
+      --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+      --bs-btn-font-weight: 600;
+      --bs-btn-color: var(--bs-white);
+      --bs-btn-bg: var(--bd-violet-bg);
+      --bs-btn-border-color: var(--bd-violet-bg);
+      --bs-btn-hover-color: var(--bs-white);
+      --bs-btn-hover-bg: #6528e0;
+      --bs-btn-hover-border-color: #6528e0;
+      --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+      --bs-btn-active-color: var(--bs-btn-hover-color);
+      --bs-btn-active-bg: #5a23c8;
+      --bs-btn-active-border-color: #5a23c8;
+    }
+
+    .bd-mode-toggle {
+      z-index: 1500;
+    }
+
+    .bd-mode-toggle .dropdown-menu .active .bi {
+      display: block !important;
+    }
+
+
+    .ticker-wrap {
+      width: 100%;
+      height: 80px;
+      margin: 0 auto;
+      overflow: hidden;
+      white-space: nowrap;
+      height: 3.5rem;
+    }
+
+    .ticker {
+      display: inline-block;
+      margin-top: 5px;
+      animation: marquee 20s linear infinite;
+    }
+
+    .item-collection-1 {
+      position: relative;
+      left: 0%;
+      animation: swap 20s linear infinite;
+    }
+
+    .item {
+      display: inline-block;
+    }
+
+  
+
+</style>
+
+
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3>Request Post on WhatsApp  -   <u>Employee  - Department Head /Project Manager - HR - IT Administrator</u></h3>
+            <h3>Request Post on WhatsApp  -   <u>Employee  - Department Head /Project Manager - HR - WhatsApp Administrator</u></h3>
             <h3 class="panel-title">
             </h3>
         </div>
-     
+
         @using (Html.BeginForm("SubmitRequest", "LinkedIn", FormMethod.Post, new { id = "ShowForm" }))
         {
             <div class="panel-body">
                 <div class="table-responsive">
 
-                    
-
-                        @Html.HiddenFor(modelItem => Model.EmpCode)
-                        @Html.HiddenFor(modelItem => Model.Name)
-                        @Html.HiddenFor(modelItem => Model.Position)
-                        @Html.HiddenFor(modelItem => Model.Project)
-                        @Html.HiddenFor(modelItem => Model.ProjectCode)
-
-                        <table class="table table-bordered">
-                            <tr>
-                                <td colspan="6" class="alert alert-dark" role="alert">
-                                    <b>PERSONAL INFORMATION :</b>
-                                    <span style="color:red">
-                                        <b>@Html.DisplayFor(model => Model.EmpCode)</b>
-
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="background-color:lightgray">Name</td>
-                                <td><b>@Html.DisplayFor(model => Model.Name)</b></td>
-                                <td style="background-color:lightgray">Position</td>
-                                <td><b>@Html.DisplayFor(model => Model.Position)</b></td>
-                                <td style="background-color:lightgray">Project</td>
-                                <td> <span style="color:green"><b>@Html.DisplayFor(model => Model.Project)</b></span></td>
-                            </tr>
 
 
-                        </table>
+                    @Html.HiddenFor(modelItem => Model.EmpCode)
+                    @Html.HiddenFor(modelItem => Model.Name)
+                    @Html.HiddenFor(modelItem => Model.Position)
+                    @Html.HiddenFor(modelItem => Model.Project)
+                    @Html.HiddenFor(modelItem => Model.ProjectCode)
+
+                    <table class="table table-bordered">
+                        <tr>
+                            <td colspan="6" class="alert alert-dark" role="alert">
+                                <b>PERSONAL INFORMATION :</b>
+                                <span style="color:red">
+                                    <b>@Html.DisplayFor(model => Model.EmpCode)</b>
+
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="background-color:lightgray">Name</td>
+                            <td><b>@Html.DisplayFor(model => Model.Name)</b></td>
+                            <td style="background-color:lightgray">Position</td>
+                            <td><b>@Html.DisplayFor(model => Model.Position)</b></td>
+                            <td style="background-color:lightgray">Project</td>
+                            <td> <span style="color:green"><b>@Html.DisplayFor(model => Model.Project)</b></span></td>
+                        </tr>
+
+
+                    </table>
 
                 </div>
 
@@ -69,16 +174,16 @@
                 <tr>
                     <td style="color:#003087;font-size:xx-large">Attachment</td>
                     <td>
-                       
+
                         @Html.TextBoxFor(model => model.PostDocument, "", new { @type = "file", @multiple = "multiple" })
 
                     </td>
-        </tr>
+                </tr>
 
 
 
-        </table>
-    </div>
+            </table>
+        </div>
         <div class="col-lg-6 pull-right">
 
             <input type="button" id="btnprocess" value="Submit" class="btn btn-success " />
@@ -86,3 +191,4 @@
         </div>
     </div>
 </div>
+
