@@ -15,11 +15,13 @@ using AJCCFM.Action_Filters.ErroHandler;
 using AJCCFM.Models;
 using AJCCFM.Models.Reports;
 using AJCCFM.Models.Service;
+
+using AJCCFM.Models.SocialNetWorking;
 using Newtonsoft.Json;
 using Services.AJESServices;
 using Services.GroupRequest;
 using Services.Helper;
-
+using Services.LinkedInPost;
 using static AJCCFM.Models.GroupRequest.SharefolderModel;
 using static AJCCFM.Models.Reports.MISReport;
 
@@ -35,6 +37,7 @@ namespace AJCCFM.Controllers
 
         private IGroupRequest _GroupRequest;
         private IServices _Services;
+        private ILinkedInPost _linkservice; 
 
 
         // GET: DashBoard
@@ -170,6 +173,16 @@ namespace AJCCFM.Controllers
             return View("_ApprovedServices", obj);
         }
 
+
+
+        public ActionResult SocialNetworkingPending()
+        {
+            _linkservice = new LinkedInPostService();
+
+            var obj = _linkservice.LinkInPostPending<LinkInPending>(System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""));
+
+            return View("_SocialNetworkingPending", obj);
+        }
 
 
         public ActionResult GetLedger(int CompanyID = 0)

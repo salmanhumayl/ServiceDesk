@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Core.Domain
 {
@@ -27,6 +28,8 @@ namespace Core.Domain
         public string SubmittedToEmail { get; set; }
 
         [Required(ErrorMessage = "Required")]
+
+        [AllowHtml]
         public string Post { get; set; }
         public bool IsAttachment { get; set; }
 

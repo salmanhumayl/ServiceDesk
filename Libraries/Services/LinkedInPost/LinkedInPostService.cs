@@ -16,6 +16,17 @@ namespace Services.LinkedInPost
             IRepository = new LinkedInPostRepository();
 
         }
+
+        public async Task<int> GetToken(string GUID, string DocCode)
+        {
+            return await IRepository.GetToken(GUID, DocCode);
+        }
+
+        public IEnumerable<T> LinkInPostPending<T>(string username)
+        {
+            return IRepository.LinkInPostPending<T>(username);
+        }
+
         public Task<bool> RejectForm(int ID, string Remarks)
         {
             throw new NotImplementedException();
@@ -33,7 +44,7 @@ namespace Services.LinkedInPost
 
         public T ViewRequest<T>(int TransactionID)
         {
-            throw new NotImplementedException();
+            return IRepository.ViewRequest<T>(TransactionID);
         }
     }
 }

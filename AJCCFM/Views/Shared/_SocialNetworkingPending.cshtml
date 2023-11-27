@@ -1,0 +1,53 @@
+﻿@model IEnumerable<AJCCFM.Models.SocialNetWorking.LinkInPending>
+
+@{
+    Layout = null;
+}
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped" id="CustomerGrid">
+                    <thead>
+                        <tr>
+                            <th>RefNo</th>
+                            <th>EmpNo</th>
+                            <th>Name</th>
+                            <th>Post</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+
+
+                            <td>
+                                <b>@Html.DisplayFor(modelItem => item.RefNo)</b>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EmpCode)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SNType)
+                            </td>
+
+
+                            <td>
+                                @Html.ActionLink("Click here to Approve", "ViewRequest", "Linkedin", new { TransactionID = item.ID }, new { @class = "btn btn-danger btn-sm" })
+                            </td>
+
+
+
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+ 

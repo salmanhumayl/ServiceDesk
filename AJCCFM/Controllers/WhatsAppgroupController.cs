@@ -4,6 +4,7 @@ using Services.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -26,5 +27,13 @@ namespace AJCCFM.Controllers
             return View(post);
 
         }
+
+
+        public async Task<ActionResult> SubmitRequest(LinkedInPost model)
+        { 
+            return RedirectToAction("Index", "Dashboard");
+
+        }
+
     }
 }

@@ -86,32 +86,50 @@
 </div>
 
 
-@if (User.IsInRole("ITShareFolder"))
-{
+
 <div class="row">
     <div class="col-lg-6">
-        <div class="panel panel-green">
-            <div class="panel panel-heading">
-
-                <h3 class="panel-title"><b>Service Processed</b></h3>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><b>Social Networking Pending Approval</b></h3>
             </div>
-            @{Html.RenderAction("ServiceProcessCount", "Dashboard");}
 
+            @{Html.RenderAction("SocialNetworkingPending", "Dashboard");}
         </div>
     </div>
 
-    <div class="col-lg-6">
-        <div class="panel panel-green">
-            <div class="panel panel-heading">
-
-                <h3 class="panel-title"><b>Folder Processed</b></h3>
-            </div>
-            @{Html.RenderAction("FolderProcessCount", "Dashboard");}
-
-        </div>
-    </div>
-
+    
 
 </div>
 
- }
+
+
+@if (User.IsInRole("ITShareFolder"))
+{
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-green">
+                <div class="panel panel-heading">
+
+                    <h3 class="panel-title"><b>Service Processed</b></h3>
+                </div>
+                @{Html.RenderAction("ServiceProcessCount", "Dashboard");}
+
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="panel panel-green">
+                <div class="panel panel-heading">
+
+                    <h3 class="panel-title"><b>Folder Processed</b></h3>
+                </div>
+                @{Html.RenderAction("FolderProcessCount", "Dashboard");}
+
+            </div>
+        </div>
+
+
+    </div>
+
+}

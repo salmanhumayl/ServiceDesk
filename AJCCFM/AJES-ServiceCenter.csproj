@@ -213,6 +213,7 @@
     <Compile Include="Models\Reports\rptCashClaimFormModel.cs" />
     <Compile Include="Models\Reports\rptWorkFlowModel.cs" />
     <Compile Include="Models\Service\ServiceModel.cs" />
+    <Compile Include="Models\SocialNetWorkin\LinkInPending.cs" />
     <Compile Include="Models\UserFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\rptApprovalProcess.cs">
@@ -539,6 +540,7 @@
     <Content Include="Images\reject.png" />
     <Content Include="Images\Spinner.gif" />
     <Content Include="Images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\images_upload\MR-000017\File_1.JPG" />
     <Content Include="js\bootstrap.js" />
     <Content Include="js\bootstrap.min.js" />
     <Content Include="js\jquery.js" />
@@ -668,6 +670,7 @@
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="App_Data\Project.Json" />
+    <Content Include="Content\images_upload\MR-000017\File_2.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-1.8.0.js" />
@@ -745,7 +748,8 @@
     <Content Include="Views\Linkedin\Add.cshtml" />
     <Content Include="Views\WhatsApp\Add.cshtml" />
     <Content Include="Views\WhatsAppgroup\Add.cshtml" />
-    <Content Include="Views\Linkedin\View.cshtml" />
+    <Content Include="Views\Linkedin\ViewRequest.cshtml" />
+    <Content Include="Views\Shared\_SocialNetworkingPending.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />
