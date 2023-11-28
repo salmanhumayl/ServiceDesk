@@ -36,9 +36,16 @@
                                 @Html.DisplayFor(modelItem => item.SNType)
                             </td>
 
-
                             <td>
-                                @Html.ActionLink("Click here to Approve", "ViewRequest", "Linkedin", new { TransactionID = item.ID }, new { @class = "btn btn-danger btn-sm" })
+                                @if (item.SNType == "LinkedIn")
+                                {
+                                    @Html.ActionLink("Click here to Approve", "ViewRequest", "Linkedin", new { TransactionID = item.ID }, new { @class = "btn btn-danger btn-sm" })
+                                }
+                                else if (item.SNType == "WhatsApp")
+                                {
+                                    @Html.ActionLink("Click here to Approve", "ViewRequest", "WhatsApp", new { TransactionID = item.ID }, new { @class = "btn btn-danger btn-sm" })
+                                }
+
                             </td>
 
 

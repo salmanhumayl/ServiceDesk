@@ -63,6 +63,9 @@
     <Compile Include="LinkedInPost\LinkedInPostRepository.cs" />
     <Compile Include="LinkedInPost\LinkedInPostService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WhatsAppPost\IWhatsAppPost.cs" />
+    <Compile Include="WhatsAppPost\WhatsAppPostRepository.cs" />
+    <Compile Include="WhatsAppPost\WhatsAppPostService.cs" />
     <Compile Include="WorkFlow\IWorkFlow.cs" />
     <Compile Include="WorkFlow\WorkFlowRepository.cs" />
     <Compile Include="WorkFlow\WorkFlowService.cs" />

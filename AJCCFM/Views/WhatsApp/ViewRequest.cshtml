@@ -1,4 +1,4 @@
-﻿@model  AJCCFM.Models.SocialNetWorking.LinkedRequestModel
+﻿@model  AJCCFM.Models.SocialNetWorking.WhatsAppRequestModel
 
 
 <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
@@ -436,179 +436,188 @@
 
 
 <div class="col-lg-12">
+   
 
-    <div class="team-single">
+            <div class="row">
 
-        <div class="row">
+                <div class="col-lg-12 col-md-12">
 
-            <div class="col-lg-12 col-md-12">
+                    <div class="team-single-text padding-50px-left sm-no-padding-left">
 
-                <div class="team-single-text padding-50px-left sm-no-padding-left">
+                        <h1>
+                            @Html.HiddenFor(modelItem => Model.ID)
+                            @Model.EmpCode  - @Model.Name   -  @Model.Position
+
+                        </h1>
+
+                        <p class="no-margin-bottom"></p>
+
+                        <div class="contact-info-section margin-40px-tb">
+
+                            <ul class="list-style9 no-margin">
+
+
+
+
+                                <li>
+
+                                    <div class="row">
+
+                                        <div class="col-md-1 col-1">
+
+                                            <!-- <i class="far fa-gem text-yellow"></i> -->
+
+                                            <strong class="margin-10px-left text-black">Post</strong>
+
+                                        </div>
+
+                                        <div class="col-md-11 col-11">
+
+                                            <p>
+                                                @Model.Post
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="col-md-12 mt-5">
 
                     <h1>
-                        @Html.HiddenFor(modelItem => Model.ID)
-                        @Model.EmpCode  - @Model.Name   -  @Model.Position
+
+                        WhatsApp Posted Files
 
                     </h1>
 
-                    <p class="no-margin-bottom"></p>
 
-                    <div class="contact-info-section margin-40px-tb">
-
-                        <ul class="list-style9 no-margin">
-
-
-
-
-                            <li>
-
-                                <div class="row">
-
-                                    <div class="col-md-1 col-1">
-
-                                        <!-- <i class="far fa-gem text-yellow"></i> -->
-
-                                        <strong class="margin-10px-left text-black">Post</strong>
-
-                                    </div>
-
-                                    <div class="col-md-11 col-11">
-
-                                        <p>
-                                            @Model.Post
-                                        </p>
-
-                                    </div>
-
-                                </div>
-                            </li>
-                        </ul>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="col-md-12 mt-5">
-
-                <h1>
-
-                    LinkedIn Posted Files
-
-                </h1>
-
-
-                <div class="row">
-                    @if (Model.Images != null)
-                    {
-                        foreach (var image in Model.Images)
+                    <div class="row">
+                        @if (Model.Images != null)
                         {
-                            <div class="col-md-4">
-                                <div class="thumbnail">
-                                    @if (@Path.GetExtension(Path.GetFileName(image)) == ".jpg" || @Path.GetExtension(Path.GetFileName(image)) == ".png" || @Path.GetExtension(Path.GetFileName(image)) == ".gif")
-                                    {
-                                        <a href="~/Content/images_upload/@Model.RefNo/@Path.GetFileName(image)" target="_blank">
-                                            <img src="~/Content/images_upload/@Model.RefNo/@Path.GetFileName(image)" style="width:100%">
-                                        </a>
-                                        <div class="caption">
-                                            <p>@Path.GetFileName(image)</p>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <a href="@Url.Action("DownloadSupportFiles", "Linkedin", new { RefNo = Model.RefNo, fileName = Path.GetFileName(image) })">
-                                            View File @Path.GetExtension(Path.GetFileName(image))
-                                        </a>
-                                        <div class="caption">
-                                            <p>@Path.GetFileName(image)</p>
-                                        </div>
-                                    }
+                            foreach (var image in Model.Images)
+                            {
+                                <div class="col-md-4">
+                                    <div class="thumbnail">
+                                        @if (@Path.GetExtension(Path.GetFileName(image)) == ".jpg" || @Path.GetExtension(Path.GetFileName(image)) == ".png" || @Path.GetExtension(Path.GetFileName(image)) == ".gif")
+                                        {
+                                            <a href="~/Content/images_upload/@Model.RefNo/@Path.GetFileName(image)" target="_blank">
+                                                <img src="~/Content/images_upload/@Model.RefNo/@Path.GetFileName(image)" style="width:100%">
+                                            </a>
+                                            <div class="caption">
+                                                <p>@Path.GetFileName(image)</p>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("DownloadSupportFiles", "Linkedin", new { RefNo = Model.RefNo, fileName = Path.GetFileName(image) })">
+                                                View File @Path.GetExtension(Path.GetFileName(image))
+                                            </a>
+                                            <div class="caption">
+                                                <p>@Path.GetFileName(image)</p>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         }
-                    }
-                </div>
-
-            </div>
-
-        </div>
-        <hr />
-
-        <div class="col-lg-6">
-            <div class="panel panel-default pull-right">
-
-                <input type="button" id="btnProcess" name="btnProcess" value="Approve" class="btn btn-success " />
-
-
-
-                &nbsp; &nbsp; &nbsp;
-                <input type="button" onclick="Reject(@Model.ID)" id="Btnreject" value="Reject" class="btn btn-danger" />
-
-
-
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<div class="modal fade" id="AdjustmentModal" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" onclick="Cancel()">  &times;</button>
-                <h3 class="modal-title">Confirm Approval </h3>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body">
-                <label for="inputMessage">Remarks</label>
-                <textarea class="form-control" id="inputMessage" placeholder="Enter your Remarks"></textarea>
-                <div style="text-align:center;display:none" id="loaderDiv">
-                    <img src="~/Content/Images/Spinner.gif" width="150" />
-                    <p style="color:red">Please wait.....</p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning cancelbtn" data-dismiss="modal" onclick="Cancel()">Close</button>
-                <a href="#" class="btn btn-success submitBtn" onclick="ProcessSubmission()">Confirm</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="staticBackdrop" data-coreui-backdrop="static" data-coreui-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span>
-                    <span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Reject ?</h4>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body">
-                <p class="statusMsg"></p>
-                <form role="form">
-
-                    <div class="form-group">
-                        <label for="inputMessage">Reason</label>
-                        <textarea class="form-control" id="inputMessageReject" placeholder="Enter your reason"></textarea>
                     </div>
-                </form>
+
+                </div>
+
+            </div>
+            <hr />
+
+            <div class="col-lg-6">
+                <div class="panel panel-default pull-right">
+
+                    <input type="button" id="btnProcess" name="btnProcess" value="Approve" class="btn btn-success " />
+
+
+
+                    &nbsp; &nbsp; &nbsp;
+                    <input type="button" onclick="Reject(@Model.ID)" id="Btnreject" value="Reject" class="btn btn-danger" />
+
+
+
+                </div>
             </div>
 
-            <!-- Modal Footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger submitBtnReject" onclick="submitRejectForm()">SUBMIT</button>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="background-color:#056cd5;color:White;">
+                        <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>Work Flow Log History</h3>
+                    </div>
+                    @{Html.RenderAction("GetLogHistory", "Dashboard", new { RecordID = Model.ID, Doc_Code = "MW" });}
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="AdjustmentModal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="Cancel()">  &times;</button>
+                    <h3 class="modal-title">Confirm Approval </h3>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <label for="inputMessage">Remarks</label>
+                    <textarea class="form-control" id="inputMessage" placeholder="Enter your Remarks"></textarea>
+                    <div style="text-align:center;display:none" id="loaderDiv">
+                        <img src="~/Content/Images/Spinner.gif" width="150" />
+                        <p style="color:red">Please wait.....</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning cancelbtn" data-dismiss="modal" onclick="Cancel()">Close</button>
+                    <a href="#" class="btn btn-success submitBtn" onclick="ProcessSubmission()">Confirm</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="modal fade" id="staticBackdrop" data-coreui-backdrop="static" data-coreui-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Reject ?</h4>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <p class="statusMsg"></p>
+                    <form role="form">
+
+                        <div class="form-group">
+                            <label for="inputMessage">Reason</label>
+                            <textarea class="form-control" id="inputMessageReject" placeholder="Enter your reason"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger submitBtnReject" onclick="submitRejectForm()">SUBMIT</button>
+                </div>
+            </div>
+        </div>
+    </div>

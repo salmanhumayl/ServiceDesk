@@ -290,6 +290,7 @@
     <Content Include="App_Data\Templates\NewGroupRequest-POnwer.html" />
     <Content Include="App_Data\Templates\LinkedInStatusUpdate-Approved.html" />
     <Content Include="App_Data\Templates\RequestStatusUpdate-Approved.html" />
+    <Content Include="App_Data\Templates\LinkedInStatusUpdate-Rejected.html" />
     <Content Include="App_Data\Templates\RequestStatusUpdate-Rejected.html" />
     <Content Include="Content\AJCbootstrap-datetimepicker.min.css" />
     <Content Include="Content\AJCSite.css" />
@@ -754,6 +755,7 @@
     <Content Include="Views\WhatsAppgroup\Add.cshtml" />
     <Content Include="Views\Linkedin\ViewRequest.cshtml" />
     <Content Include="Views\Shared\_SocialNetworkingPending.cshtml" />
+    <Content Include="Views\WhatsApp\ViewRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />

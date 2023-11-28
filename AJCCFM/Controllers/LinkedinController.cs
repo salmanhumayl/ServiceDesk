@@ -30,14 +30,14 @@ namespace AJCCFM.Controllers
         {
             var post = new LinkedInPost();
             string Empcode = AJESAD.GetEmpNo(System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""));
-            string EmpEmailAddress = AJESActiveDirectoryInterface.AJESAD.GetEmpEmail(Empcode);
+          
             var empDetail = Common.GetEmpData<Core.EmployeeDetail>(Empcode);
             post.Name = empDetail.EmpName;
             post.EmpCode = empDetail.EmpCode;
             post.Position = empDetail.Position;
             post.Project = empDetail.Project;
             post.ProjectCode = empDetail.ProjectCode;
-            post.Email = EmpEmailAddress;
+           
             return View(post);
 
         }
@@ -48,6 +48,7 @@ namespace AJCCFM.Controllers
             _LinkedInPost = new LinkedInPostService();
             _GroupRequest = new GroupRequestService();
 
+            model.Email = AJESActiveDirectoryInterface.AJESAD.GetEmpEmail(model.EmpCode);
             model.Createdby = System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", "");
             model.SubmittedTo = System.Configuration.ConfigurationManager.AppSettings.Get("HRForwardTo");
             model.SubmittedToEmail= System.Configuration.ConfigurationManager.AppSettings.Get("HRManagerEmail");
@@ -185,6 +186,38 @@ namespace AJCCFM.Controllers
 
         }
 
+
+        public async Task<ActionResult> RejectForm(int ID, string Remarks)
+        {
+            string returnURL = "";
+
+            _LinkedInPost = new LinkedInPostService();
+            var affectedRows = await _LinkedInPost.RejectForm(ID, Remarks);
+
+            var obj = _LinkedInPost.ViewRequest<GroupRequest>(ID);
+            if (ID > 0)
+            {
+              
+                EmailManager VCTEmailService = new EmailManager();
+                string body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\LinkedInStatusUpdate-Rejected.html");
+                mailcontent = body.Replace("@ReqNo", obj.RefNo); //Replace Contenct...
+               
+                mailcontent = mailcontent.Replace("@Reason", Remarks); //Replace Contenct...
+                VCTEmailService.Body = mailcontent;
+                VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("LinkedInReject");
+                if (!string.IsNullOrEmpty(obj.Email))
+                {
+                    VCTEmailService.ReceiverAddress = obj.Email;
+                    VCTEmailService.ReceiverDisplayName = obj.Name;
+                    await VCTEmailService.SendEmail();
+                }
+                returnURL = Url.Action("Index", "Dashboard");
+
+
+            }
+            return Json(new { Result = returnURL });
+
+        }
 
         public FileContentResult DownloadSupportFiles(string RefNo,string fileName)
         {

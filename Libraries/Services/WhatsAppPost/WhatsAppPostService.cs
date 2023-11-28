@@ -1,20 +1,21 @@
 ﻿using Model;
+using Services.WhatsAppPost;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.LinkedInPost
+namespace Services.WhatsAppPost
 {
-    public class LinkedInPostService : ILinkedInPost
+    public class WhatsAppPostService : IWhatsAppPost
     {
 
-        private LinkedInPostRepository IRepository;
+        private WhatsAppPostRepository IRepository;
 
-        public LinkedInPostService()
+        public WhatsAppPostService()
         {
-            IRepository = new LinkedInPostRepository();
+            IRepository = new WhatsAppPostRepository();
 
         }
 
@@ -23,7 +24,7 @@ namespace Services.LinkedInPost
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> LinkInPostPending<T>(string username)
+        public IEnumerable<T> WhatsAppPostPending<T>(string username)
         {
             return IRepository.LinkInPostPending<T>(username);
         }
@@ -40,7 +41,7 @@ namespace Services.LinkedInPost
             return await IRepository.SubmitForApproval(ID, Remarks);
         }
 
-        public async Task<RefNoID> SubmitLinkedInRequest(Core.Domain.LinkedInPost model)
+        public async Task<RefNoID> SubmitLinkedInRequest(Core.Domain.WhatsApp model)
         {
             return await IRepository.SubmitGroupRequest(model);
         }

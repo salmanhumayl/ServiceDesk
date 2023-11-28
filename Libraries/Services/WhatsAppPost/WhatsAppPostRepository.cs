@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -11,25 +12,25 @@ using Dapper;
 using Model;
 using Services.Helper;
 
-namespace Services.LinkedInPost
+namespace Services.WhatsAppPost
 {
-    public class LinkedInPostRepository
+    public class WhatsAppPostRepository
     {
-        public async Task<RefNoID> SubmitGroupRequest(Core.Domain.LinkedInPost model)
+        public async Task<RefNoID> SubmitGroupRequest(Core.Domain.WhatsApp model)
         {
             string sql = "";
             int RequestID = 0;
             string RefNo;
             using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
             {
-                if (model.PostDocument!=null)
+                if (model.PostDocument[0]!=null)
                 {
                     model.IsAttachment = true;
                 }
 
                 RefNo = Common.GetDocumentNumber("MR");
                 model.RefNo = RefNo;
-                sql = " Insert into SD_LinkedInPost " +
+                sql = " Insert into SD_WhatsAppPost " +
                       " (RefNo,Status,Name,EmpCode,Position,ProjectCode,Project,Createdby,Email,SubmittedTo,SubmittedToEmail,Post,IsAttachment) " +
                       " Values (@RefNo,0,@Name,@EmpCode,@Position,@ProjectCode,@Project,@Createdby,@Email,@SubmittedTo,@SubmittedToEmail,@Post,@IsAttachment)" +
                       " Select Cast(SCOPE_IDENTITY() AS int)";
@@ -50,9 +51,10 @@ namespace Services.LinkedInPost
                     model.SubmittedTo,
                     model.SubmittedToEmail
 
+
                 });
 
-                if (model.PostDocument!=null)
+                if (model.PostDocument[0]!=null)
                 {
 
                     string DirectoryPath = System.Web.HttpContext.Current.Server.MapPath("~/Content/images_upload/") + model.RefNo;
@@ -78,16 +80,17 @@ namespace Services.LinkedInPost
                                     Count = Count + 1;
                                     //inputStream.CopyTo(outputFileStream);
                                 }
+                               
 
-                              
                                 //file.SaveAs(Path.Combine(DirectoryPath, InputFileName));
-                                
+
                             }
                         }
                      
                     }
 
                 }
+                AddLogHistory(RequestID, "S", model.Createdby.Trim(), model.SubmittedTo, "", "MW");
 
             }
 
@@ -101,7 +104,7 @@ namespace Services.LinkedInPost
 
         public T ViewRequest<T>(int TransactionID)
         {
-            string sql = " Select * from SD_LinkedInPost " +
+            string sql = " Select * from SD_WhatsAppPost " +
                          " Where ID=" + TransactionID;
 
 
@@ -167,7 +170,7 @@ namespace Services.LinkedInPost
         {
             string sql = "select id,RefNo,EmpCode,Name, 'LinkedIn' as SNType from SD_LinkedInPost Where Status = 0 " +
                         " Union All " +
-                        " select id,RefNo,EmpCode,Name, 'WhatsApp' as Type from SD_WhatsAppPost Where Status = 0";
+                        " select id,RefNo,EmpCode,Name, 'WhatsApp Post' as Type from SD_WhatsAppPost Where Status = 0";
 
 
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
@@ -222,6 +225,30 @@ namespace Services.LinkedInPost
                 return obj.SingleOrDefault();
             }
 
+        }
+
+
+        public void AddLogHistory(int TransactionID, string Status, string Processby, string SubmittedTo, string Remarks, string Doc_Code)
+        {
+            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+
+                DynamicParameters param = new DynamicParameters();
+                param.Add("@TransactionID", TransactionID);
+                param.Add("@Status", Status);
+                param.Add("@ProcessBy", Processby);
+                param.Add("@SubmittedTo", SubmittedTo);
+                param.Add("@ProcessOn", DateTime.Now);
+                param.Add("@Remarks", Remarks);
+                param.Add("@Doc_Code", Doc_Code);
+
+
+                param.Add("@ReturnVal", dbType: DbType.Int64, direction: ParameterDirection.Output);
+
+                connection.Execute("SD_AddLogHistory", param, commandType: CommandType.StoredProcedure);
+
+                Int64 NextLevel = param.Get<Int64>("@ReturnVal");
+            }
         }
 
     }
