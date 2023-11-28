@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,9 +18,9 @@ namespace Services.LinkedInPost
 
         }
 
-        public async Task<int> GetToken(string GUID, string DocCode)
+        public Task<T> GeneratePDF<T>(int RequestID)
         {
-            return await IRepository.GetToken(GUID, DocCode);
+            throw new NotImplementedException();
         }
 
         public IEnumerable<T> LinkInPostPending<T>(string username)
@@ -27,17 +28,19 @@ namespace Services.LinkedInPost
             return IRepository.LinkInPostPending<T>(username);
         }
 
+       
+
         public Task<bool> RejectForm(int ID, string Remarks)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> SubmitForApproval(int ID, string Remarks)
+        public async Task<bool> SubmitForApproval(int ID, string Remarks)
         {
-            throw new NotImplementedException();
+            return await IRepository.SubmitForApproval(ID, Remarks);
         }
 
-        public async Task<string> SubmitLinkedInRequest(Core.Domain.LinkedInPost model)
+        public async Task<RefNoID> SubmitLinkedInRequest(Core.Domain.LinkedInPost model)
         {
             return await IRepository.SubmitGroupRequest(model);
         }

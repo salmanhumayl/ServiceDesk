@@ -27,11 +27,14 @@ namespace AJCCFM.Models.SocialNetWorking
     public class LinkedRequestModel
     {
 
+        public int ID { get; set; }
         public string RefNo { get; set; }
         public string EmpCode { get; set; }
         public string Name { get; set; }
         public string Position { get; set; }
         public string Project { get; set; }
+
+        public string Email { get; set; }
         public string Post { get; set; }
 
         public IEnumerable<string> Postedimages { get; set; }

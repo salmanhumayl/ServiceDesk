@@ -27,9 +27,12 @@ namespace Core.Domain
         public string SubmittedTo { get; set; }
         public string SubmittedToEmail { get; set; }
 
+
+
+       // [AllowHtml]
         [Required(ErrorMessage = "Required")]
 
-        [AllowHtml]
+        
         public string Post { get; set; }
         public bool IsAttachment { get; set; }
 

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RefNoID.cs" />
     <Compile Include="RoleApproval\ApprovalAuthorityDetail.cs" />
     <Compile Include="ServiceRequestReport.cs" />
   </ItemGroup>

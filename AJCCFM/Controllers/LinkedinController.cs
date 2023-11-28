@@ -1,7 +1,10 @@
 ﻿using AJCCFM.Core;
 using AJCCFM.Models.SocialNetWorking;
 using AJESActiveDirectoryInterface;
+using AJESeForm.Models;
 using Core.Domain;
+using Model;
+using Services.GroupRequest;
 using Services.Helper;
 using Services.LinkedInPost;
 using System;
@@ -17,7 +20,11 @@ namespace AJCCFM.Controllers
     public class LinkedinController : Controller
     {
         private ILinkedInPost _LinkedInPost;
+        private IGroupRequest _GroupRequest;
+
         public string DirectoryPath;
+        private string mailcontent;
+        private string body;
 
         public ActionResult Add()
         {
@@ -39,13 +46,52 @@ namespace AJCCFM.Controllers
         public async Task<ActionResult> SubmitRequest(LinkedInPost model)
         {
             _LinkedInPost = new LinkedInPostService();
-          
+            _GroupRequest = new GroupRequestService();
+
             model.Createdby = System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", "");
             model.SubmittedTo = System.Configuration.ConfigurationManager.AppSettings.Get("HRForwardTo");
             model.SubmittedToEmail= System.Configuration.ConfigurationManager.AppSettings.Get("HRManagerEmail");
 
-            var result =await _LinkedInPost.SubmitLinkedInRequest(model);
-            return RedirectToAction("Index", "Dashboard");
+            RefNoID result  = await _LinkedInPost.SubmitLinkedInRequest(model);
+
+            if(result==null)
+            {
+                return RedirectToAction("Add");
+            }
+
+            string mGuid = Guid.NewGuid().ToString();
+
+            await _GroupRequest.LogEmail(result.ID, mGuid, "M");
+
+            
+            string url = System.Configuration.ConfigurationManager.AppSettings.Get("Url");
+            string Link = url + "/Linkedin/ShowRequest?token=" + mGuid;
+            EmailManager VCTEmailService = new EmailManager();
+
+            body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\LinkedInRequestDH.html");
+            mailcontent = body.Replace("@ReqNo", result.RefNo); //Replace Contenct...
+            mailcontent = mailcontent.Replace("@pwdchangelink", Link); //Replace Contenct...
+            VCTEmailService.Body = mailcontent;
+            VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("LinkedSubject");
+            VCTEmailService.ReceiverAddress = model.SubmittedToEmail;
+            VCTEmailService.ReceiverDisplayName ="";
+            await VCTEmailService.SendEmail();
+
+            //Users 
+
+            if (!string.IsNullOrEmpty(model.Email))
+            {
+                //Send Email to requestor
+                EmailManager VCTEmailServiceInit = new EmailManager();
+                body = VCTEmailServiceInit.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\LinkedInRequest-Init.html");
+                mailcontent = body.Replace("@ReqNo", result.RefNo); //Replace Contenct...
+                VCTEmailServiceInit.Body = mailcontent;
+                VCTEmailServiceInit.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("LinkedSubject");
+                VCTEmailServiceInit.ReceiverAddress = model.Email;
+                VCTEmailServiceInit.ReceiverDisplayName = model.Name;
+                await VCTEmailServiceInit.SendEmail();
+            }
+                return RedirectToAction("Index", "Dashboard");
 
         }
 
@@ -53,12 +99,21 @@ namespace AJCCFM.Controllers
         {
 
             _LinkedInPost = new LinkedInPostService();
-
-            int TransactionID = await _LinkedInPost.GetToken(token, "F");
+            _GroupRequest = new GroupRequestService();
+            int TransactionID = await _GroupRequest.GetToken(token, "M");
 
             if (TransactionID > 0)
             {
-                var obj = _LinkedInPost.ViewRequest<LinkedRequestModel>(TransactionID);
+                LinkedRequestModel obj = _LinkedInPost.ViewRequest<LinkedRequestModel>(TransactionID);
+                DirectoryPath = Server.MapPath("~/Content/images_upload/") + obj.RefNo + @"\";
+
+                ViewBag.Directory = DirectoryPath;
+
+                if (Directory.Exists(DirectoryPath))
+                {
+                    obj.Images = Directory.GetFiles(DirectoryPath);
+                    // obj.Postedimages = Directory.EnumerateFiles(DirectoryPath).Select(fn => DirectoryPath + Path.GetFileName(fn));
+                }
                 return View("ViewRequest", obj);
             }
             else
@@ -80,11 +135,54 @@ namespace AJCCFM.Controllers
 
             ViewBag.Directory = DirectoryPath;
 
-            obj.Images = Directory.GetFiles(DirectoryPath);
-            obj.Postedimages = Directory.EnumerateFiles(DirectoryPath).Select(fn => DirectoryPath +  Path.GetFileName(fn));
-
+            if (Directory.Exists(DirectoryPath))
+            {
+                obj.Images = Directory.GetFiles(DirectoryPath);
+               // obj.Postedimages = Directory.EnumerateFiles(DirectoryPath).Select(fn => DirectoryPath + Path.GetFileName(fn));
+            }
 
             return View(obj);
+        }
+
+
+        public async Task<ActionResult> SubmitForApproval(int ID, string Remarks)
+        {
+            string returnURL = "";
+            string body;
+            _LinkedInPost = new LinkedInPostService();
+
+            var obj = _LinkedInPost.ViewRequest<LinkedRequestModel>(ID);
+            if (ID > 0)
+            {
+                var affectedRows = await _LinkedInPost.SubmitForApproval(ID, Remarks);
+                if (!string.IsNullOrEmpty(obj.Email))
+                {
+                    string PName = AJESActiveDirectoryInterface.AJESAD.GetName(System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""));
+                    EmailManager VCTEmailService = new EmailManager();
+                    body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\LinkedInStatusUpdate-Approved.html");
+                    mailcontent = body.Replace("@ReqNo", obj.RefNo); //Replace Contenct...
+                    VCTEmailService.Body = mailcontent;
+                    VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("LinkedSubject");
+                    VCTEmailService.ReceiverAddress = obj.Email;
+                    VCTEmailService.ReceiverDisplayName = obj.Name;
+                    await VCTEmailService.SendEmail();
+                }
+
+                EmailManager VCTEmailServiceIT = new EmailManager();
+                body = VCTEmailServiceIT.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\LinkedInStatus-Approved(IT).html");
+                mailcontent = body.Replace("@ReqNo", obj.RefNo); //Replace Contenct...
+                VCTEmailServiceIT.Body = mailcontent;
+                VCTEmailServiceIT.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("LinkedSubject");
+                VCTEmailServiceIT.ReceiverAddress = System.Configuration.ConfigurationManager.AppSettings.Get("SocialNetworkingdistribution");
+                VCTEmailServiceIT.ReceiverDisplayName = System.Configuration.ConfigurationManager.AppSettings.Get("SocialNetworkingdistributionName"); ;
+                await VCTEmailServiceIT.SendEmail();
+
+                returnURL = Url.Action("Index", "Dashboard");
+
+
+            }
+            return Json(new { Result = returnURL });
+
         }
 
 
