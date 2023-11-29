@@ -1,7 +1,10 @@
-﻿@model Core.Domain.WhatsAppGroup
+﻿@using AJCCFM.Control
+@using Core.Domain
+@model Core.Domain.WhatsAppGroup
 
 @{
     ViewBag.Title = "NewPost";
+    string ForemanCode = ViewBag.ForemanCode;
 }
 
 <script src="~/Scripts/jquery-1.12.4.min.js"></script>
@@ -61,8 +64,13 @@
                                     @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                                 </td>
                             </tr>
-                          
 
+                            <tr>
+                                <td style="color:#003087;font-size:xx-large">Submit To</td>
+
+                                <td colspan="2">@Html.AJESADDropdownList("SubmitTo", ViewBag.ADUser as List<UserDetail>, ForemanCode) </td>
+
+                            </tr>
                         </table>
                     </div>
                     <div class="col-lg-6 pull-right">
