@@ -1,4 +1,5 @@
-﻿using AJCCFM.Models.SocialNetWorking;
+﻿using AJCCFM.Action_Filters.ErroHandler;
+using AJCCFM.Models.SocialNetWorking;
 using AJESActiveDirectoryInterface;
 using AJESeForm.Models;
 using Core.Domain;
@@ -16,7 +17,7 @@ using System.Web.Mvc;
 
 namespace AJCCFM.Controllers
 {
-  
+    [AjeErrorHandler]
     public class WhatsAppController : Controller
     {
         private IWhatsAppPost _WhatsAppPost;
@@ -201,7 +202,7 @@ namespace AJCCFM.Controllers
                 string Link = url + "/WhatsApp/ShowRequest?token=" + mGuid + "&Mode=E";
                 await _GroupRequest.LogEmail(ID, mGuid, "W");
                 EmailManager VCTEmailService = new EmailManager();
-                body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceRequest-ITManager.html");
+                body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\WhatsAppRequest-HRManager.html");
                 mailcontent = body.Replace("@pwdchangelink", Link); //Replace Contenct...
                 mailcontent = mailcontent.Replace("@ReqNo", RefNo); //Replace Contenct...
                 VCTEmailService.Body = mailcontent;
@@ -215,7 +216,7 @@ namespace AJCCFM.Controllers
 
                     //Send Email to User .... 
                     EmailManager VCTEmailServiceUser = new EmailManager();
-                    body = VCTEmailServiceUser.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceStatusUpdate-Approved.html");
+                    body = VCTEmailServiceUser.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\WhatsAppStatusUpdate-Approved.html");
                     mailcontent = body.Replace("@ReqNo", RefNo); //Replace Contenct...
                     VCTEmailServiceUser.Body = mailcontent;
                     VCTEmailServiceUser.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("WhatsAppSubject");
@@ -229,7 +230,7 @@ namespace AJCCFM.Controllers
                 if (!string.IsNullOrEmpty(Email))
                 {
                     EmailManager VCTEmailService = new EmailManager();
-                    body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceStatusUpdate-Processed.html");
+                    body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\WhatsAppStatusUpdate-Processed.html");
                     mailcontent = body.Replace("@ReqNo", RefNo); //Replace Contenct...
                     VCTEmailService.Body = mailcontent;
                     VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("WhatsAppSubject");
@@ -238,7 +239,7 @@ namespace AJCCFM.Controllers
                 }
 
                 EmailManager VCTEmailServiceIT = new EmailManager();
-                body = VCTEmailServiceIT.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceRequestStatus-Approved(IT).html");
+                body = VCTEmailServiceIT.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\WhatsAppRequestStatus-Approved(IT).html");
                 mailcontent = body.Replace("@ReqNo", RefNo); //Replace Contenct...
                 VCTEmailServiceIT.Body = mailcontent;
                 VCTEmailServiceIT.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("WhatsAppSubject");

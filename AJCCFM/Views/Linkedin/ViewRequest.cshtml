@@ -508,7 +508,7 @@
                         {
                             <div class="col-md-4">
                                 <div class="thumbnail">
-                                    @if (@Path.GetExtension(Path.GetFileName(image)) == ".jpg" || @Path.GetExtension(Path.GetFileName(image)) == ".png" || @Path.GetExtension(Path.GetFileName(image)) == ".gif")
+                                    @if (@Path.GetExtension(Path.GetFileName(image)) == ".jpg" || @Path.GetExtension(Path.GetFileName(image)) == ".png" || @Path.GetExtension(Path.GetFileName(image)) == ".GIF" || @Path.GetExtension(Path.GetFileName(image)) == ".ico")
                                     {
                                         <a href="~/Content/images_upload/@Model.RefNo/@Path.GetFileName(image)" target="_blank">
                                             <img src="~/Content/images_upload/@Model.RefNo/@Path.GetFileName(image)" style="width:100%">
