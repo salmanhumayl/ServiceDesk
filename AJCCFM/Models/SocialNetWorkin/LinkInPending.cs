@@ -16,11 +16,12 @@ namespace AJCCFM.Models.SocialNetWorking
 
              
         public int Status { get; set; }
+        public string StatusDes { get; set; }
+        public string Post { get; set; }
 
-      
         public string AssystNo { get; set; }
         public string Project { get; set; }
-
+        public DateTime CreatedOn { get; set; }
         public string SNType  { get; set; }
     }
 
@@ -54,8 +55,12 @@ namespace AJCCFM.Models.SocialNetWorking
         public string Position { get; set; }
         public string Project { get; set; }
 
+        public int Status { get; set; }
         public string Email { get; set; }
         public string Post { get; set; }
+
+     
+
 
         public IEnumerable<string> Postedimages { get; set; }
 

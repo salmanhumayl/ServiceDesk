@@ -537,20 +537,23 @@
         </div>
         <hr />
 
-        <div class="col-lg-6">
-            <div class="panel panel-default pull-right">
+        @if (ViewBag.Mode != "V")
+        {
+            <div class="col-lg-6">
+                <div class="panel panel-default pull-right">
 
-                <input type="button" id="btnProcess" name="btnProcess" value="Approve" class="btn btn-success " />
-
-
-
-                &nbsp; &nbsp; &nbsp;
-                <input type="button" onclick="Reject(@Model.ID)" id="Btnreject" value="Reject" class="btn btn-danger" />
+                    <input type="button" id="btnProcess" name="btnProcess" value="Approve" class="btn btn-success " />
 
 
 
+                    &nbsp; &nbsp; &nbsp;
+                    <input type="button" onclick="Reject(@Model.ID)" id="Btnreject" value="Reject" class="btn btn-danger" />
+
+
+
+                </div>
             </div>
-        </div>
+        }
     </div>
 
 </div>

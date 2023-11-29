@@ -148,7 +148,7 @@ namespace Services.LinkedInPost
                 try
                 {
                     var affectedrows = await connection.ExecuteAsync("Update SD_LinkedInPost Set Status=100,RejectedOn='" + DateTime.Now + "',RejectedRemarks='" + Remarks + "' Where ID=@RecordID", new { RecordID = ID });
-                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='M' ", new { RecordID = ID });
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='L' ", new { RecordID = ID });
 
                 }
                 catch (Exception e)
@@ -167,7 +167,7 @@ namespace Services.LinkedInPost
         {
             string sql = "select id,RefNo,EmpCode,Name, 'LinkedIn' as SNType from SD_LinkedInPost Where Status = 0 " +
                         " Union All " +
-                        " select id,RefNo,EmpCode,Name, 'WhatsApp' as Type from SD_WhatsAppPost Where Status = 0";
+                        " select id,RefNo,EmpCode,Name, 'WhatsApp' as SNType from SD_WhatsAppPost Where Status In(0,1)";
 
 
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
@@ -224,5 +224,43 @@ namespace Services.LinkedInPost
 
         }
 
+
+
+        public IEnumerable<T> MySocialNetWorking<T>(string UserName)
+        {
+
+
+            string sql = "select id,RefNo,EmpCode,Name, 'LinkedIn' as SNType,Project,CreatedOn, " +
+                         " StatusDes=case when Status=-1 then 'Approved' when Status=100 then 'Rejected' when Status=0 then 'Pending'  end  from SD_LinkedInPost Where  Createdby='" + UserName + "' And Status  In (0,-1) " +
+                          " Union All " +
+                          " select id,RefNo,EmpCode,Name, 'WhatsApp' as SNType,Project,CreatedOn," +
+                          " StatusDes=case when Status=-1 then 'Approved' when Status=100 then 'Rejected' when Status=0 then 'Pending'  when Status=1 then 'Pending' end " +
+                          " from SD_WhatsAppPost Where  Createdby='" + UserName + "' And Status In(0,1,-1)";
+
+
+            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                var obj = connection.Query<T>(sql);
+                return obj.ToList();
+            }
+
+        }
+
+        public IEnumerable<T> AllSocialNetWorking<T>()
+        {
+
+
+            string sql = " Select ID,RefNo,EmpCode,Name,Department,Position,ProjectCode,Project,CreatedOn,Createdby,ApprovedOn,ProcessOwner,AssystNo,IsReview,ProcessOwnerLoginID, " +
+                         " Status=case when Status=-1 then 'Approved' when Status=0 then 'Pending' when Status=100 then 'Rejected' end  from SD_GroupRequest where Status in (0,-1, 100)";
+
+
+
+            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                var obj = connection.Query<T>(sql);
+                return obj.ToList();
+            }
+
+        }
     }
 }

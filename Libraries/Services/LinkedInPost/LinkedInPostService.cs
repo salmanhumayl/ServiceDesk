@@ -18,6 +18,11 @@ namespace Services.LinkedInPost
 
         }
 
+        public IEnumerable<T> AllSocialNetWorking<T>()
+        {
+            return IRepository.AllSocialNetWorking<T>();
+        }
+
         public Task<T> GeneratePDF<T>(int RequestID)
         {
             throw new NotImplementedException();
@@ -28,7 +33,10 @@ namespace Services.LinkedInPost
             return IRepository.LinkInPostPending<T>(username);
         }
 
-       
+        public IEnumerable<T> MySocialNetWorking<T>(string UserName)
+        {
+            return IRepository.MySocialNetWorking<T>(UserName);
+        }
 
         public async Task<bool> RejectForm(int ID, string Remarks)
         {

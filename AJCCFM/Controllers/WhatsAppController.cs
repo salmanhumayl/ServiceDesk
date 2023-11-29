@@ -85,18 +85,18 @@ namespace AJCCFM.Controllers
 
             string mGuid = Guid.NewGuid().ToString();
 
-            await _GroupRequest.LogEmail(result.ID, mGuid, "MW");
+            await _GroupRequest.LogEmail(result.ID, mGuid, "W");
 
 
             string url = System.Configuration.ConfigurationManager.AppSettings.Get("Url");
             string Link = url + "/WhatsApp/ShowRequest?token=" + mGuid;
             EmailManager VCTEmailService = new EmailManager();
 
-            body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\LinkedInRequestDH.html");
+            body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\WhatsAppRequestDH.html");
             mailcontent = body.Replace("@ReqNo", result.RefNo); //Replace Contenct...
             mailcontent = mailcontent.Replace("@pwdchangelink", Link); //Replace Contenct...
             VCTEmailService.Body = mailcontent;
-            VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("LinkedSubject");
+            VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("WhatsAppSubject");
             VCTEmailService.ReceiverAddress = model.SubmittedToEmail;
             VCTEmailService.ReceiverDisplayName = "";
             await VCTEmailService.SendEmail();
@@ -107,10 +107,11 @@ namespace AJCCFM.Controllers
             {
                 //Send Email to requestor
                 EmailManager VCTEmailServiceInit = new EmailManager();
-                body = VCTEmailServiceInit.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\LinkedInRequest-Init.html");
+                body = VCTEmailServiceInit.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\WhatsAppRequest-Init.html");
                 mailcontent = body.Replace("@ReqNo", result.RefNo); //Replace Contenct...
+                mailcontent = mailcontent.Replace("@forwardto", Name[0]); //Replace Contenct...
                 VCTEmailServiceInit.Body = mailcontent;
-                VCTEmailServiceInit.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("LinkedSubject");
+                VCTEmailServiceInit.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("WhatsAppSubject");
                 VCTEmailServiceInit.ReceiverAddress = model.Email;
                 VCTEmailServiceInit.ReceiverDisplayName = model.Name;
                 await VCTEmailServiceInit.SendEmail();
@@ -126,7 +127,7 @@ namespace AJCCFM.Controllers
             _WhatsAppPost = new WhatsAppPostService();
             _GroupRequest = new GroupRequestService();
 
-            int TransactionID = await _GroupRequest.GetToken(token, "M");
+            int TransactionID = await _GroupRequest.GetToken(token, "W");
 
             if (TransactionID > 0)
             {
@@ -169,6 +170,87 @@ namespace AJCCFM.Controllers
 
             return View(obj);
         }
+
+
+
+        public async Task<ActionResult> ApproveRequest(int ID, int Status, string RefNo,string Email,string Remarks)
+        {
+            _WhatsAppPost = new WhatsAppPostService();
+            _GroupRequest = new GroupRequestService();
+            string Submitedto="";
+            if (Status == 0) // PM Level
+            {
+                Status = 1;
+                Submitedto = System.Configuration.ConfigurationManager.AppSettings.Get("HRForwardTo");
+            }
+            else
+            {
+                Status = -1;
+
+            }
+
+            var affectedRows = await _WhatsAppPost.SubmitForApproval(ID, Status, Submitedto,Remarks);
+
+            //Send Email to 
+            string returnURL = "";
+            string body;
+            if (Status == 1)
+            {
+                string mGuid = Guid.NewGuid().ToString();
+                string url = System.Configuration.ConfigurationManager.AppSettings.Get("Url");
+                string Link = url + "/WhatsApp/ShowRequest?token=" + mGuid + "&Mode=E";
+                await _GroupRequest.LogEmail(ID, mGuid, "W");
+                EmailManager VCTEmailService = new EmailManager();
+                body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceRequest-ITManager.html");
+                mailcontent = body.Replace("@pwdchangelink", Link); //Replace Contenct...
+                mailcontent = mailcontent.Replace("@ReqNo", RefNo); //Replace Contenct...
+                VCTEmailService.Body = mailcontent;
+                VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("WhatsAppSubject");
+                VCTEmailService.ReceiverAddress = System.Configuration.ConfigurationManager.AppSettings.Get("HRManagerEmail");
+                await VCTEmailService.SendEmail();
+
+
+                if (!string.IsNullOrEmpty(Email))
+                {
+
+                    //Send Email to User .... 
+                    EmailManager VCTEmailServiceUser = new EmailManager();
+                    body = VCTEmailServiceUser.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceStatusUpdate-Approved.html");
+                    mailcontent = body.Replace("@ReqNo", RefNo); //Replace Contenct...
+                    VCTEmailServiceUser.Body = mailcontent;
+                    VCTEmailServiceUser.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("WhatsAppSubject");
+                    VCTEmailServiceUser.ReceiverAddress = Email;
+                    await VCTEmailServiceUser.SendEmail();
+                }
+            }
+            else if (Status == -1) //Approved //Send Email to User  and IT HELP DESK AS WELL 
+            {
+
+                if (!string.IsNullOrEmpty(Email))
+                {
+                    EmailManager VCTEmailService = new EmailManager();
+                    body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceStatusUpdate-Processed.html");
+                    mailcontent = body.Replace("@ReqNo", RefNo); //Replace Contenct...
+                    VCTEmailService.Body = mailcontent;
+                    VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("WhatsAppSubject");
+                    VCTEmailService.ReceiverAddress = Email;
+                    await VCTEmailService.SendEmail();
+                }
+
+                EmailManager VCTEmailServiceIT = new EmailManager();
+                body = VCTEmailServiceIT.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceRequestStatus-Approved(IT).html");
+                mailcontent = body.Replace("@ReqNo", RefNo); //Replace Contenct...
+                VCTEmailServiceIT.Body = mailcontent;
+                VCTEmailServiceIT.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("WhatsAppSubject");
+                VCTEmailServiceIT.ReceiverAddress = System.Configuration.ConfigurationManager.AppSettings.Get("groupdistribution");
+                await VCTEmailServiceIT.SendEmail();
+
+                returnURL = Url.Action("Index", "Dashboard");
+
+            }
+            return Json(new { Result = returnURL });
+        }
+
 
 
     }

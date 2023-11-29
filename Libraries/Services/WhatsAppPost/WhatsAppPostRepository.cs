@@ -119,16 +119,27 @@ namespace Services.WhatsAppPost
 
 
 
-        public async Task<bool> SubmitForApproval(int ID, string Remarks)
+        public async Task<bool> SubmitForApproval(int ID, int Status,string Submitedto, string remarks)
         {
 
             using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
             {
                 try
                 {
-                    var affectedrows = await connection.ExecuteAsync("Update SD_LinkedInPost Set Status=-1,ApprovedOn='" + DateTime.Now + "',ApprovedRemarks='" + Remarks + "' Where ID=@RecordID", new { RecordID = ID });
-                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID", new { RecordID = ID });
 
+                    if (Status != -1)
+                    {
+                        var affectedrows = await connection.ExecuteAsync("Update SD_WhatsAppPost Set Status=" + Status + ",SubmittedTo='" + Submitedto + "' Where ID=@RecordID", new { RecordID = ID });
+
+                        AddLogHistory(ID, "A", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), Submitedto, remarks,"MW");
+                    }
+                    else
+                    {
+                        var affectedrows = await connection.ExecuteAsync("Update SD_WhatsAppPost Set Status=" + Status + "  Where ID=@RecordID", new { RecordID = ID });
+
+                        AddLogHistory(ID, "A", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), "", remarks, "MW");
+                    }
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='W'", new { RecordID = ID });
 
                 }
                 catch (Exception e)
@@ -151,7 +162,7 @@ namespace Services.WhatsAppPost
                 try
                 {
                     var affectedrows = await connection.ExecuteAsync("Update SD_LinkedInPost Set Status=100,RejectedOn='" + DateTime.Now + "',RejectedRemarks='" + Remarks + "' Where ID=@RecordID", new { RecordID = ID });
-                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='M' ", new { RecordID = ID });
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='W' ", new { RecordID = ID });
 
                 }
                 catch (Exception e)

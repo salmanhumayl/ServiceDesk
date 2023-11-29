@@ -36,9 +36,9 @@ namespace Services.WhatsAppPost
             return await IRepository.RejectForm(ID, Remarks);
         }
 
-        public async Task<bool> SubmitForApproval(int ID, string Remarks)
+        public async Task<bool> SubmitForApproval(int ID, int Status, string Submitedto,string Remarks)
         {
-            return await IRepository.SubmitForApproval(ID, Remarks);
+            return await IRepository.SubmitForApproval(ID, Status, Submitedto,Remarks);
         }
 
         public async Task<RefNoID> SubmitLinkedInRequest(Core.Domain.WhatsApp model)

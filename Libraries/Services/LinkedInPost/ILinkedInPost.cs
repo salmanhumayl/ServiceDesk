@@ -21,5 +21,10 @@ namespace Services.LinkedInPost
         Task<bool> RejectForm(int ID, string Remarks);
 
         IEnumerable<T> LinkInPostPending<T>(string username);
+
+
+        IEnumerable<T> MySocialNetWorking<T>(string UserName);
+
+        IEnumerable<T> AllSocialNetWorking<T>();
     }
 }

@@ -34,14 +34,17 @@
         $('.submitBtn').attr("disabled", "disabled");
         $("#loaderDiv").show();
 
-        var ID= $('#ID').val();
+        var ID = $('#ID').val();
+        var RefNo = $('#RefNo').val();
+        var Email = $('#Email').val();
+        var Status = $('#Status').val();
         var Remarks = $('#inputMessage').val();
 
         $.ajax({
             type: "POST",
-            url: '@Url.Action("SubmitForApproval", "Linkedin")',
+            url: '@Url.Action("ApproveRequest", "WhatsApp")',
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ 'ID': ID, 'Remarks': Remarks }),
+            data: JSON.stringify({ 'ID': ID, 'Status': Status,'RefNo': RefNo, 'Email': Email, 'Remarks': Remarks }),
             dataType: "json",
             success: function (response) {
                 if (response.type == 1 || response.type == 2) {
@@ -88,7 +91,7 @@
 
         $.ajax({
             type: "POST",
-            url: '@Url.Action("RejectForm", "Linkedin")',
+            url: '@Url.Action("RejectForm", "WhatsApp")',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({ 'ID': ID, 'Remarks': message}),
             dataType: "json",
@@ -436,131 +439,140 @@
 
 
 <div class="col-lg-12">
-   
+
+
+    <div class="row">
+
+        <div class="col-lg-12 col-md-12">
+
+            <div class="team-single-text padding-50px-left sm-no-padding-left">
+
+                <h1>
+                    @Html.HiddenFor(modelItem => Model.ID)
+
+
+                    @Html.HiddenFor(modelItem => Model.Status)
+
+                    @Html.HiddenFor(modelItem => Model.RefNo)
+                    @Html.HiddenFor(modelItem => Model.Email)
+
+
+                    @Model.EmpCode  - @Model.Name   -  @Model.Position
+
+                </h1>
+
+                <p class="no-margin-bottom"></p>
+
+                <div class="contact-info-section margin-40px-tb">
+
+                    <ul class="list-style9 no-margin">
+
+
+
+
+                        <li>
+
+                            <div class="row">
+
+                                <div class="col-md-1 col-1">
+
+                                    <!-- <i class="far fa-gem text-yellow"></i> -->
+
+                                    <strong class="margin-10px-left text-black">Post</strong>
+
+                                </div>
+
+                                <div class="col-md-11 col-11">
+
+                                    <p>
+                                        @Model.Post
+                                    </p>
+
+                                </div>
+
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-12 mt-5">
+
+            <h1>
+
+                WhatsApp Posted Files
+
+            </h1>
+
 
             <div class="row">
-
-                <div class="col-lg-12 col-md-12">
-
-                    <div class="team-single-text padding-50px-left sm-no-padding-left">
-
-                        <h1>
-                            @Html.HiddenFor(modelItem => Model.ID)
-                            @Model.EmpCode  - @Model.Name   -  @Model.Position
-
-                        </h1>
-
-                        <p class="no-margin-bottom"></p>
-
-                        <div class="contact-info-section margin-40px-tb">
-
-                            <ul class="list-style9 no-margin">
-
-
-
-
-                                <li>
-
-                                    <div class="row">
-
-                                        <div class="col-md-1 col-1">
-
-                                            <!-- <i class="far fa-gem text-yellow"></i> -->
-
-                                            <strong class="margin-10px-left text-black">Post</strong>
-
-                                        </div>
-
-                                        <div class="col-md-11 col-11">
-
-                                            <p>
-                                                @Model.Post
-                                            </p>
-
-                                        </div>
-
+                @if (Model.Images != null)
+                {
+                    foreach (var image in Model.Images)
+                    {
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                @if (@Path.GetExtension(Path.GetFileName(image)) == ".jpg" || @Path.GetExtension(Path.GetFileName(image)) == ".png" || @Path.GetExtension(Path.GetFileName(image)) == ".gif")
+                                {
+                                    <a href="~/Content/images_upload/@Model.RefNo/@Path.GetFileName(image)" target="_blank">
+                                        <img src="~/Content/images_upload/@Model.RefNo/@Path.GetFileName(image)" style="width:100%">
+                                    </a>
+                                    <div class="caption">
+                                        <p>@Path.GetFileName(image)</p>
                                     </div>
-                                </li>
-                            </ul>
-
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("DownloadSupportFiles", "Linkedin", new { RefNo = Model.RefNo, fileName = Path.GetFileName(image) })">
+                                        View File @Path.GetExtension(Path.GetFileName(image))
+                                    </a>
+                                    <div class="caption">
+                                        <p>@Path.GetFileName(image)</p>
+                                    </div>
+                                }
+                            </div>
                         </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="col-md-12 mt-5">
-
-                    <h1>
-
-                        WhatsApp Posted Files
-
-                    </h1>
-
-
-                    <div class="row">
-                        @if (Model.Images != null)
-                        {
-                            foreach (var image in Model.Images)
-                            {
-                                <div class="col-md-4">
-                                    <div class="thumbnail">
-                                        @if (@Path.GetExtension(Path.GetFileName(image)) == ".jpg" || @Path.GetExtension(Path.GetFileName(image)) == ".png" || @Path.GetExtension(Path.GetFileName(image)) == ".gif")
-                                        {
-                                            <a href="~/Content/images_upload/@Model.RefNo/@Path.GetFileName(image)" target="_blank">
-                                                <img src="~/Content/images_upload/@Model.RefNo/@Path.GetFileName(image)" style="width:100%">
-                                            </a>
-                                            <div class="caption">
-                                                <p>@Path.GetFileName(image)</p>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <a href="@Url.Action("DownloadSupportFiles", "Linkedin", new { RefNo = Model.RefNo, fileName = Path.GetFileName(image) })">
-                                                View File @Path.GetExtension(Path.GetFileName(image))
-                                            </a>
-                                            <div class="caption">
-                                                <p>@Path.GetFileName(image)</p>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                            }
-                        }
-                    </div>
-
-                </div>
-
-            </div>
-            <hr />
-
-            <div class="col-lg-6">
-                <div class="panel panel-default pull-right">
-
-                    <input type="button" id="btnProcess" name="btnProcess" value="Approve" class="btn btn-success " />
-
-
-
-                    &nbsp; &nbsp; &nbsp;
-                    <input type="button" onclick="Reject(@Model.ID)" id="Btnreject" value="Reject" class="btn btn-danger" />
-
-
-
-                </div>
+                    }
+                }
             </div>
 
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading" style="background-color:#056cd5;color:White;">
-                        <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>Work Flow Log History</h3>
-                    </div>
-                    @{Html.RenderAction("GetLogHistory", "Dashboard", new { RecordID = Model.ID, Doc_Code = "MW" });}
+        </div>
 
-                </div>
+    </div>
+    <hr />
+    @if (ViewBag.Mode != "V")
+    {
+        <div class="col-lg-6">
+            <div class="panel panel-default pull-right">
+
+                <input type="button" id="btnProcess" name="btnProcess" value="Approve" class="btn btn-success " />
+
+
+
+                &nbsp; &nbsp; &nbsp;
+                <input type="button" onclick="Reject(@Model.ID)" id="Btnreject" value="Reject" class="btn btn-danger" />
+
+
+
             </div>
         </div>
+    }
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background-color:#056cd5;color:White;">
+                    <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>Work Flow Log History</h3>
+                </div>
+                @{Html.RenderAction("GetLogHistory", "Dashboard", new { RecordID = Model.ID, Doc_Code = "MW" });}
+
+            </div>
+        </div>
+    </div>
 
     </div>
 

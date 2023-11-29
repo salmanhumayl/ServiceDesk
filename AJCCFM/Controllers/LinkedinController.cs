@@ -62,7 +62,7 @@ namespace AJCCFM.Controllers
 
             string mGuid = Guid.NewGuid().ToString();
 
-            await _GroupRequest.LogEmail(result.ID, mGuid, "M");
+            await _GroupRequest.LogEmail(result.ID, mGuid, "L");
 
             
             string url = System.Configuration.ConfigurationManager.AppSettings.Get("Url");
@@ -101,7 +101,7 @@ namespace AJCCFM.Controllers
 
             _LinkedInPost = new LinkedInPostService();
             _GroupRequest = new GroupRequestService();
-            int TransactionID = await _GroupRequest.GetToken(token, "M");
+            int TransactionID = await _GroupRequest.GetToken(token, "L");
 
             if (TransactionID > 0)
             {
@@ -227,6 +227,16 @@ namespace AJCCFM.Controllers
             return File(System.IO.File.ReadAllBytes(filePath), "application/octet-stream", fileName);
           
         }
-     
+
+
+
+        public ActionResult MySociaklNetworking()
+        {
+            _LinkedInPost = new LinkedInPostService();
+
+            var obj = _LinkedInPost.MySocialNetWorking<LinkInPending>(System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""));
+
+            return PartialView("MySociaklNetworking", obj);
+        }
     }
 }

@@ -146,9 +146,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-                <span style="color:green;font-size:xx-large">
-                    @Model.ServiceName
-                </span> <span style="color:red;font-size:large">@Model.RefNo</span>
+                 <span style="color:red;font-size:xx-large">@Model.RefNo</span>
                 
 
             </h3>
@@ -180,6 +178,9 @@
                         <td style="background-color:darkkhaki">Project</td>
                         <td><b>@Model.Project</b></td>
                     </tr>
+		   <tr><td colspan="8"><span style="color:green;font-size:xx-large">
+                    @Model.ServiceName
+                </span></td></tr>
                     <tr>
                         <td style="font-size:large">Justification </td>
                         <td colspan="4"><textarea rows="3" cols="70" style="font-weight:bold">@Model.Remarks</textarea> </td>

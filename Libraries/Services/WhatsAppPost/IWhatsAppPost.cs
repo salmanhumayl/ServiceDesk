@@ -14,7 +14,7 @@ namespace Services.WhatsAppPost
         Task<RefNoID> SubmitLinkedInRequest(Core.Domain.WhatsApp model);
         T ViewRequest<T>(int TransactionID);
 
-        Task<bool> SubmitForApproval(int ID, string Remarks);
+        Task<bool> SubmitForApproval(int ID, int Status,string Submitedto,string Remarks);
 
     
 

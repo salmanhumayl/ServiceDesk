@@ -1,0 +1,117 @@
+﻿
+@model IEnumerable<AJCCFM.Models.SocialNetWorking.LinkInPending>
+@{
+
+    Layout = null;
+}
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/buttons.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/AJCDataTables/jquery.dataTables.min.js"></script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#tblMySocialNetworking').DataTable({
+            "iDisplayLength": 50,
+            "aaSorting": [[0, "desc"]]
+        });
+
+        
+    });
+
+ 
+ 
+
+</script>
+
+
+
+
+
+
+<div class="panel-body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped" id="tblMySocialNetworking">
+            <thead>
+                <tr>
+
+                    <th>
+                        Ref No
+                    </th>
+
+                   
+                    <th>
+                        Poject
+                    </th>
+                    <th>
+                        Post Type
+                    </th>
+                    
+                    <th>
+                        Created On
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                   
+                <tr>
+                    <td>
+                        @if (item.SNType == "LinkedIn")
+                        {
+                            @Html.ActionLink(item.RefNo, "ViewRequest", "Linkedin", new { TransactionID = item.ID, Mode = "V" }, new { @class = "btn btn-info btn-sm" })
+                        }
+                        else if (item.SNType == "WhatsApp")
+                        {
+                            @Html.ActionLink(item.RefNo, "ViewRequest", "WhatsApp", new { TransactionID = item.ID, Mode = "V" }, new { @class = "btn btn-success btn-sm" })
+                        }
+
+                    </td>
+
+
+                   
+
+                    <td>
+                        <b>@Html.DisplayFor(modelItem => item.Project)</b>
+                    </td>
+
+
+
+                    <td style='color: @(item.SNType == "LinkedIn" ? "blue" : "green");'>
+                        @Html.DisplayFor(modelItem => item.SNType)
+                    </td>
+
+
+
+                    <td>
+                        @item.CreatedOn.ToString("dd/MMM/yyyy")
+                    </td>
+
+                    <td>
+                        @item.StatusDes
+                    </td>
+
+
+
+                </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+
+
