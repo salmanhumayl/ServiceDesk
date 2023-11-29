@@ -222,6 +222,7 @@ namespace AJCCFM.Controllers
                     VCTEmailServiceUser.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("WhatsAppSubject");
                     VCTEmailServiceUser.ReceiverAddress = Email;
                     await VCTEmailServiceUser.SendEmail();
+                    returnURL = Url.Action("Index", "Dashboard");
                 }
             }
             else if (Status == -1) //Approved //Send Email to User  and IT HELP DESK AS WELL 
