@@ -26,6 +26,12 @@ namespace Core.Domain
         [Required(ErrorMessage = "Required Mobile")]
         public string Phone { get; set; }
 
+        public string Email { get; set; }
+        public string SubmittedTo { get; set; }
+
+        public string SubmittedToEmail { get; set; }
+        public string Createdby { get; set; }
+
         public bool IsJoined { get; set; }
         public string JoinedOn { get; set; }
     }

@@ -12,27 +12,23 @@ using Dapper;
 using Model;
 using Services.Helper;
 
-namespace Services.WhatsAppPost
+namespace Services.WhatsAppGroup
 {
     public class WhatsAppGroupRepository
     {
-        public async Task<RefNoID> SubmitGroupRequest(Core.Domain.WhatsApp model)
+        public async Task<RefNoID> SubmitGroupRequest(Core.Domain.WhatsAppGroup model)
         {
             string sql = "";
             int RequestID = 0;
             string RefNo;
             using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
             {
-                if (model.PostDocument[0]!=null)
-                {
-                    model.IsAttachment = true;
-                }
-
+              
                 RefNo = Common.GetDocumentNumber("MR");
                 model.RefNo = RefNo;
-                sql = " Insert into SD_WhatsAppPost " +
-                      " (RefNo,Status,Name,EmpCode,Position,ProjectCode,Project,Createdby,Email,SubmittedTo,SubmittedToEmail,Post,IsAttachment) " +
-                      " Values (@RefNo,0,@Name,@EmpCode,@Position,@ProjectCode,@Project,@Createdby,@Email,@SubmittedTo,@SubmittedToEmail,@Post,@IsAttachment)" +
+                sql = " Insert into SD_WhatsAppGroup " +
+                      " (RefNo,Status,Name,EmpCode,Position,ProjectCode,Project,Createdby,Email,SubmittedTo,SubmittedToEmail,Phone) " +
+                      " Values (@RefNo,0,@Name,@EmpCode,@Position,@ProjectCode,@Project,@Createdby,@Email,@SubmittedTo,@SubmittedToEmail,@Phone)" +
                       " Select Cast(SCOPE_IDENTITY() AS int)";
 
 
@@ -44,8 +40,7 @@ namespace Services.WhatsAppPost
                     model.Position,
                     model.ProjectCode,
                     model.Project,
-                    model.Post,
-                    model.IsAttachment,
+                    model.Phone,
                     model.Createdby,
                     model.Email,
                     model.SubmittedTo,
@@ -54,43 +49,8 @@ namespace Services.WhatsAppPost
 
                 });
 
-                if (model.PostDocument[0]!=null)
-                {
-
-                    string DirectoryPath = System.Web.HttpContext.Current.Server.MapPath("~/Content/images_upload/") + model.RefNo;
-
-                  
-                    Directory.CreateDirectory(DirectoryPath);
-                  
-                    if (Directory.Exists(DirectoryPath))
-                    {
-                        int Count = 1;
-                        foreach (HttpPostedFileBase file in model.PostDocument)
-                        {
-                            if (file != null)
-                            {
-                                var InputFileName = "File_" + Count +  Path.GetExtension(file.FileName) ;
-
-                                string path = Path.Combine(DirectoryPath, InputFileName);
-                                using (FileStream outputFileStream = new FileStream(path, FileMode.Create))
-                                {
-
-                                    //Stream inputStream = file.InputStream.CopyTo(outputFileStream);
-                                    await  file.InputStream.CopyToAsync(outputFileStream);
-                                    Count = Count + 1;
-                                    //inputStream.CopyTo(outputFileStream);
-                                }
-                               
-
-                                //file.SaveAs(Path.Combine(DirectoryPath, InputFileName));
-
-                            }
-                        }
-                     
-                    }
-
-                }
-                AddLogHistory(RequestID, "S", model.Createdby.Trim(), model.SubmittedTo, "", "MW");
+              
+                AddLogHistory(RequestID, "S", model.Createdby.Trim(), model.SubmittedTo, "", "MG");
 
             }
 
@@ -104,7 +64,7 @@ namespace Services.WhatsAppPost
 
         public T ViewRequest<T>(int TransactionID)
         {
-            string sql = " Select * from SD_WhatsAppPost " +
+            string sql = " Select * from SD_WhatsAppGroup " +
                          " Where ID=" + TransactionID;
 
 
@@ -131,15 +91,15 @@ namespace Services.WhatsAppPost
                     {
                         var affectedrows = await connection.ExecuteAsync("Update SD_WhatsAppPost Set Status=" + Status + ",SubmittedTo='" + Submitedto + "' Where ID=@RecordID", new { RecordID = ID });
 
-                        AddLogHistory(ID, "A", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), Submitedto, remarks,"MW");
+                        AddLogHistory(ID, "A", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), Submitedto, remarks, "MG");
                     }
                     else
                     {
                         var affectedrows = await connection.ExecuteAsync("Update SD_WhatsAppPost Set Status=" + Status + "  Where ID=@RecordID", new { RecordID = ID });
 
-                        AddLogHistory(ID, "A", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), "", remarks, "MW");
+                        AddLogHistory(ID, "A", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), "", remarks, "MG");
                     }
-                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='W'", new { RecordID = ID });
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='G'", new { RecordID = ID });
 
                 }
                 catch (Exception e)
@@ -161,8 +121,8 @@ namespace Services.WhatsAppPost
             {
                 try
                 {
-                    var affectedrows = await connection.ExecuteAsync("Update SD_LinkedInPost Set Status=100,RejectedOn='" + DateTime.Now + "',RejectedRemarks='" + Remarks + "' Where ID=@RecordID", new { RecordID = ID });
-                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='W' ", new { RecordID = ID });
+                    var affectedrows = await connection.ExecuteAsync("Update SD_WhatsAppGroup Set Status=100,RejectedOn='" + DateTime.Now + "',RejectedRemarks='" + Remarks + "' Where ID=@RecordID", new { RecordID = ID });
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='G' ", new { RecordID = ID });
 
                 }
                 catch (Exception e)
@@ -177,20 +137,7 @@ namespace Services.WhatsAppPost
             }
         }
 
-        public IEnumerable<T> LinkInPostPending<T>(string username)
-        {
-            string sql = "select id,RefNo,EmpCode,Name, 'LinkedIn' as SNType from SD_LinkedInPost Where Status = 0 " +
-                        " Union All " +
-                        " select id,RefNo,EmpCode,Name, 'WhatsApp Post' as Type from SD_WhatsAppPost Where Status = 0";
-
-
-            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
-            {
-                var obj = connection.Query<T>(sql).ToList();
-                return obj;
-            }
-
-        }
+     
 
         public async Task<bool> LogEmail(int TransactionID, string GUID, string DocCode)
         {

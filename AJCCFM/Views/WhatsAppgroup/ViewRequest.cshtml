@@ -1,0 +1,595 @@
+﻿@model  AJCCFM.Models.SocialNetWorking.WhatsAppGroupRequestModel
+
+
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+      //  $("#divProcessing").hide();
+
+      
+
+        $('#btnProcess').click
+            (
+
+                function () {
+                    $("#AdjustmentModal").modal("show");
+                    $('#btnProcess').attr("disabled", "disabled");
+                    $("#btnProcess").attr('value', 'Processing...');
+                    $("#Btnreject").attr('disabled', 'disabled');
+                });
+
+
+    });
+
+
+
+
+
+    var ProcessSubmission = function () {
+        $('.cancelbtn').attr("disabled", "disabled");
+        $('.submitBtn').attr("disabled", "disabled");
+        $("#loaderDiv").show();
+
+        var ID = $('#ID').val();
+        var RefNo = $('#RefNo').val();
+        var Email = $('#Email').val();
+        var Status = $('#Status').val();
+        var Remarks = $('#inputMessage').val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ApproveRequest", "WhatsAppgroup")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ 'ID': ID, 'Status': Status,'RefNo': RefNo, 'Email': Email, 'Remarks': Remarks }),
+            dataType: "json",
+            success: function (response) {
+                if (response.type == 1 || response.type == 2) {
+                    alert(response.ErrorMsg);
+                }
+
+                $("#loaderDiv").hide();
+                $("#SubmitApprovalModal").modal("hide");
+                window.location.href = response.Result;
+
+            }
+        });
+    }
+
+
+
+    var Cancel = function () {
+
+        $('#btnProcess').removeAttr("disabled", "disabled");
+        $("#Btnreject").removeAttr('disabled', 'disabled');
+        $('#btnProcess').attr("value", "Approve");
+        $('#AdjustmentModal').modal("hide");
+    }
+
+
+    var Reject = function () {
+        $("#staticBackdrop").modal("show");
+
+    }
+
+
+    var submitRejectForm = function () {
+
+        var message = $('#inputMessageReject').val();
+
+        if (message.trim() == '') {
+            alert('Please enter your Reason.');
+            $('#inputMessageReject').focus();
+            return false;
+        }
+
+        $("#loaderDiv").show();
+          var ID = $('#ID').val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("RejectForm", "WhatsAppgroup")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ 'ID': ID, 'Remarks': message}),
+            dataType: "json",
+
+           // data: 'name=' + name + '&email=' + email + '&message=' + message,
+
+            beforeSend: function () {
+                $('.submitBtnReject').attr("disabled", "disabled");
+                $('.modal-body').css('opacity', '.5');
+            },
+            success: function (response) {
+                $("#loaderDiv").hide();
+                $("#staticBackdrop").modal("hide");
+                window.location.href = response.Result;
+            }
+        });
+
+    }
+</script>
+
+
+<style type="text/css">
+
+    body {
+        font-size: 16px;
+        color: #6f6f6f;
+        font-weight: 400;
+        line-height: 28px;
+        letter-spacing: 0.8px;
+        margin-top: 20px;
+    }
+
+
+
+    .font-size38 {
+        font-size: 38px;
+    }
+
+
+
+    .team-single-text .section-heading h4,
+    .section-heading h5 {
+        font-size: 36px;
+    }
+
+
+
+    .team-single-text .section-heading.half {
+        margin-bottom: 20px;
+    }
+
+
+
+
+
+
+    .team-single-text .section-heading.half {
+        margin-bottom: 15px;
+    }
+
+    }
+
+
+
+
+
+    .team-single-text .section-heading.half {
+        margin-bottom: 10px;
+    }
+
+    }
+
+
+
+
+
+    .team-single-icons ul li {
+        display: inline-block;
+        border: 1px solid #02c2c7;
+        border-radius: 50%;
+        color: #86bc42;
+        margin-right: 8px;
+        margin-bottom: 5px;
+        -webkit-transition-duration: 0.3s;
+        transition-duration: 0.3s;
+    }
+
+
+
+        .team-single-icons ul li a {
+            color: #02c2c7;
+            display: block;
+            font-size: 14px;
+            height: 25px;
+            line-height: 26px;
+            text-align: center;
+            width: 25px;
+        }
+
+
+
+        .team-single-icons ul li:hover {
+            background: #02c2c7;
+            border-color: #02c2c7;
+        }
+
+
+
+            .team-single-icons ul li:hover a {
+                color: #fff;
+            }
+
+
+
+    .team-social-icon li {
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+
+
+        .team-social-icon li:last-child {
+            margin-right: 0;
+        }
+
+
+
+    .team-social-icon i {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        font-size: 15px;
+        border-radius: 50px;
+    }
+
+
+
+    .padding-30px-all {
+        padding: 30px;
+    }
+
+
+
+    .bg-light-gray {
+        background-color: #f7f7f7;
+    }
+
+
+
+    .text-center {
+        text-align: center !important;
+    }
+
+
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+
+
+    .list-style9 {
+        list-style: none;
+        padding: 0;
+    }
+
+
+
+        .list-style9 li {
+            position: relative;
+            padding: 0 0 5px 0;
+            margin: 0 0 10px 0;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+
+
+
+            .list-style9 li:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+
+
+
+    .text-sky {
+        color: #02c2c7;
+    }
+
+
+
+    .text-orange {
+        color: #e95601;
+    }
+
+
+
+    .text-green {
+        color: #5bbd2a;
+    }
+
+
+
+    .text-yellow {
+        color: #f0d001;
+    }
+
+
+
+    .text-pink {
+        color: #ff48a4;
+    }
+
+
+
+    .text-purple {
+        color: #9d60ff;
+    }
+
+
+
+    .text-lightred {
+        color: #ff5722;
+    }
+
+
+
+    a.text-sky:hover {
+        opacity: 0.8;
+        color: #02c2c7;
+    }
+
+
+
+    a.text-orange:hover {
+        opacity: 0.8;
+        color: #e95601;
+    }
+
+
+
+    a.text-green:hover {
+        opacity: 0.8;
+        color: #5bbd2a;
+    }
+
+
+
+    a.text-yellow:hover {
+        opacity: 0.8;
+        color: #f0d001;
+    }
+
+
+
+    a.text-pink:hover {
+        opacity: 0.8;
+        color: #ff48a4;
+    }
+
+
+
+    a.text-purple:hover {
+        opacity: 0.8;
+        color: #9d60ff;
+    }
+
+
+
+    a.text-lightred:hover {
+        opacity: 0.8;
+        color: #ff5722;
+    }
+
+
+
+    .custom-progress {
+        height: 10px;
+        border-radius: 50px;
+        box-shadow: none;
+        margin-bottom: 25px;
+    }
+
+
+
+    .progress {
+        display: -ms-flexbox;
+        display: flex;
+        height: 1rem;
+        overflow: hidden;
+        font-size: 0.75rem;
+        background-color: #e9ecef;
+        border-radius: 0.25rem;
+    }
+
+
+
+    .bg-sky {
+        background-color: #02c2c7;
+    }
+
+
+
+    .bg-orange {
+        background-color: #e95601;
+    }
+
+
+
+    .bg-green {
+        background-color: #5bbd2a;
+    }
+
+
+
+    .bg-yellow {
+        background-color: #f0d001;
+    }
+
+
+
+    .bg-pink {
+        background-color: #ff48a4;
+    }
+
+
+
+    .bg-purple {
+        background-color: #9d60ff;
+    }
+
+
+
+    .bg-lightred {
+        background-color: #ff5722;
+    }
+</style>
+
+
+
+
+
+
+
+<div class="col-lg-12">
+
+
+    <div class="row">
+
+        <div class="col-lg-12 col-md-12">
+
+            <div class="team-single-text padding-50px-left sm-no-padding-left">
+
+                <h1>
+                    @Html.HiddenFor(modelItem => Model.ID)
+
+
+                    @Html.HiddenFor(modelItem => Model.Status)
+
+                    @Html.HiddenFor(modelItem => Model.RefNo)
+                    @Html.HiddenFor(modelItem => Model.Email)
+
+
+                    @Model.EmpCode  - @Model.Name   -  @Model.Position
+
+                </h1>
+
+                <p class="no-margin-bottom"></p>
+
+                <div class="contact-info-section margin-40px-tb">
+
+                    <ul class="list-style9 no-margin">
+
+
+
+
+                        <li>
+
+                            <div class="row">
+
+                                <div class="col-md-1 col-1">
+
+                                    <!-- <i class="far fa-gem text-yellow"></i> -->
+
+                                    <strong class="margin-10px-left text-black"></strong>
+
+                                </div>
+
+                                <div class="col-md-11 col-11">
+
+                                    <p>
+                                        <h1>@Model.Phone</h1>
+                                    </p>
+
+                                </div>
+
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+       
+
+    </div>
+    <hr />
+    @if (ViewBag.Mode != "V")
+    {
+        <div class="col-lg-6">
+            <div class="panel panel-default pull-right">
+
+                <input type="button" id="btnProcess" name="btnProcess" value="Approve" class="btn btn-success " />
+
+
+
+                &nbsp; &nbsp; &nbsp;
+                <input type="button" onclick="Reject(@Model.ID)" id="Btnreject" value="Reject" class="btn btn-danger" />
+
+
+
+            </div>
+        </div>
+    }
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background-color:#056cd5;color:White;">
+                    <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>Work Flow Log History</h3>
+                </div>
+                @{Html.RenderAction("GetLogHistory", "Dashboard", new { RecordID = Model.ID, Doc_Code = "MG" });}
+
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <div class="modal fade" id="AdjustmentModal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="Cancel()">  &times;</button>
+                    <h3 class="modal-title">Confirm Approval </h3>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <label for="inputMessage">Remarks</label>
+                    <textarea class="form-control" id="inputMessage" placeholder="Enter your Remarks"></textarea>
+                    <div style="text-align:center;display:none" id="loaderDiv">
+                        <img src="~/Content/Images/Spinner.gif" width="150" />
+                        <p style="color:red">Please wait.....</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning cancelbtn" data-dismiss="modal" onclick="Cancel()">Close</button>
+                    <a href="#" class="btn btn-success submitBtn" onclick="ProcessSubmission()">Confirm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="staticBackdrop" data-coreui-backdrop="static" data-coreui-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Reject ?</h4>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <p class="statusMsg"></p>
+                    <form role="form">
+
+                        <div class="form-group">
+                            <label for="inputMessage">Reason</label>
+                            <textarea class="form-control" id="inputMessageReject" placeholder="Enter your reason"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger submitBtnReject" onclick="submitRejectForm()">SUBMIT</button>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -67,4 +67,25 @@ namespace AJCCFM.Models.SocialNetWorking
         public string[] Images { get; set; }
 
     }
+
+
+    public class WhatsAppGroupRequestModel
+    {
+
+        public int ID { get; set; }
+        public string RefNo { get; set; }
+        public string EmpCode { get; set; }
+        public string Name { get; set; }
+        public string Position { get; set; }
+        public string Project { get; set; }
+
+        public int Status { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+
+
+
+
+    
+    }
 }

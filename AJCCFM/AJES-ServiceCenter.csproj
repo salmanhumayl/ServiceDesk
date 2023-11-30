@@ -763,6 +763,7 @@
     <Content Include="Views\Shared\_SocialNetworkingPending.cshtml" />
     <Content Include="Views\WhatsApp\ViewRequest.cshtml" />
     <Content Include="Views\Shared\MySociaklNetworking.cshtml" />
+    <Content Include="Views\WhatsAppgroup\ViewRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />

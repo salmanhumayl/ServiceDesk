@@ -45,7 +45,10 @@
                                 {
                                     @Html.ActionLink("Click here to Approve", "ViewRequest", "WhatsApp", new { TransactionID = item.ID }, new { @class = "btn btn-danger btn-sm" })
                                 }
-
+                                else if (item.SNType == "WhatsAppGroup")
+                                {
+                                    @Html.ActionLink("Click here to Approve", "ViewRequest", "WhatsAppgroup", new { TransactionID = item.ID }, new { @class = "btn btn-danger btn-sm" })
+                                }
                             </td>
 
 

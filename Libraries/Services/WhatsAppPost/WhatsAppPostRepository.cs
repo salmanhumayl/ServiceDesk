@@ -16,7 +16,7 @@ namespace Services.WhatsAppPost
 {
     public class WhatsAppPostRepository
     {
-        public async Task<RefNoID> SubmitGroupRequest(Core.Domain.WhatsApp model)
+       public async Task<RefNoID> SubmitGroupRequest(Core.Domain.WhatsApp model)
         {
             string sql = "";
             int RequestID = 0;
@@ -161,7 +161,7 @@ namespace Services.WhatsAppPost
             {
                 try
                 {
-                    var affectedrows = await connection.ExecuteAsync("Update SD_LinkedInPost Set Status=100,RejectedOn='" + DateTime.Now + "',RejectedRemarks='" + Remarks + "' Where ID=@RecordID", new { RecordID = ID });
+                    var affectedrows = await connection.ExecuteAsync("Update SD_WhatsAppPost Set Status=100,RejectedOn='" + DateTime.Now + "',RejectedRemarks='" + Remarks + "' Where ID=@RecordID", new { RecordID = ID });
                     var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='W' ", new { RecordID = ID });
 
                 }
@@ -177,20 +177,7 @@ namespace Services.WhatsAppPost
             }
         }
 
-        public IEnumerable<T> LinkInPostPending<T>(string username)
-        {
-            string sql = "select id,RefNo,EmpCode,Name, 'LinkedIn' as SNType from SD_LinkedInPost Where Status = 0 " +
-                        " Union All " +
-                        " select id,RefNo,EmpCode,Name, 'WhatsApp Post' as Type from SD_WhatsAppPost Where Status = 0";
-
-
-            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
-            {
-                var obj = connection.Query<T>(sql).ToList();
-                return obj;
-            }
-
-        }
+      
 
         public async Task<bool> LogEmail(int TransactionID, string GUID, string DocCode)
         {

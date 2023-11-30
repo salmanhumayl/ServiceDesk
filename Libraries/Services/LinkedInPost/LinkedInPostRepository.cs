@@ -167,7 +167,10 @@ namespace Services.LinkedInPost
         {
             string sql = "select id,RefNo,EmpCode,Name, 'LinkedIn' as SNType from SD_LinkedInPost Where Status = 0 " +
                         " Union All " +
-                        " select id,RefNo,EmpCode,Name, 'WhatsApp' as SNType from SD_WhatsAppPost Where Status In(0,1)";
+                        " select id,RefNo,EmpCode,Name, 'WhatsApp' as SNType from SD_WhatsAppPost Where Status In(0,1)" +
+                        " Union All " +
+                        " select id,RefNo,EmpCode,Name, 'WhatsAppGroup' as SNType from SD_WhatsAppGroup Where Status In(0,1)";
+
 
 
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))

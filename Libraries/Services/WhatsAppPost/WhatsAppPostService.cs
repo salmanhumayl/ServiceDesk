@@ -24,11 +24,7 @@ namespace Services.WhatsAppPost
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> WhatsAppPostPending<T>(string username)
-        {
-            return IRepository.LinkInPostPending<T>(username);
-        }
-
+  
        
 
         public async Task<bool> RejectForm(int ID, string Remarks)

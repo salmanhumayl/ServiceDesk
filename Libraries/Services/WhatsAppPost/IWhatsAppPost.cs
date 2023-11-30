@@ -20,6 +20,6 @@ namespace Services.WhatsAppPost
 
         Task<bool> RejectForm(int ID, string Remarks);
 
-        IEnumerable<T> WhatsAppPostPending<T>(string username);
+      
     }
 }

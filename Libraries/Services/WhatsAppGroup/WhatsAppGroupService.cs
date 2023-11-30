@@ -1,4 +1,5 @@
-﻿using Model;
+﻿using Core.Domain;
+using Model;
 using Services.WhatsAppPost;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.WhatsAppPost
+namespace Services.WhatsAppGroup
 {
     public class WhatsAppGroupService : IWhatsAppGroup
     {
@@ -24,11 +25,7 @@ namespace Services.WhatsAppPost
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> WhatsAppPostPending<T>(string username)
-        {
-            return IRepository.LinkInPostPending<T>(username);
-        }
-
+      
        
 
         public async Task<bool> RejectForm(int ID, string Remarks)
@@ -41,7 +38,7 @@ namespace Services.WhatsAppPost
             return await IRepository.SubmitForApproval(ID, Status, Submitedto,Remarks);
         }
 
-        public async Task<RefNoID> SubmitLinkedInRequest(Core.Domain.WhatsApp model)
+        public async Task<RefNoID> SubmitLinkedInRequest(Core.Domain.WhatsAppGroup model)
         {
             return await IRepository.SubmitGroupRequest(model);
         }
@@ -50,5 +47,7 @@ namespace Services.WhatsAppPost
         {
             return IRepository.ViewRequest<T>(TransactionID);
         }
+
+       
     }
 }
