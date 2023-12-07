@@ -321,7 +321,7 @@ namespace Services.GroupRequest
                 try
                 {
                     var affectedrows = await connection.ExecuteAsync("Update SD_GroupRequest Set Status=-1,ApprovedOn='" + DateTime.Now + "',ApprovedRemarks='" + Remarks + "' Where ID=@RecordID", new { RecordID = ID });
-                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID", new { RecordID = ID });
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where DocCode ='F' And TransactionID=@RecordID", new { RecordID = ID });
 
 
                 }
@@ -368,7 +368,7 @@ namespace Services.GroupRequest
                 {
                     var affectedrows = await connection.ExecuteAsync("Update SD_GroupRequest Set ProcessOwner='" + ProcessOwner + "',ProcessOwnerLoginID='" + ProcessOwnerLoginID + "',ProcessOwnerEmail='" + ProcessOwnerEmail + "'  Where ID=@RecordID", new { RecordID = ID });
                     var affectedrows1 = await connection.ExecuteAsync("Update SD_GroupReqDetail Set Group_Name='" + Folder + "' Where RequestID=@RecordID", new { RecordID = ID });
-                    var affectedrows2 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID", new { RecordID = ID });
+                    var affectedrows2 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where DocCode ='F' And  TransactionID=@RecordID", new { RecordID = ID });
 
                 }
                 catch (Exception e)
@@ -394,7 +394,7 @@ namespace Services.GroupRequest
                 try
                 {
                     var affectedrows = await connection.ExecuteAsync("Update SD_GroupRequest Set Status=100,RejectedOn='" + DateTime.Now + "',RejectedRemarks='"+ Remarks +"' Where ID=@RecordID", new { RecordID = ID });
-                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID", new { RecordID = ID });
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where DocCode ='F' And TransactionID =@RecordID", new { RecordID = ID });
 
                 }
                 catch (Exception e)
