@@ -52,71 +52,57 @@
     }
 </style>
 
-
-
-
- $('#btnprocess').attr("disabled", "disabled");
-            $('#btnprocess').attr("value", "Processing....");
-
-
-            if ($('#ShowForm').valid()) {
-                $('#btnprocess').attr("value", "Processing....");
-                $('#forwardto').val($('#SubmitTo').val());
-                $('#forwardName').val($('#SubmitTo :selected').text());
-                $('#ShowForm').submit();
-            }
-            else {
-                $('#btnprocess').attr("value", "Submit");
-                $('#btnprocess').removeAttr("disabled", "disabled");
-            }
-
-
-
 <script>
 
-    $(document).ready(function () {
-        $("#divProcessing").hide();
+   
 
-        $('#btnprocess').click(
-         
 
-            function () {
-                if ($('#ShowForm').valid()) {
-                    $('#AdjustmentModal').modal("show");
-                    $('#btnprocess').attr("disabled", "disabled");
-                    $('#btnprocess').attr("value", "Processing....");
-                }
-                else {
-                    $('#btnprocess').attr("value", "Submit");
-                    $('#btnprocess').removeAttr("disabled", "disabled");
-                }
-            });
 
-    });
 
-    var Cancel = function () {
-        $('#btnprocess').removeAttr("disabled", "disabled");
-        $('#btnprocess').attr("value", "Submit");
-        $('#AdjustmentModal').modal("hide");
-    }
 
-    var Save = function () {
+        $(document).ready(function () {
+            $("#divProcessing").hide();
 
-        if ($('#SubmitTo :selected').text() == "Please Select") {
-            alert("Please select a name from list");
-            return;
+            $('#btnprocess').click(
+
+             
+                function () {
+                    if ($('#ShowForm').valid()) {
+                        $('#AdjustmentModal').modal("show");
+                        $('#btnprocess').attr("disabled", "disabled");
+                        $('#btnprocess').attr("value", "Processing....");
+                    }
+                    else {
+                        $('#btnprocess').attr("value", "Submit");
+                        $('#btnprocess').removeAttr("disabled", "disabled");
+                    }
+                });
+
+        });
+
+        var Cancel = function () {
+            $('#btnprocess').removeAttr("disabled", "disabled");
+            $('#btnprocess').attr("value", "Submit");
+            $('#AdjustmentModal').modal("hide");
         }
 
-        $('#loaderDiv').show();
-        $('.cancelbtn').attr("disabled", "disabled");
-        $('.submitBtn').attr("disabled", "disabled");
-        $('#forwardto').val($('#SubmitTo').val());
-        $('#forwardName').val($('#SubmitTo :selected').text());
+        var Save = function () {
 
-        $('#ShowForm').submit();
+            if ($('#SubmitTo :selected').text() == "Please Select") {
+                alert("Please select a name from list");
+                return;
+            }
+
+            $('#loaderDiv').show();
+            $('.cancelbtn').attr("disabled", "disabled");
+            $('.submitBtn').attr("disabled", "disabled");
+            $('#forwardto').val($('#SubmitTo').val());
+            $('#forwardName').val($('#SubmitTo :selected').text());
+
+            $('#ShowForm').submit();
 
 
-    }
+        }
 </script>
 
 
