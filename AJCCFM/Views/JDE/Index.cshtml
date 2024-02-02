@@ -55,6 +55,22 @@
 
 
 
+ $('#btnprocess').attr("disabled", "disabled");
+            $('#btnprocess').attr("value", "Processing....");
+
+
+            if ($('#ShowForm').valid()) {
+                $('#btnprocess').attr("value", "Processing....");
+                $('#forwardto').val($('#SubmitTo').val());
+                $('#forwardName').val($('#SubmitTo :selected').text());
+                $('#ShowForm').submit();
+            }
+            else {
+                $('#btnprocess').attr("value", "Submit");
+                $('#btnprocess').removeAttr("disabled", "disabled");
+            }
+
+
 
 <script>
 
@@ -62,12 +78,18 @@
         $("#divProcessing").hide();
 
         $('#btnprocess').click(
+         
 
             function () {
-                $('#AdjustmentModal').modal("show");
-                $('#btnprocess').attr("disabled", "disabled");
-                $('#btnprocess').attr("value", "Processing....");
-
+                if ($('#ShowForm').valid()) {
+                    $('#AdjustmentModal').modal("show");
+                    $('#btnprocess').attr("disabled", "disabled");
+                    $('#btnprocess').attr("value", "Processing....");
+                }
+                else {
+                    $('#btnprocess').attr("value", "Submit");
+                    $('#btnprocess').removeAttr("disabled", "disabled");
+                }
             });
 
     });
@@ -162,7 +184,7 @@
                                 @Html.TextAreaFor(Model => Model.jde.Reason, new { @class = "form-control" })
 
                             <td>@Html.ValidationMessageFor(model => model.jde.Reason, "", new { @class = "text-danger" })</td>
-                            
+
                         </tr>
                         @if (ViewBag.ADUser != null)
                         {
