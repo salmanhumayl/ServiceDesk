@@ -15,33 +15,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        //$("#Others").attr("disabled", "disabled");
-        $("#Others").attr("readonly", true)
-
-
-        $('#AccessType').change(
-
-            function () {
-
-                $("#Others").val('');
-                if ($('#ServiceCode').val() == "SD_SUA" || $('#ServiceCode').val() == "SD_IRL" || $('#ServiceCode').val() == "SD_Monitor" || $('#ServiceCode').val() == "SD_USB") {
-                    if ($('#AccessType').val() == "Others") {
-                        $("#Others").removeAttr("readonly", false)
-
-                    }
-
-                    else {
-                        $("#Others").attr("readonly", true)
-                      //$("#Others").attr("disabled", "disabled");
-
-                    }
-                }
-                else {
-                    $("#Others").attr("readonly", true)
-                   //("#Others").attr("disabled", "disabled");
-                }
-
-            });
+     
 
 
         $('#btnprocess').click(
@@ -64,29 +38,8 @@
 
     var Save = function () {
 
-            if ($('#AccessType').val() == '') {
-                alert("Please Select  ");
-                $('#btnprocess').removeAttr("disabled", "disabled");
-                $('#btnprocess').attr("value", "Approve");
-                $('#AdjustmentModal').modal("hide");
-                return;
+           
 
-            }
-
-        var isDisable = $('#Others').prop('readonly')
-
-        if (isDisable == false) {
-            if ($('#Others').val() == '')
-            {
-                alert("Please specify Others");
-                $('#Others').focus();
-                $('#btnprocess').removeAttr("disabled", "disabled");
-                $('#btnprocess').attr("value", "Approve");
-                $('#AdjustmentModal').modal("hide");
-                return;
-            }
-
-        }
 
         $('#loaderDiv').show();
         $('.cancelbtn').attr("disabled", "disabled");
@@ -120,9 +73,9 @@
 
         $.ajax({
             type: "POST",
-            url: '@Url.Action("RejectForm", "Services")',
+            url: '@Url.Action("RejectForm", "JDE")',
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ 'ID': ID, 'Remarks': message, 'ServiceCode': $('#ServiceCode').val()}),
+            data: JSON.stringify({ 'ID': ID, 'Remarks': message}),
             dataType: "json",
 
            // data: 'name=' + name + '&email=' + email + '&message=' + message,
