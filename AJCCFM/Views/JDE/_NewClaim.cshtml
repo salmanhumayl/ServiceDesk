@@ -1,0 +1,155 @@
+﻿@{
+    ViewBag.Title = "NewClaim";
+    Layout = null;
+}
+
+@*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />*@
+<link href="~/Content/AJCbootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+
+<style>
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        /* add padding to account for vertical scrollbar */
+        padding-right: 20px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+          $("#Path").attr("disabled", "disabled");
+     
+
+
+        $('#cmbServices').change(
+
+            function () {
+
+             
+                if ($('#cmbServices').val() == "SD_SUA" || $('#cmbServices').val() == "SD_SFC" || $('#cmbServices').val() == "SD_DBR" || $('#cmbServices').val() == "SD_Soft" || $('#cmbServices').val() == "SD_Misc"  ) {
+                    $("#Path").removeAttr("disabled", "disabled");
+               }
+               else  {
+                    $("#Path").attr("disabled", "disabled");
+                }
+
+                 });
+     
+
+
+     
+
+        $("#dialogpo")
+            .dialog({
+                autoOpen: false,
+                resizable: false,
+                width: 800,
+                height: 500,
+                modal: true,
+                title: 'Invoice Detail',
+                buttons: [
+                    {
+                        text: "OK",
+                        click: function () {
+                            fnsave();
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "Cancel", click: function () { $(this).dialog("close"); }
+                    }
+                ]
+
+            });
+
+         table = $('#tblCFM_Claims').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "bFilter": false
+        });
+
+
+    }); //document load Finish Here
+
+
+
+
+
+
+</script>
+
+
+
+
+<style>
+    a.print {
+        height: 24px;
+        width: 24px;
+        background: url("../../Content/images/printer24.png") no-repeat center right;
+        display: block;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+<div id="newclaim" data-request-url="@Url.Action("SaveService", "Services")">
+</div>
+
+<div class="row">
+
+
+
+    <div class="col-sm-12">
+        <table class="table" border="0">
+            <tr>
+                <td colspan="2">
+                    <span id="message" style="color:red;font-size:x-large"></span>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td class="btn-danger">Select Service </td>
+                <td>@Html.DropDownList("cmbServices", ViewBag.Services as SelectList, "Please Select Service", new { @class = "form-control" })</td>
+            </tr>
+            <tr>
+                <td>Justification</td>
+                <td>@Html.TextBox("Remarks", null, new { @class = "form-control" })</td>
+            </tr>
+
+            <tr>
+                <td>Path / Remarks / Application Name</td>
+                <td>@Html.TextBox("Path", null, new { @class = "form-control" })</td>
+            </tr>
+
+
+
+        </table>
+    </div>
+
+
+   
+
+
+</div>
+
+
+
+
+
+
+
+
+
+

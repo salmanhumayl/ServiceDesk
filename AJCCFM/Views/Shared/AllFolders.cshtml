@@ -156,7 +156,7 @@
                 @foreach (var item in Model)
                 {
 
-                <tr id="row_@item.ID" style='background-color: @(item.Status == "Pending" ? "red" : "white");'>
+                <tr id="row_@item.ID" style='background-color: @(item.Status == "Pending" ? "yellow" : "white");'>
                     <td>
                         @Html.ActionLink(item.RefNo, "ViewRequest", "GroupRequest", new { TransactionID = item.ID, Mode = "V" }, new { @class = "btn btn-success btn-sm" })
                     </td>
@@ -210,7 +210,7 @@
                         }
                     </td>
 
-                    </tr>
+                </tr>
                 }
             </tbody>
         </table>

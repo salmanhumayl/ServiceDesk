@@ -72,49 +72,49 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                   
-                <tr style='background-color: @(item.Status >= 0 ? "red" : "white");'>
+
+                    <tr style='background-color: @(item.Status >= 0 ? "yellow" : "white");'>
 
 
 
-                    <td>
-                        @Html.ActionLink(item.RefNo, "ViewRequest", "Services", new { TransactionID = item.ID, Service = item.ServiceCode, Status = item.Status, Mode = "V" }, new { @class = "btn btn-success btn-sm" })
+                        <td>
+                            @Html.ActionLink(item.RefNo, "ViewRequest", "Services", new { TransactionID = item.ID, Service = item.ServiceCode, Status = item.Status, Mode = "V" }, new { @class = "btn btn-success btn-sm" })
 
 
-                    </td>
+                        </td>
 
-                    <td>
-                        <b>@Html.DisplayFor(modelItem => item.EmpCode)</b>
-                    </td>
-
-
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Project)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ServiceName)
-                    </td>
-
-                    <td>
-                        @item.CreatedOn.ToString("dd/MMM/yyyy")
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Createdby)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StatusDescription)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AssystNo)
-                    </td>
+                        <td>
+                            <b>@Html.DisplayFor(modelItem => item.EmpCode)</b>
+                        </td>
 
 
 
-                </tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Project)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ServiceName)
+                        </td>
+
+                        <td>
+                            @item.CreatedOn.ToString("dd/MMM/yyyy")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Createdby)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StatusDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AssystNo)
+                        </td>
+
+
+
+                    </tr>
                 }
             </tbody>
         </table>

@@ -13,13 +13,14 @@ using AJCCFM.Action_Filters;
 using AJCCFM.Action_Filters.ErroHandler;
 
 using AJCCFM.Models;
+
 using AJCCFM.Models.Reports;
 using AJCCFM.Models.Service;
 using Newtonsoft.Json;
 using Services.AJESServices;
 using Services.GroupRequest;
 using Services.Helper;
-
+using Services.JDE;
 using static AJCCFM.Models.GroupRequest.SharefolderModel;
 using static AJCCFM.Models.Reports.MISReport;
 
@@ -35,7 +36,7 @@ namespace AJCCFM.Controllers
 
         private IGroupRequest _GroupRequest;
         private IServices _Services;
-
+        private IJDE _JDEService;
 
         // GET: DashBoard
 
@@ -81,7 +82,10 @@ namespace AJCCFM.Controllers
         {
             return View();
         }
-
+        public ActionResult ProjectJDEActivity()
+        {
+            return View();
+        }
         [HttpPost]
         public ActionResult CashierActivity(string EmployeeCode)
         {
@@ -133,6 +137,8 @@ namespace AJCCFM.Controllers
         }
 
 
+        
+
 
         public ActionResult ServiceProgress()
         {
@@ -151,6 +157,23 @@ namespace AJCCFM.Controllers
             return View("_ServicePending", obj);
         }
 
+        public ActionResult JDEProgress()
+        {
+            _JDEService = new JDEService();
+
+            var obj = _JDEService.JDEProgress<JDEProgress>(System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""));
+
+            return View("_JDEProgress", obj);
+        }
+
+   
+       public ActionResult JDEPending()
+        {
+            _JDEService = new JDEService();
+            var obj = _JDEService.JDEPending<JDEPending>(System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""));
+
+            return View("_JDEPending", obj);
+        }
         public ActionResult ApprovedShareFolderRequest()
         {
             _GroupRequest = new GroupRequestService();
@@ -170,8 +193,15 @@ namespace AJCCFM.Controllers
             return View("_ApprovedServices", obj);
         }
 
+        
+             public ActionResult ApprovedJDERequest()
+        {
+            _JDEService = new JDEService();
 
+            var obj = _JDEService.ApprovedJDERequest<ServicePending>();
 
+            return View("_ApprovedJDERequest", obj);
+        }
         public ActionResult GetLedger(int CompanyID = 0)
         {
 

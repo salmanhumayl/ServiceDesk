@@ -9,7 +9,7 @@
 @if (User.IsInRole("ITShareFolder"))
 {
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
             <div class="panel panel-green">
                 <div class="panel panel-heading">
 
@@ -21,6 +21,12 @@
         </div>
 
 
+     
+
+
+    </div>
+    <div class="row">
+
         <div class="col-lg-6">
             <div class="panel panel-green">
                 <div class="panel panel-heading">
@@ -31,8 +37,16 @@
                 @{Html.RenderAction("ApprovedServices", "Dashboard");}
             </div>
         </div>
+        <div class="col-lg-6">
+            <div class="panel panel-green">
+                <div class="panel panel-heading">
 
+                    <h3 class="panel-title"><b>JDE Approved Request</b></h3>
+                </div>
 
+                @{Html.RenderAction("ApprovedJDERequest", "Dashboard");}
+            </div>
+        </div>
     </div>
 
 }
@@ -60,58 +74,82 @@
             @{Html.RenderAction("ServiceProgress", "Dashboard");}
         </div>
     </div>
-</div>
 
+   </div>
 <div class="row">
-    <div class="col-lg-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title"><b>ShareFolder Access Request Pending Approval</b></h3>
-            </div>
-
-            @{Html.RenderAction("ShareFolderPending", "Dashboard");}
-        </div>
-    </div>
 
     <div class="col-lg-6">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title"><b>Access Services Pending Approval</b></h3>
+
+                <h3 class="panel-title"><b>JDE Access Request In Progress</b></h3>
             </div>
 
-            @{Html.RenderAction("ServicePending", "Dashboard");}
+            @{Html.RenderAction("JDEProgress", "Dashboard");}
         </div>
     </div>
-
 </div>
 
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>ShareFolder Access Request Pending Approval</b></h3>
+                </div>
 
-@if (User.IsInRole("ITShareFolder"))
-{
-<div class="row">
-    <div class="col-lg-6">
-        <div class="panel panel-green">
-            <div class="panel panel-heading">
-
-                <h3 class="panel-title"><b>Service Processed</b></h3>
+                @{Html.RenderAction("ShareFolderPending", "Dashboard");}
             </div>
-            @{Html.RenderAction("ServiceProcessCount", "Dashboard");}
+        </div>
 
+        <div class="col-lg-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>Access Services Pending Approval</b></h3>
+                </div>
+
+                @{Html.RenderAction("ServicePending", "Dashboard");}
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>JDE Pending Approval</b></h3>
+                </div>
+
+                @{Html.RenderAction("JDEPending", "Dashboard");}
+            </div>
         </div>
     </div>
 
-    <div class="col-lg-6">
-        <div class="panel panel-green">
-            <div class="panel panel-heading">
+    @if (User.IsInRole("ITShareFolder"))
+    {
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="panel panel-green">
+                    <div class="panel panel-heading">
 
-                <h3 class="panel-title"><b>Folder Processed</b></h3>
+                        <h3 class="panel-title"><b>Service Processed</b></h3>
+                    </div>
+                    @{Html.RenderAction("ServiceProcessCount", "Dashboard");}
+
+                </div>
             </div>
-            @{Html.RenderAction("FolderProcessCount", "Dashboard");}
+
+            <div class="col-lg-6">
+                <div class="panel panel-green">
+                    <div class="panel panel-heading">
+
+                        <h3 class="panel-title"><b>Folder Processed</b></h3>
+                    </div>
+                    @{Html.RenderAction("FolderProcessCount", "Dashboard");}
+
+                </div>
+            </div>
+
 
         </div>
-    </div>
 
-
-</div>
-
- }
+    }

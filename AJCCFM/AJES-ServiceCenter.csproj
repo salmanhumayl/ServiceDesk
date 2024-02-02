@@ -192,6 +192,7 @@
     </Compile>
     <Compile Include="Controllers\GroupRequestController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
+    <Compile Include="Controllers\JDEController.cs" />
     <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\UnauthorisedController.cs" />
     <Compile Include="Control\AJESHelper.cs" />
@@ -203,6 +204,7 @@
     </Compile>
     <Compile Include="Models\ClaimCart.cs" />
     <Compile Include="Models\GroupRequest\SharefolderModel.cs" />
+    <Compile Include="Models\JDE\JDEModel.cs" />
     <Compile Include="Models\LogHistoryModel.cs" />
     <Compile Include="Models\Services.cs" />
     <Compile Include="Models\Project\Project.cs" />
@@ -730,6 +732,7 @@
     <Content Include="Views\Shared\MyFolders.cshtml" />
     <Content Include="Views\Shared\MyService.cshtml" />
     <Content Include="Views\DashBoard\ProjectFolderActivity.cshtml" />
+    <Content Include="Views\DashBoard\ProjectJDEActivity.cshtml" />
     <None Include="Views\DashBoard\ProjectServiceActivity.cshtml" />
     <Content Include="Views\GroupRequest\Processed.cshtml" />
     <Content Include="Views\Services\Processed.cshtml" />
@@ -739,6 +742,15 @@
     <Content Include="Views\Shared\AllService.cshtml" />
     <Content Include="Views\Shared\_ProcessedServiceCount.cshtml" />
     <Content Include="Views\Shared\_ProcessedFolderCount.cshtml" />
+    <Content Include="Views\JDE\_NewClaim.cshtml" />
+    <Content Include="Views\JDE\Index.cshtml" />
+    <Content Include="Views\JDE\Processed.cshtml" />
+    <Content Include="Views\JDE\ViewRequest.cshtml" />
+    <Content Include="Views\Shared\_JDEProgress.cshtml" />
+    <Content Include="Views\Shared\_JDEPending.cshtml" />
+    <Content Include="Views\Shared\_ApprovedJDERequest.cshtml" />
+    <Content Include="Views\Shared\AllJDERequest.cshtml" />
+    <Content Include="Views\Shared\MyJDERequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />

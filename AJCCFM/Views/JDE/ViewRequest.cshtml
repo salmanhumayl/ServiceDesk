@@ -1,0 +1,302 @@
+﻿@model  AJCCFM.Core.Domain.SD_JDE.JDE
+
+@{
+
+    ViewBag.Title = "View";
+
+
+}
+
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //$("#Others").attr("disabled", "disabled");
+        $("#Others").attr("readonly", true)
+
+
+        $('#AccessType').change(
+
+            function () {
+
+                $("#Others").val('');
+                if ($('#ServiceCode').val() == "SD_SUA" || $('#ServiceCode').val() == "SD_IRL" || $('#ServiceCode').val() == "SD_Monitor" || $('#ServiceCode').val() == "SD_USB") {
+                    if ($('#AccessType').val() == "Others") {
+                        $("#Others").removeAttr("readonly", false)
+
+                    }
+
+                    else {
+                        $("#Others").attr("readonly", true)
+                      //$("#Others").attr("disabled", "disabled");
+
+                    }
+                }
+                else {
+                    $("#Others").attr("readonly", true)
+                   //("#Others").attr("disabled", "disabled");
+                }
+
+            });
+
+
+        $('#btnprocess').click(
+
+            function () {
+
+                 $('#AdjustmentModal').modal("show");
+                 $('#btnprocess').attr("disabled", "disabled");
+                 $('#btnprocess').attr("value", "Processing....");
+
+            });
+
+    });
+
+    var Cancel = function () {
+        $('#btnprocess').removeAttr("disabled", "disabled");
+        $('#btnprocess').attr("value", "Approve");
+        $('#AdjustmentModal').modal("hide");
+    }
+
+    var Save = function () {
+
+            if ($('#AccessType').val() == '') {
+                alert("Please Select  ");
+                $('#btnprocess').removeAttr("disabled", "disabled");
+                $('#btnprocess').attr("value", "Approve");
+                $('#AdjustmentModal').modal("hide");
+                return;
+
+            }
+
+        var isDisable = $('#Others').prop('readonly')
+
+        if (isDisable == false) {
+            if ($('#Others').val() == '')
+            {
+                alert("Please specify Others");
+                $('#Others').focus();
+                $('#btnprocess').removeAttr("disabled", "disabled");
+                $('#btnprocess').attr("value", "Approve");
+                $('#AdjustmentModal').modal("hide");
+                return;
+            }
+
+        }
+
+        $('#loaderDiv').show();
+        $('.cancelbtn').attr("disabled", "disabled");
+        $('.submitBtn').attr("disabled", "disabled");
+        $('#remarks').val($('#inputMessage').val());
+        $('#ShowForm').submit();
+
+
+    }
+
+
+
+
+    var Reject = function () {
+        $("#staticBackdrop").modal("show");
+
+    }
+
+      var submitRejectForm = function () {
+
+        var message = $('#inputMessageReject').val();
+
+        if (message.trim() == '') {
+            alert('Please enter your Reason.');
+            $('#inputMessageReject').focus();
+            return false;
+        }
+
+        $("#loaderDiv").show();
+          var ID = $('#ID').val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("RejectForm", "Services")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ 'ID': ID, 'Remarks': message, 'ServiceCode': $('#ServiceCode').val()}),
+            dataType: "json",
+
+           // data: 'name=' + name + '&email=' + email + '&message=' + message,
+
+            beforeSend: function () {
+                $('.submitBtnReject').attr("disabled", "disabled");
+                $('.modal-body').css('opacity', '.5');
+            },
+            success: function (response) {
+                $("#loaderDiv").hide();
+                $("#staticBackdrop").modal("hide");
+                window.location.href = response.Result;
+            }
+        });
+
+    }
+</script>
+</script>
+
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span style="color:green;font-size:xx-large">
+                    JDE Request
+                </span> <span style="color:red;font-size:large">@Model.RefNo</span>
+
+
+            </h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                @using (Html.BeginForm("ApproveRequest", "JDE", FormMethod.Post, new { id = "ShowForm" }))
+                {
+                <table class="table table-bordered">
+
+                    @Html.HiddenFor(modelItem => Model.ID)
+                    @Html.HiddenFor(modelItem => Model.Status)
+                    @Html.HiddenFor(modelItem => Model.RefNo)
+                    @Html.HiddenFor(modelItem => Model.Email)
+
+                    <input type="hidden" id="remarks" name="remarks" />
+                    <tr>
+                        <td style="background-color:lightgray">
+                            EmpCode
+                        </td>
+                        <td><b>@Model.EmpCode</b></td>
+                        <td style="background-color:lightgray">Name</td>
+                        <td><b>@Model.Name</b></td>
+                        <td style="background-color:lightgray">Job Title</td>
+                        <td>@Model.Position</td>
+                        <td style="background-color:darkkhaki">Project</td>
+                        <td><b>@Model.Project</b></td>
+                    </tr>
+                    <tr>
+                        <td style="background-color:#056cd5;color:White;font-size:large">Reason </td>
+                        <td colspan="4"><textarea rows="3" cols="70" style="font-weight:bold">@Model.Reason</textarea> </td>
+
+
+                    </tr>
+                    <tr>
+                        @if (Model.Status == 1)
+                        {
+                            <td style="font-size:large" class="btn-warning">JDE No </td>
+                            <td>@Html.TextBoxFor(Model => Model.JDEAddressNO, new { @class = "form-control" })</td>
+                        }
+                        @if (Model.Status == -1)
+                        {
+                            <td style="font-size:large" class="btn-warning">JDE No </td>
+                            <td style="font-size:xx-large">@Html.DisplayFor(Model => Model.JDEAddressNO, new { @class = "form-control" })</td>
+                        }
+
+                    </tr>
+                    <tr>
+                        <td>
+                            @if (User.IsInRole("ITShareFolder"))
+                            {
+                                @Html.ActionLink("Download", "GeneratePDF", "JDE", new { RecordID = Model.ID }, new { @class = "btn btn-success btn-sm" })
+                            }
+                        </td>
+                    </tr>
+                    
+
+                </table>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@if (ViewBag.Mode != "V")
+{
+    <div class="col-lg-6">
+        <div class="panel panel-default pull-right">
+
+            <input type="button" id="btnprocess" value="Approve" class="btn btn-success " />
+
+            &nbsp; &nbsp; &nbsp;
+            <input type="button" onclick="Reject(@Model.ID)" id="Btnreject" value="Reject" class="btn btn-danger" />
+        </div>
+    </div>
+}
+
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background-color:#056cd5;color:White;">
+            <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>Work Flow Log History</h3>
+        </div>
+        @{Html.RenderAction("GetLogHistory", "Dashboard", new { RecordID = Model.ID, Doc_Code = "JDE" });}
+
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="AdjustmentModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick="Cancel()">  &times;</button>
+                <h3 class="modal-title">Confirm Approval </h3>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <label for="inputMessage">Remarks</label>
+                <textarea class="form-control" id="inputMessage" placeholder="Enter your Remarks"></textarea>
+                <div style="text-align:center;display:none" id="loaderDiv">
+                    <img src="~/Content/Images/Spinner.gif" width="150" />
+                    <p style="color:red">Please wait.....</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning cancelbtn" data-dismiss="modal" onclick="Cancel()">Close</button>
+                <a href="#" class="btn btn-success submitBtn" onclick="Save()">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="staticBackdrop" data-coreui-backdrop="static" data-coreui-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Reject ?</h4>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <p class="statusMsg"></p>
+                <form role="form">
+
+                    <div class="form-group">
+                        <label for="inputMessage">Reason</label>
+                        <textarea class="form-control" id="inputMessageReject" placeholder="Enter your reason"></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger submitBtnReject" onclick="submitRejectForm()">SUBMIT</button>
+            </div>
+        </div>
+    </div>
+</div>

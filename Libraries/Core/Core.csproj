@@ -45,6 +45,7 @@
     <Compile Include="Domain\GroupRequest\EmployeeDetail.cs" />
     <Compile Include="Domain\GroupRequest\GroupDetail.cs" />
     <Compile Include="Domain\GroupRequest\GroupRequest.cs" />
+    <Compile Include="Domain\JDE\JDE.cs" />
     <Compile Include="Domain\Services\CartService.cs" />
     <Compile Include="Domain\Services\ServiceRequestModel-SD_VPN.cs" />
     <Compile Include="Domain\Services\UserDetail.cs" />
