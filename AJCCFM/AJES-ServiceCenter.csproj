@@ -274,11 +274,18 @@
   <ItemGroup>
     <Content Include="AJCJS\ClaimIndex.js" />
     <Content Include="App_Data\Templates\NewGroupRequest-Init.html" />
+    <Content Include="App_Data\Templates\NewJDERequest-DH.html" />
     <Content Include="App_Data\Templates\NewServiceRequest-DH.html" />
+    <Content Include="App_Data\Templates\NewJDERequest-Init.html" />
     <Content Include="App_Data\Templates\NewServiceRequest-Init.html" />
+    <Content Include="App_Data\Templates\NewJDERequest-HRManager.html" />
     <Content Include="App_Data\Templates\NewServiceRequest-ITManager.html" />
+    <Content Include="App_Data\Templates\NewJDEStatusUpdate-Approved.html" />
+    <Content Include="App_Data\Templates\NewJDEStatusUpdate-Processed.html" />
+    <Content Include="App_Data\Templates\NewJDERequestStatus-Approved%28IT%29.html" />
     <Content Include="App_Data\Templates\NewServiceStatusUpdate-Processed.html" />
     <Content Include="App_Data\Templates\NewServiceStatusUpdate-Approved.html" />
+    <Content Include="App_Data\Templates\NewJDEStatusUpdate-Rejected.html" />
     <Content Include="App_Data\Templates\NewServiceStatusUpdate-Rejected.html" />
     <Content Include="App_Data\Templates\NewServiceRequestStatus-Approved%28IT%29.html" />
     <Content Include="App_Data\Templates\RequestStatus-Approved%28IT%29.html" />

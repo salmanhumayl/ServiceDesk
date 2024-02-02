@@ -1,6 +1,6 @@
 ﻿using AJCCFM.Core;
 using AJCCFM.Models;
-
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +18,9 @@ namespace Services.JDE
 
         }
        
-        public string SubmitJDERequest(JDEModel model, string SubmittedTo, string EmpEmail, string SubmittedToEmail)
+        public IResponse SubmitJDERequest(JDEModel model, string SubmittedTo, string EmpEmail, string SubmittedToEmail)
         {
+            
             return IRepository.SubmitJDERequest(model, SubmittedTo, EmpEmail, SubmittedToEmail);
         }
 

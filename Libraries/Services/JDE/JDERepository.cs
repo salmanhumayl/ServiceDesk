@@ -11,6 +11,7 @@ using AJCCFM.Core;
 using AJCCFM.Models;
 
 using Dapper;
+using Model;
 using Services.Helper;
 
 namespace Services.JDE
@@ -32,18 +33,21 @@ namespace Services.JDE
     
 
 
-        public string SubmitJDERequest(JDEModel model,  string SubmittedTo, string EmpEmailAddress, string SubmittToAddress)
+        public IResponse SubmitJDERequest(JDEModel model,  string SubmittedTo, string EmpEmailAddress, string SubmittToAddress)
         {
             string[] UserDetail = new string[2];
             string sql = "";
             int RequestID;
             string RefNo = "";
+            IResponse response = new IResponse();
+
             using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
             {
 
                 if (model.empdetail.EmpCode == null)
                 {
-                    return "Employee Code is missing...";
+                    response.ErrorMessage="Employee Code is missing...";
+                    return response;
                 }
                 string Createdby = System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", "");
 
@@ -75,20 +79,24 @@ namespace Services.JDE
                             }).SingleOrDefault();
 
                             AddLogHistory(RequestID, "S", Createdby.Trim(), SubmittedTo, "", "JDE");
-                       
-                 
+                           
+
+
                 }
 
                 catch (Exception e)
                 {
-
-                    return e.Message + "Error";
+                    response.ErrorMessage = e.Message;
+                    return response;
 
 
                 }
             }
+           
+            response.RequestNo = RefNo;
+            response.RecordID = RequestID;
 
-           return RefNo;
+           return response;
 
         }
 
@@ -150,7 +158,7 @@ namespace Services.JDE
             {
                 try
                 {
-                    var affectedrows = await connection.ExecuteAsync("Update SD_VPN Set Status=-100  Where ID=@RecordID", new { RecordID = ID });
+                    var affectedrows = await connection.ExecuteAsync("Update SD_JDERequest Set Status=-100  Where ID=@RecordID", new { RecordID = ID });
                     var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID", new { RecordID = ID });
 
                     AddLogHistory(ID, "R", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), "", Remarks, ServiceCode);

@@ -91,37 +91,39 @@ namespace AJCCFM.Controllers
         [HttpPost]
         public async Task<ActionResult> SubmitRequest(JDEModel model, string forwardto, string forwardName)
         {
-
-
             if (model.empdetail == null)
             {
                 return RedirectToAction("Index");
             }
-
-            
             string EmpEmailAddress = AJESActiveDirectoryInterface.AJESAD.GetEmpEmail(model.empdetail.EmpCode);
             string SubmittToAddress = AJESActiveDirectoryInterface.AJESAD.GetEmailAddress(forwardto);
-
-
 
             string[] Name = forwardName.Split('-');
 
             _JDEServices = new JDEService();
+            _GroupRequest = new GroupRequestService();
 
-            string result = _JDEServices.SubmitJDERequest(model, forwardto, EmpEmailAddress, SubmittToAddress);
-            if (!result.Equals("") && result.Contains("Error"))
+
+            IResponse result = _JDEServices.SubmitJDERequest(model, forwardto, EmpEmailAddress, SubmittToAddress);
+            if (result.ErrorMessage!=null)
             {
                 return RedirectToAction("Index");
             }
            
             // Send Email.....
             string body;
+            string mGuid = Guid.NewGuid().ToString();
+            string url = System.Configuration.ConfigurationManager.AppSettings.Get("Url");
+            await _GroupRequest.LogEmail(result.RecordID, mGuid, "J");
+
+            string Link = url + "/JDE/ShowRequest?token=" + mGuid + "&Mode=E";
 
             EmailManager VCTEmailService = new EmailManager();
-            body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceRequest-DH.html");
-            mailcontent = body.Replace("@ReqNo", result); //Replace Contenct...
+            body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewJDERequest-DH.html");
+            mailcontent = body.Replace("@ReqNo", result.RequestNo); //Replace Contenct...
+            mailcontent = mailcontent.Replace("@urllink", Link); //Replace Contenct...
             VCTEmailService.Body = mailcontent;
-            VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectService");
+            VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectJDE");
             VCTEmailService.ReceiverAddress = SubmittToAddress;
             await VCTEmailService.SendEmail();
 
@@ -130,11 +132,11 @@ namespace AJCCFM.Controllers
             {
                 //Send Email to requestor
                 EmailManager VCTEmailServiceInit = new EmailManager();
-                body = VCTEmailServiceInit.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceRequest-Init.html");
+                body = VCTEmailServiceInit.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewJDERequest-Init.html");
                 mailcontent = body.Replace("@forwardto", Name[0]); //Replace Contenct...
-              
+                mailcontent = mailcontent.Replace("@ReqNo", result.RequestNo); //Replace Contenct...
                 VCTEmailServiceInit.Body = mailcontent;
-                VCTEmailServiceInit.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectService");
+                VCTEmailServiceInit.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectJDE");
                 VCTEmailServiceInit.ReceiverAddress = EmpEmailAddress;
                 VCTEmailServiceInit.ReceiverDisplayName = model.empdetail.EmpName;
                 await VCTEmailServiceInit.SendEmail();
@@ -144,7 +146,7 @@ namespace AJCCFM.Controllers
                 EmailManager VCTEmailServiceInit = new EmailManager();
 
                 VCTEmailServiceInit.Body = "Update Employee No In Active Direcotry:" + model.empdetail.EmpCode;
-                VCTEmailServiceInit.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectService");
+                VCTEmailServiceInit.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectJDE");
                 VCTEmailServiceInit.ReceiverAddress = "ithelpdesk@ajes.ae";
                 VCTEmailServiceInit.ReceiverDisplayName = "IT HELP DESK";
                 await VCTEmailServiceInit.SendEmail();
@@ -195,16 +197,16 @@ namespace AJCCFM.Controllers
             {
                 string mGuid = Guid.NewGuid().ToString();
                 string url = System.Configuration.ConfigurationManager.AppSettings.Get("Url");
-                string Link = url + "/Services/ShowRequest?token=" + mGuid + "&Mode=E";
-                await _GroupRequest.LogEmail(model.ID, mGuid, "S");
+                string Link = url + "/JDE/ShowRequest?token=" + mGuid + "&Mode=E";
+                await _GroupRequest.LogEmail(model.ID, mGuid, "J");
                 EmailManager VCTEmailService = new EmailManager();
-                body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceRequest-ITManager.html");
+                body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewJDERequest-HRManager.html");
                 mailcontent = body.Replace("@pwdchangelink", Link); //Replace Contenct...
                 mailcontent = mailcontent.Replace("@ReqNo", model.RefNo); //Replace Contenct...
              
                 VCTEmailService.Body = mailcontent;
-                VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectService");
-                VCTEmailService.ReceiverAddress = System.Configuration.ConfigurationManager.AppSettings.Get("ITManagerEmail");
+                VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectJDE");
+                VCTEmailService.ReceiverAddress = System.Configuration.ConfigurationManager.AppSettings.Get("HRManagerEmail");
                 await VCTEmailService.SendEmail();
 
 
@@ -213,10 +215,10 @@ namespace AJCCFM.Controllers
 
                     //Send Email to User .... 
                     EmailManager VCTEmailServiceUser = new EmailManager();
-                    body = VCTEmailServiceUser.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceStatusUpdate-Approved.html");
+                    body = VCTEmailServiceUser.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewJDEStatusUpdate-Approved.html");
                     mailcontent = body.Replace("@ReqNo", model.RefNo); //Replace Contenct...
                     VCTEmailServiceUser.Body = mailcontent;
-                    VCTEmailServiceUser.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectService");
+                    VCTEmailServiceUser.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectJDE");
                     VCTEmailServiceUser.ReceiverAddress = model.Email;
                     await VCTEmailServiceUser.SendEmail();
                 }
@@ -227,19 +229,19 @@ namespace AJCCFM.Controllers
                 if (!string.IsNullOrEmpty(model.Email))
                 {
                     EmailManager VCTEmailService = new EmailManager();
-                    body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceStatusUpdate-Processed.html");
+                    body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewJDEStatusUpdate-Processed.html");
                     mailcontent = body.Replace("@ReqNo", model.RefNo); //Replace Contenct...
                     VCTEmailService.Body = mailcontent;
-                    VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectService");
+                    VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectJDE");
                     VCTEmailService.ReceiverAddress = model.Email;
                     await VCTEmailService.SendEmail();
                 }
 
                 EmailManager VCTEmailServiceIT = new EmailManager();
-                body = VCTEmailServiceIT.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceRequestStatus-Approved(IT).html");
+                body = VCTEmailServiceIT.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewJDERequestStatus-Approved(IT).html");
                 mailcontent = body.Replace("@ReqNo", model.RefNo); //Replace Contenct...
                 VCTEmailServiceIT.Body = mailcontent;
-                VCTEmailServiceIT.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectService");
+                VCTEmailServiceIT.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectJDE");
                 VCTEmailServiceIT.ReceiverAddress = System.Configuration.ConfigurationManager.AppSettings.Get("groupdistribution");
                 await VCTEmailServiceIT.SendEmail();
 
@@ -262,11 +264,11 @@ namespace AJCCFM.Controllers
             {
                 var affectedRows = await _JDEServices.RejectForm(ID, Remarks, ServiceCode);
                 EmailManager VCTEmailService = new EmailManager();
-                string body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewServiceStatusUpdate-Rejected.html");
+                string body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewJDEStatusUpdate-Rejected.html");
                 mailcontent = body.Replace("@ReqNo", obj.RefNo); //Replace Contenct...
                 mailcontent = mailcontent.Replace("@Reason", Remarks); //Replace Contenct...
                 VCTEmailService.Body = mailcontent;
-                VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectRejectService");
+                VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectRejectJDE");
                 if (!string.IsNullOrEmpty(obj.Email))
                 {
                     VCTEmailService.ReceiverAddress = obj.Email;
@@ -302,21 +304,18 @@ namespace AJCCFM.Controllers
 
 
         }
-       
+           
 
-    
-     
-
-        public async Task<ActionResult> ShowRequest(string token, string Service, string Mode)
+        public async Task<ActionResult> ShowRequest(string token, string Mode)
         {
 
             _GroupRequest = new GroupRequestService();
             _JDEServices = new JDEService();
-            int TransactionID = await _GroupRequest.GetToken(token, "S");
+            int TransactionID = await _GroupRequest.GetToken(token, "J");
 
             if (TransactionID > 0)
             {
-                return RedirectToAction("ViewRequest", new { TransactionID = TransactionID, Service = Service, Mode = Mode });
+                return RedirectToAction("ViewRequest", new { TransactionID = TransactionID, Mode = Mode });
 
             }
             else
@@ -327,10 +326,7 @@ namespace AJCCFM.Controllers
             }
         }
       
-     
-     
-
-
+    
         public ActionResult MyJDERequest()
         {
             _JDEServices = new JDEService();
@@ -445,6 +441,7 @@ namespace AJCCFM.Controllers
         }
 
 
+   
 
 
     }

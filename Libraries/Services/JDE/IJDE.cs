@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Model;
 
 namespace Services.JDE
 {
@@ -29,7 +30,7 @@ namespace Services.JDE
        
 
       
-        string SubmitJDERequest(JDEModel model, string SubmittedTo, string EmpEmail, string SubmittedToEmail);
+        IResponse SubmitJDERequest(JDEModel model, string SubmittedTo, string EmpEmail, string SubmittedToEmail);
         T ViewRequest<T>(int TransactionID);
 
         //  void AddLogHistory(int TransactionID, string Status, string ProcessBy, string SubmittedTo, string Remarks, string Doc_Code);
