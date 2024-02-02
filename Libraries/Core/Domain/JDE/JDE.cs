@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace AJCCFM.Core.Domain.SD_JDE
 
         public string Remarks { get; set; }
 
-       
+        [Required(ErrorMessage = "Required")]
         public string Reason { get; set; }
         public string JDEAddressNO { get; set; }
 

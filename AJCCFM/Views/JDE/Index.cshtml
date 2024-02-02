@@ -90,7 +90,7 @@
         $('.submitBtn').attr("disabled", "disabled");
         $('#forwardto').val($('#SubmitTo').val());
         $('#forwardName').val($('#SubmitTo :selected').text());
-    
+
         $('#ShowForm').submit();
 
 
@@ -114,12 +114,12 @@
             <table class="table">
                 <tr>
                     <td>@Html.EmployeeCode(EmpCode) </td>
-                    @if(ViewBag.IsEmployeeExist == false)
-                    { 
+                    @if (ViewBag.IsEmployeeExist == false)
+                    {
                         <td style="color:red;font-size:large;font:bold" class="alert alert-danger">Employee Does Not Exist</td>
                     }
                 </tr>
-                
+
             </table>
         }
         @using (Html.BeginForm("SubmitRequest", "JDE", FormMethod.Post, new { id = "ShowForm" }))
@@ -131,7 +131,7 @@
                         <tr>
                             <td colspan="2">
 
-                               
+
                                 @Html.HiddenFor(modelItem => Model.empdetail.EmpCode)
                                 @Html.HiddenFor(modelItem => Model.empdetail.EmpName)
                                 @Html.HiddenFor(modelItem => Model.empdetail.Department)
@@ -155,15 +155,17 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style ="background-color:#056cd5;color:White;font-size:large" >
-                                Reason:</td>
-                                <td>
-                                    @Html.TextAreaFor(Model => Model.jde.Reason, new {@class="form-control"})
+                            <td style="background-color:#056cd5;color:White;font-size:large">
+                                Reason:
+                            </td>
+                            <td>
+                                @Html.TextAreaFor(Model => Model.jde.Reason, new { @class = "form-control" })
 
-                                </td>
+                            <td>@Html.ValidationMessageFor(model => model.jde.Reason, "", new { @class = "text-danger" })</td>
+                            
                         </tr>
-                       @if (ViewBag.ADUser != null)
-                       {
+                        @if (ViewBag.ADUser != null)
+                        {
                             <tr>
                                 <td colspan="2">
                                     @Html.AJESADDropdownList("SubmitTo", ViewBag.ADUser as List<UserDetail>, ForemanCode)
@@ -174,7 +176,7 @@
                                     <input type="button" id="btnprocess" value="Submit" class="btn btn-success " />
                                 </td>
                             </tr>
-                       }
+                        }
                     </table>
 
                 </div>
@@ -192,7 +194,7 @@
 
 <div class="col-lg-6 pull-right">
 
-   
+
 
 </div>
 
@@ -257,3 +259,7 @@
 
 
 
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
