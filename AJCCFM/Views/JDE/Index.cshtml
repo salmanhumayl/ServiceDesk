@@ -164,15 +164,18 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style="background-color:#056cd5;color:White;font-size:large">
-                                JDE Role & Security<span style="color:red">*</span> : 
+                            <td style="background-color:#056cd5;color:White;font-size:medium">
+                                JDE Role & Security<span style="color:red"> * </span> : 
                             </td>
+                            </tr>
+                            <tr>
                             <td>
                                 @Html.TextAreaFor(Model => Model.jde.Reason, new { @class = "form-control" })
 
                                @Html.ValidationMessageFor(model => model.jde.Reason, "", new { @class = "text-danger" })</td>
 
                         </tr>
+                       
                         @if (ViewBag.ADUser != null)
                         {
                             <tr>

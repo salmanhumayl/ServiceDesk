@@ -209,7 +209,7 @@ namespace AJCCFM.Controllers
                 await VCTEmailService.SendEmail();
 
                 EmailManager VCTEmailServiceIT = new EmailManager();
-                body = VCTEmailServiceIT.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewJDERequest-HRManager.html");
+                body = VCTEmailServiceIT.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewJDERequest-ITNotification.html");
                 mailcontent = body.Replace("@Content", GenerateContent(model));
                 mailcontent = mailcontent.Replace("@ReqNo", model.RefNo); //Replace Contenct...
                 VCTEmailServiceIT.Body = mailcontent;
@@ -294,11 +294,12 @@ namespace AJCCFM.Controllers
 
         public async Task<ActionResult> ArchiveJDEReturnPartialView(string AssetsNo, int RecordID)
         {
-
+            
 
             _JDEServices = new JDEService();
 
             var response = await _JDEServices.ArchiveRecord(AssetsNo, RecordID);
+           
 
             return new JsonResult
             {
@@ -315,16 +316,12 @@ namespace AJCCFM.Controllers
           public async Task<ActionResult> AddressNoReturnPartialView(string JDENo, int RecordID)
         {
 
-
+            string returnURL = "";
             _JDEServices = new JDEService();
 
             var response = await _JDEServices.UpdateJDEAddressNo(JDENo, RecordID);
-
-            return new JsonResult
-            {
-                Data = response,
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet
-            };
+            returnURL = Url.Action("Index", "Dashboard");
+            return Json(new { Result = returnURL });
 
 
 
@@ -474,11 +471,11 @@ namespace AJCCFM.Controllers
 
 
             StringBuilder sb = new StringBuilder();
-            sb.Append("<table cellpadding='5' cellspacing='2' style='border:1px solid black'><tr><td style='border: 1px solid black'>Emp Code</td><td style='border: 1px solid black'>" + model.EmpCode + "</td></tr>");
+            sb.Append("<table cellpadding='5' cellspacing='2' style='border:1px solid black'><tr><td style='border: 1px solid black'>Emp No</td><td style='border: 1px solid black'>" + model.EmpCode + "</td></tr>");
             sb.Append("<tr><td style='border: 1px solid black'>Emp Name</td><td style='border: 1px solid black'>" + model.Name + "</td></tr>");
             sb.Append("<tr><td style='border: 1px solid black'>Designation</td><td style='border: 1px solid black'>" + model.Position + "</td></tr>");
             sb.Append("<tr><td style='border: 1px solid black'>Department</td><td style='border: 1px solid black'>" + model.Department + "</td></tr>");
-            sb.Append("<tr><td style='border: 1px solid black'>Procject Code</td><td style='border: 1px solid black'>" + model.ProjectCode  + "</td></tr>");
+            sb.Append("<tr><td style='border: 1px solid black'>Project Code</td><td style='border: 1px solid black'>" + model.ProjectCode  + "</td></tr>");
             sb.Append("<tr><td style='border: 1px solid black'>JDE Role & Security</td><td style='border: 1px solid black'>" + model.Reason + "</td></tr>");
             sb.Append("<tr><td style='border: 1px solid black'>JDE Address Number</td><td style='border: 1px solid black'>&nbsp;&nbsp</td></tr></table>");
             return sb.ToString();

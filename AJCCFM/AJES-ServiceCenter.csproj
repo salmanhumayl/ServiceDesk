@@ -275,6 +275,7 @@
     <Content Include="AJCJS\ClaimIndex.js" />
     <Content Include="App_Data\Templates\NewGroupRequest-Init.html" />
     <Content Include="App_Data\Templates\NewJDERequest-DH.html" />
+    <Content Include="App_Data\Templates\NewJDERequest-ITNotification.html" />
     <Content Include="App_Data\Templates\NewServiceRequest-DH.html" />
     <Content Include="App_Data\Templates\NewJDERequest-Init.html" />
     <Content Include="App_Data\Templates\NewServiceRequest-Init.html" />

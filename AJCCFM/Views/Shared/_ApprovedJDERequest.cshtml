@@ -87,18 +87,19 @@
                                     return;
                                 }
 
-                                alert(url);
+                              
                                 var mJDENo = $("#txtJDENo").val();
-                                alert(mJDENo);
+                            
                                 var _parameters = { JDENo: mJDENo, RecordID: nRecordID };
 
                                 $.ajax({
                                     url: url,
                                     type: "post",
                                     data: _parameters,
-                                    success: function (data, textStatus, jqXHR) {
-
-                                        $("#row_" + nRecordID).remove();
+                                    success: function (data) {
+                                      //  alert(data.Result);
+                                        window.location.href = data.Result;
+                                      //$("#row_" + nRecordID).remove();
                                     }
                                 });
                                 $(this).dialog('close');
