@@ -40,7 +40,14 @@
 
            
         //validate for jdeno in case of hr manager 
-
+      if ($('#Status').val()==1)
+        {
+          if ($('#JDEAddressNO').val() == '') {
+              alert("Please Enter JDE NO  ");
+              return;
+          }
+        }
+        
         $('#loaderDiv').show();
         $('.cancelbtn').attr("disabled", "disabled");
         $('.submitBtn').attr("disabled", "disabled");
@@ -93,7 +100,7 @@
 
     }
 </script>
-</script>
+
 
 <div class="col-lg-12">
     <div class="panel panel-default">
@@ -118,6 +125,17 @@
                     @Html.HiddenFor(modelItem => Model.RefNo)
                     @Html.HiddenFor(modelItem => Model.Email)
 
+
+                    @Html.HiddenFor(modelItem => Model.EmpCode)
+                    @Html.HiddenFor(modelItem => Model.Name)
+                    @Html.HiddenFor(modelItem => Model.Department)
+                    @Html.HiddenFor(modelItem => Model.Position)
+                    @Html.HiddenFor(modelItem => Model.Project)
+                    @Html.HiddenFor(modelItem => Model.ProjectCode)
+                    @Html.HiddenFor(modelItem => Model.Reason)
+
+
+
                     <input type="hidden" id="remarks" name="remarks" />
                     <tr>
                         <td style="background-color:lightgray">
@@ -132,33 +150,35 @@
                         <td><b>@Model.Project</b></td>
                     </tr>
                     <tr>
-                        <td style="background-color:#056cd5;color:White;font-size:large">Reason </td>
+                        <td style="background-color:#056cd5;color:White;font-size:large">JDE Role & Security </td>
                         <td colspan="4"><textarea rows="3" cols="70" style="font-weight:bold">@Model.Reason</textarea> </td>
-
 
                     </tr>
                     <tr>
                         @if (Model.Status == 1)
                         {
-                            <td style="font-size:large" class="btn-warning">JDE No </td>
+                            <td style="font-size:large" class="btn-warning">JDE Address No </td>
                             <td>@Html.TextBoxFor(Model => Model.JDEAddressNO, new { @class = "form-control" })</td>
                         }
                         @if (Model.Status == -1)
                         {
-                            <td style="font-size:large" class="btn-warning">JDE No </td>
+                            <td style="font-size:large" class="btn-warning">JDE Address No  </td>
                             <td style="font-size:xx-large">@Html.DisplayFor(Model => Model.JDEAddressNO, new { @class = "form-control" })</td>
                         }
 
                     </tr>
                     <tr>
                         <td>
-                            @if (User.IsInRole("ITShareFolder"))
+                            @if (Model.Status == -1)
                             {
-                                @Html.ActionLink("Download", "GeneratePDF", "JDE", new { RecordID = Model.ID }, new { @class = "btn btn-success btn-sm" })
+                                if (User.IsInRole("ITShareFolder"))
+                                {
+                                    @Html.ActionLink("Download", "GeneratePDF", "JDE", new { RecordID = Model.ID }, new { @class = "btn btn-success btn-sm" })
+                                }
                             }
                         </td>
                     </tr>
-                    
+
 
                 </table>
                 }

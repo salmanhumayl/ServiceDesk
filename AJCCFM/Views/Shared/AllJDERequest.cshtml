@@ -51,12 +51,15 @@
                     <th>
                         Project
                     </th>
-                    
+
                     <th>
                         Created On
                     </th>
                     <th>
                         Created by
+                    </th>
+                    <th>
+                        JDE No
                     </th>
                     <th>
                         Status
@@ -76,7 +79,7 @@
 
 
                     <td>
-                        @Html.ActionLink(item.RefNo, "ViewRequest", "JDE", new { TransactionID = item.ID,  Status = item.Status, Mode = "V" }, new { @class = "btn btn-success btn-sm" })
+                        @Html.ActionLink(item.RefNo, "ViewRequest", "JDE", new { TransactionID = item.ID, Status = item.Status, Mode = "V" }, new { @class = "btn btn-success btn-sm" })
 
 
                     </td>
@@ -93,13 +96,16 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Project)
                     </td>
-                 
+
 
                     <td>
                         @item.CreatedOn.ToString("dd/MMM/yyyy")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Createdby)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.JDEAddressNO)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.StatusDescription)

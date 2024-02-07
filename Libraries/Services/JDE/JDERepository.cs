@@ -58,8 +58,8 @@ namespace Services.JDE
                     RefNo = Common.GetDocumentNumber("JR");
                          
                             sql = " Insert into SD_JDERequest" +
-                                  " (RefNo,Status,Name,EmpCode,Position,ProjectCode,Project,Createdby,Email,SubmittedTo,Reason,SubmittedToEmail) " +
-                                  " Values (@RefNo,0,@EmpName,@EmpCode,@Position,@ProjectCode,@Project,@Createdby,@EmpEmailAddress,@SubmittedTo,@Reason,'" + SubmittToAddress + "')" +
+                                  " (RefNo,Status,Name,EmpCode,Position,Department,ProjectCode,Project,Createdby,Email,SubmittedTo,Reason,SubmittedToEmail) " +
+                                  " Values (@RefNo,0,@EmpName,@EmpCode,@Position,@Department,@ProjectCode,@Project,@Createdby,@EmpEmailAddress,@SubmittedTo,@Reason,'" + SubmittToAddress + "')" +
                                   " Select Cast(SCOPE_IDENTITY() AS int)";
 
 
@@ -69,6 +69,7 @@ namespace Services.JDE
                                 model.empdetail.EmpCode,
                                 model.empdetail.EmpName,
                                 model.empdetail.Position,
+                                model.empdetail.Department,
                                 model.empdetail.ProjectCode,
                                 model.empdetail.Project,
                                 model.jde.Reason,
@@ -126,7 +127,7 @@ namespace Services.JDE
 
                     if (model.Status != -1)
                     {
-                        var affectedrows = await connection.ExecuteAsync("Update SD_JDERequest Set Status=" + model.Status + " ,SubmittedTo='" + model.Submitedto + "' Where ID=@RecordID", new { RecordID = model.ID });
+                        var affectedrows = await connection.ExecuteAsync("Update SD_JDERequest Set Status=" + model.Status + "  Where ID=@RecordID", new { RecordID = model.ID });
 
                         AddLogHistory(model.ID, "A", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), model.Submitedto, remarks,"JDE");
                     }
@@ -136,7 +137,7 @@ namespace Services.JDE
 
                         AddLogHistory(model.ID, "A", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), "", remarks, "JDE");
                     }
-                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID", new { RecordID = model.ID });
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='J'", new { RecordID = model.ID });
 
                 }
                 catch (Exception e)
@@ -159,7 +160,7 @@ namespace Services.JDE
                 try
                 {
                     var affectedrows = await connection.ExecuteAsync("Update SD_JDERequest Set Status=-100  Where ID=@RecordID", new { RecordID = ID });
-                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID", new { RecordID = ID });
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='J'", new { RecordID = ID });
 
                     AddLogHistory(ID, "R", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), "", Remarks, ServiceCode);
                 }
@@ -190,6 +191,21 @@ namespace Services.JDE
             }
 
         }
+        public async Task<int> UpdateJDEAddressNo(string JDENo, int RecordID)
+        {
+
+            string sql = " Update SD_JDERequest Set JDEAddressNO='" + JDENo + "',Status=-1 where ID=" + RecordID;
+            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                connection.Open();
+
+                await connection.ExecuteAsync(sql);
+
+                return 1;
+            }
+
+        }
+        
 
 
         public IEnumerable<T> ServiceProcessCount<T>()
@@ -232,7 +248,7 @@ namespace Services.JDE
         
         public IEnumerable<T> AllJDERequest<T>()
         {
-            string sql = " Select id, RefNo, EmpCode,Name,CreatedOn,Createdby,AssystNo,Project,status," +
+            string sql = " Select id, RefNo, EmpCode,Name,CreatedOn,Createdby,AssystNo,Project,status,JDEAddressNO," +
                          " StatusDescription =case when Status = -1 then 'Approved' when Status = -100 then 'Rejected'" +
                          " when Status = 0 then 'Pending' when Status = 1 then 'Pending' end " +
                          " From SD_JDERequest Where status in (-1, -100,0,1)";
@@ -279,7 +295,7 @@ namespace Services.JDE
         public IEnumerable<T> ApprovedJDERequest<T>()
         {
 
-            string sql = "Select id, RefNo,  Name,CreatedOn,Status from SD_JDERequest Where  status =-1 and Archive=0";
+            string sql = "Select id, RefNo,  Name,CreatedOn,Status,JDEAddressNO from SD_JDERequest Where  status in (1,-1) and Archive=0";
 
 
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
@@ -381,7 +397,7 @@ namespace Services.JDE
             //             " Select id, RefNo,'Restricted website access' as Service, Name,CreatedOn,Status from SD_RWA";
 
 
-            string sql = "Select id, RefNo,  Name,CreatedOn,Status from SD_JDERequest Where Submittedto='" + username + "' And  status >=0 ";
+            string sql = "Select id, RefNo,  Name,CreatedOn,Status from SD_JDERequest Where Submittedto='" + username + "' And  status =0 ";
 
 
 

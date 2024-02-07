@@ -40,6 +40,7 @@ namespace AJCCFM.Models.Service
         public string StatusDescription { get; set; }
         public string AssystNo { get; set; }
         public string Project { get; set; }
+        public string JDEAddressNO { get; set; }
 
     }
 }

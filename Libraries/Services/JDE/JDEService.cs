@@ -89,5 +89,10 @@ namespace Services.JDE
         {
             return IRepository.ServiceProcessCount<T>();
         }
+
+        public async  Task<int> UpdateJDEAddressNo(string JDENo, int RecordID)
+        {
+            return await IRepository.UpdateJDEAddressNo(JDENo, RecordID);
+        }
     }
 }

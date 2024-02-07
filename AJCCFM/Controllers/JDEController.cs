@@ -180,13 +180,13 @@ namespace AJCCFM.Controllers
             _GroupRequest = new GroupRequestService();
             if (model.Status == 0) // PM Level
             {
-                model.Status = 1;
-                model.Submitedto = System.Configuration.ConfigurationManager.AppSettings.Get("HRManager");
+                model.Status = 1; //AWATING FOR JDE ADDRESSS NUMBER 
+                model.Submitedto = model.Submitedto = System.Configuration.ConfigurationManager.AppSettings.Get("HRManager");
+
             }
             else
             {
                 model.Status = -1;
-
             }
 
             var affectedRows = await _JDEServices.SubmitForApproval(model, remarks);
@@ -195,22 +195,29 @@ namespace AJCCFM.Controllers
             string body;
             if (model.Status == 1)
             {
-                string mGuid = Guid.NewGuid().ToString();
-                string url = System.Configuration.ConfigurationManager.AppSettings.Get("Url");
-                string Link = url + "/JDE/ShowRequest?token=" + mGuid + "&Mode=E";
-                await _GroupRequest.LogEmail(model.ID, mGuid, "J");
+                //string mGuid = Guid.NewGuid().ToString();
+               // string url = System.Configuration.ConfigurationManager.AppSettings.Get("Url");
+              //  string Link = url + "/JDE/ShowRequest?token=" + mGuid + "&Mode=E";
+              //  await _GroupRequest.LogEmail(model.ID, mGuid, "J");
                 EmailManager VCTEmailService = new EmailManager();
                 body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewJDERequest-HRManager.html");
-                mailcontent = body.Replace("@pwdchangelink", Link); //Replace Contenct...
+                mailcontent = body.Replace("@Content", GenerateContent(model));
                 mailcontent = mailcontent.Replace("@ReqNo", model.RefNo); //Replace Contenct...
-             
                 VCTEmailService.Body = mailcontent;
                 VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectJDE");
                 VCTEmailService.ReceiverAddress = System.Configuration.ConfigurationManager.AppSettings.Get("HRManagerEmail");
                 await VCTEmailService.SendEmail();
 
+                EmailManager VCTEmailServiceIT = new EmailManager();
+                body = VCTEmailServiceIT.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewJDERequest-HRManager.html");
+                mailcontent = body.Replace("@Content", GenerateContent(model));
+                mailcontent = mailcontent.Replace("@ReqNo", model.RefNo); //Replace Contenct...
+                VCTEmailServiceIT.Body = mailcontent;
+                VCTEmailServiceIT.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectJDE");
+                VCTEmailServiceIT.ReceiverAddress = System.Configuration.ConfigurationManager.AppSettings.Get("ProcessOwnerEmailIT");
+                await VCTEmailServiceIT.SendEmail();
 
-                if (!string.IsNullOrEmpty(model.Email))
+                if (!string.IsNullOrEmpty(model.Email)) //User 
                 {
 
                     //Send Email to User .... 
@@ -305,6 +312,26 @@ namespace AJCCFM.Controllers
 
         }
            
+          public async Task<ActionResult> AddressNoReturnPartialView(string JDENo, int RecordID)
+        {
+
+
+            _JDEServices = new JDEService();
+
+            var response = await _JDEServices.UpdateJDEAddressNo(JDENo, RecordID);
+
+            return new JsonResult
+            {
+                Data = response,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+
+
+
+
+
+        }
+           
 
         public async Task<ActionResult> ShowRequest(string token, string Mode)
         {
@@ -381,11 +408,11 @@ namespace AJCCFM.Controllers
             sb.Append("<td>" + obj[0].Position + "</td>");
             sb.Append("<td>Project</td>");
             sb.Append("<td>" + obj[0].ProjectCode + "</td>");
-            sb.Append("<td>Reason</td>");
+            sb.Append("<td>JDE Role & Security</td>");
             sb.Append("<td colspan=3>" + obj[0].Reason + "</td>");
             sb.Append("</tr>");
             sb.Append("<tr>");
-            sb.Append("<td>JDE No</td>");
+            sb.Append("<td>JDE Address No </td>");
             sb.Append("<td colspan=3>" + obj[0].JDEAddressNO + "</td>");
             sb.Append("</tr>");
             sb.Append("</table>");
@@ -441,7 +468,22 @@ namespace AJCCFM.Controllers
         }
 
 
-   
+        private string GenerateContent(Core.Domain.SD_JDE.JDE model)
+        {
+          
+
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<table cellpadding='5' cellspacing='2' style='border:1px solid black'><tr><td style='border: 1px solid black'>Emp Code</td><td style='border: 1px solid black'>" + model.EmpCode + "</td></tr>");
+            sb.Append("<tr><td style='border: 1px solid black'>Emp Name</td><td style='border: 1px solid black'>" + model.Name + "</td></tr>");
+            sb.Append("<tr><td style='border: 1px solid black'>Designation</td><td style='border: 1px solid black'>" + model.Position + "</td></tr>");
+            sb.Append("<tr><td style='border: 1px solid black'>Department</td><td style='border: 1px solid black'>" + model.Department + "</td></tr>");
+            sb.Append("<tr><td style='border: 1px solid black'>Procject Code</td><td style='border: 1px solid black'>" + model.ProjectCode  + "</td></tr>");
+            sb.Append("<tr><td style='border: 1px solid black'>JDE Role & Security</td><td style='border: 1px solid black'>" + model.Reason + "</td></tr>");
+            sb.Append("<tr><td style='border: 1px solid black'>JDE Address Number</td><td style='border: 1px solid black'>&nbsp;&nbsp</td></tr></table>");
+            return sb.ToString();
+
+        }
 
 
     }

@@ -146,6 +146,7 @@
                                 @Html.HiddenFor(modelItem => Model.empdetail.Position)
                                 @Html.HiddenFor(modelItem => Model.empdetail.Project)
                                 @Html.HiddenFor(modelItem => Model.empdetail.ProjectCode)
+                                @Html.HiddenFor(modelItem => Model.empdetail.Department)
 
                                 <input type="hidden" id="forwardto" name="forwardto" />
                                 <input type="hidden" id="forwardName" name="forwardName" />
@@ -164,12 +165,12 @@
                         </tr>
                         <tr>
                             <td style="background-color:#056cd5;color:White;font-size:large">
-                                Reason:
+                                JDE Role & Security<span style="color:red">*</span> : 
                             </td>
                             <td>
                                 @Html.TextAreaFor(Model => Model.jde.Reason, new { @class = "form-control" })
 
-                            <td>@Html.ValidationMessageFor(model => model.jde.Reason, "", new { @class = "text-danger" })</td>
+                               @Html.ValidationMessageFor(model => model.jde.Reason, "", new { @class = "text-danger" })</td>
 
                         </tr>
                         @if (ViewBag.ADUser != null)

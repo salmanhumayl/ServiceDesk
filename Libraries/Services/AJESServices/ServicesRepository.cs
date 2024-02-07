@@ -193,7 +193,7 @@ namespace Services.AJESServices
 
                         AddLogHistory(model.ID, "A", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), "", remarks, model.ServiceCode);
                     }
-                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID", new { RecordID = model.ID });
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='S' ", new { RecordID = model.ID });
 
                 }
                 catch (Exception e)
@@ -216,7 +216,7 @@ namespace Services.AJESServices
                 try
                 {
                     var affectedrows = await connection.ExecuteAsync("Update SD_VPN Set Status=-100  Where ID=@RecordID", new { RecordID = ID });
-                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID", new { RecordID = ID });
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where  DocCode='S' And TransactionID=@RecordID", new { RecordID = ID });
 
                     AddLogHistory(ID, "R", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""),"", Remarks, ServiceCode);
                 }

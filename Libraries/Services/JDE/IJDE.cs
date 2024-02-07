@@ -26,6 +26,8 @@ namespace Services.JDE
        
 
         Task<int> ArchiveRecord(string AssetsNo, int RecordID);
+
+        Task<int> UpdateJDEAddressNo(string JDENo, int RecordID);
         Task<int> DeleteDetailRecord(int RecordID);
        
 

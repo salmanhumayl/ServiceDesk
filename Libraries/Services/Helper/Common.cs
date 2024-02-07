@@ -21,12 +21,13 @@ namespace Services.Helper
         public static T GetEmpData<T>(string EmpNo)
 
         {
-            string sql = " SELECT ezBusDb.Employee.EmpCode,ezBusDb.Employee.EmpName, ezBusDb.Designation.Name AS Position,ezBusDb.Project.Code as ProjectCode,ezBusDb.Project.Name AS Project,ezBusDb.Employee.ForemanCode " +
+            string sql = " SELECT ezBusDb.Employee.EmpCode,ezBusDb.Employee.EmpName, ezBusDb.Designation.Name AS Position,ezBusDb.Project.Code as ProjectCode,ezBusDb.Project.Name AS Project,ezBusDb.Employee.ForemanCode,ezBusDb.Department.Name as Department " +
                         " FROM ezBusDb.Employee INNER JOIN" +
                         " ezBusDb.Designation ON ezBusDb.Employee.CmpyCode = ezBusDb.Designation.cmpycode And" +
                         " ezBusDb.Employee.DesignationCode = ezBusDb.Designation.Code" +
                         " INNER JOIN ezBusDb.Project ON ezBusDb.Employee.CmpyCode = ezBusDb.Project.cmpycode AND " +
                         " ezBusDb.Employee.ProjectCode = ezBusDb.Project.Code" +
+                        " Left outer Join ezBusDb.Department on ezBusDb.Employee.DepartmentCode=ezBusDb.Department.Code" + 
                         " where ezBusDb.employee.empcode = '" + EmpNo +"' and ezbusdb.employee.cmpycode = '01'";
 
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStrEZWARE"].ConnectionString))
