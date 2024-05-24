@@ -27,9 +27,7 @@ namespace AJCCFM.Controllers
     [AjeErrorHandler]
     public class ServicesController : Controller
     {
-
         private IServices _Services;
-
         private IGroupRequest _GroupRequest;
         string ShoppingCartId { get; set; }
 
