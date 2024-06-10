@@ -113,7 +113,14 @@ namespace AJCCFM.Controllers
         public List<Folder> Groups(string ProjectCode="")
         {
 
-             Folder obj;
+
+            string GroupKey="";
+            string description="";
+            string ManagedBy = "";
+
+         //   Folder objTest;
+         //   List<Folder> lTestFolderDetail = new List<Folder>();
+            Folder obj;
             List<Folder> lFolderDetail = new List<Folder>();
 
             string sPath = System.Configuration.ConfigurationManager.ConnectionStrings["ADConnectionString"].ConnectionString;
@@ -122,6 +129,7 @@ namespace AJCCFM.Controllers
 
             SortOption so = new SortOption();
             so.Direction = SortDirection.Ascending;
+
             so.PropertyName = "cn";
             search.Sort = so;
 
@@ -149,29 +157,33 @@ namespace AJCCFM.Controllers
             search.PropertiesToLoad.Add("ManagedBy");
 
             SearchResultCollection searchResults;
+            search.PageSize = 1500;
             searchResults = search.FindAll();
-           
+          
             foreach (SearchResult result in searchResults)
             {
                 try
                 {
-                    string GroupKey = result.Properties["cn"][0].ToString();
-                    string description = result.Properties["description"][0].ToString();
+                     GroupKey = result.Properties["cn"][0].ToString();
+                     description = result.Properties["description"][0].ToString();
 
-                    string ManagedBy = result.Properties["ManagedBy"][0].ToString();
-                    ManagedBy = AJESActiveDirectoryInterface.AJESAD.Mid(ManagedBy, ManagedBy.IndexOf("=") + 2, ManagedBy.IndexOf(",") - 3);
-                    obj = new Folder();
+                     ManagedBy = result.Properties["ManagedBy"][0].ToString();
+                     ManagedBy = AJESActiveDirectoryInterface.AJESAD.Mid(ManagedBy, ManagedBy.IndexOf("=") + 2, ManagedBy.IndexOf(",") - 3);
+                     obj = new Folder();
                   
                     obj.FolderName = GroupKey + " " +  ">>" +  " " +  description;
                     obj.FolderDetail = description;
                     obj.ProcessOwner = ManagedBy;
                     lFolderDetail.Add(obj);
+                   
                 }
                   
 
                 catch (Exception e)
                 {
 
+                   
+                   
                 }
                
 
