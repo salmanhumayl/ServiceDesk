@@ -54,6 +54,9 @@
     <Compile Include="AJESServices\AjesServices.cs" />
     <Compile Include="AJESServices\IServices.cs" />
     <Compile Include="AJESServices\ServicesRepository.cs" />
+    <Compile Include="EzwareProject\EzwareProjectRepository.cs" />
+    <Compile Include="EzwareProject\EzwareProjectService.cs" />
+    <Compile Include="EzwareProject\IEzwareProject.cs" />
     <Compile Include="GroupRequest\GroupRequestRepository.cs" />
     <Compile Include="GroupRequest\GroupRequestService.cs" />
     <Compile Include="GroupRequest\IGroupRequest.cs" />

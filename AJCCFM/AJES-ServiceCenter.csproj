@@ -190,6 +190,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClaimDetail.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\EzwareFormController.cs" />
     <Compile Include="Controllers\GroupRequestController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\JDEController.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Control\AJESHelper.cs" />
     <Compile Include="EmailManager.cs" />
     <Compile Include="FolderComparer.cs" />
+    <Compile Include="Models\EzwareRequest\RightModel.cs" />
     <Compile Include="Models\Folder.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -759,6 +761,7 @@
     <Content Include="Views\Shared\_ApprovedJDERequest.cshtml" />
     <Content Include="Views\Shared\AllJDERequest.cshtml" />
     <Content Include="Views\Shared\MyJDERequest.cshtml" />
+    <Content Include="Views\EzwareForm\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />

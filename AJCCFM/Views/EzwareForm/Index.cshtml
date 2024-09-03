@@ -1,0 +1,307 @@
+﻿@using AJCCFM.Control
+@using Core.Domain
+
+
+@model AJCCFM.Models.EzwareRequest.EzwareModel
+
+@{
+    string ForemanCode = ViewBag.ForemanCode;
+    string EmpCode = ViewBag.EmpCode;
+    ViewBag.Title = "Ezware Project  ";
+}
+
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/AJCJS/ClaimIndex.js"></script>
+
+
+<style>
+
+    .modal-dialog {
+        width: 500px;
+        top: 50px;
+    }
+
+    a.print {
+        height: 24px;
+        width: 24px;
+        background: url(/Content/images/printer24.png) no-repeat center right;
+        display: block;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    a.pdfview {
+        height: 28px;
+        width: 36px;
+        background: url(/Content/images/pdf.png) no-repeat center right;
+        display: block;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    a.Add {
+        height: 40px;
+        width: 25px;
+        background: url(/Content/images/ApprovedIcon.jpg);
+        display: block;
+    }
+</style>
+
+<script>
+
+
+
+
+
+
+
+    $(document).ready(function () {
+        $("#divProcessing").hide();
+
+        $('#btnprocess').click(
+
+
+            function () {
+                if ($('#ShowForm').valid()) {
+                    $('#AdjustmentModal').modal("show");
+                    $('#btnprocess').attr("disabled", "disabled");
+                    $('#btnprocess').attr("value", "Processing....");
+                }
+                else {
+                    $('#btnprocess').attr("value", "Submit");
+                    $('#btnprocess').removeAttr("disabled", "disabled");
+                }
+            });
+
+    });
+
+    var Cancel = function () {
+        $('#btnprocess').removeAttr("disabled", "disabled");
+        $('#btnprocess').attr("value", "Submit");
+        $('#AdjustmentModal').modal("hide");
+    }
+
+    var Save = function () {
+
+        if ($('#SubmitTo :selected').text() == "Please Select") {
+            alert("Please select a name from list");
+            return;
+        }
+
+        $('#loaderDiv').show();
+        $('.cancelbtn').attr("disabled", "disabled");
+        $('.submitBtn').attr("disabled", "disabled");
+        $('#forwardto').val($('#SubmitTo').val());
+        $('#forwardName').val($('#SubmitTo :selected').text());
+   
+        $('#ShowForm').submit();
+
+
+    }
+</script>
+
+
+
+
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>EzBusiness User Right Request - <u>Employee - Project Manager / Department Head - IT HELPDESK </u></h3>
+            <h3 class="panel-title">
+            </h3>
+        </div>
+        @using (Html.BeginForm("GetEmployee", "EzwareForm", FormMethod.Post))
+        {
+            <table class="table">
+                <tr>
+                    <td>@Html.EmployeeCode(EmpCode) </td>
+                    @if (ViewBag.IsEmployeeExist == false)
+                    {
+                        <td style="color:red;font-size:large;font:bold" class="alert alert-danger">Employee Does Not Exist</td>
+                    }
+                </tr>
+
+            </table>
+        }
+        @using (Html.BeginForm("SubmitRequest", "EzwareForm", FormMethod.Post, new { id = "ShowForm" }))
+        {
+         <div class="panel-body">
+          <div class="table-responsive">
+
+              <table class="table table-bordered">
+                  <tr>
+                      <td colspan="2">
+                          @Html.HiddenFor(modelItem => Model.empdetail.EmpCode)
+                          @Html.HiddenFor(modelItem => Model.empdetail.EmpName)
+                          @Html.HiddenFor(modelItem => Model.empdetail.Department)
+                          @Html.HiddenFor(modelItem => Model.empdetail.Position)
+                          @Html.HiddenFor(modelItem => Model.empdetail.Project)
+                          @Html.HiddenFor(modelItem => Model.empdetail.ProjectCode)
+                          @Html.HiddenFor(modelItem => Model.empdetail.Department)
+
+                          <input type="hidden" id="forwardto" name="forwardto" />
+                          <input type="hidden" id="forwardName" name="forwardName" />
+
+                          @if (Model != null)
+                          {
+                              @Html.Partial("_EmpInformation", Model.empdetail)
+                          }
+                          else
+                          {
+                              @Html.Partial("_EmpInformation")
+                          }
+                      </td>
+                      @if (Model != null)
+                      {
+                        <tr>
+                          <td style="background-color:#056cd5;color:White;font-size:medium">
+                              Select Project<span style="color:red"> * </span> :
+                          </td>
+                        </tr>
+                  
+                          <tr>
+                              <td>
+                                  @Html.DropDownListFor(model => Model.ToProject, ViewBag.ToProject as SelectList, "Please Select Project", new { @class = "form-control" })
+                              </td>
+                          </tr>
+                      }
+                      
+                      <tr>
+                          <td>
+                              <table class="table table-bordered">
+                                  <thead class="thead-dark">
+                                      <tr>
+                                          <th scope='col' class="w-auto"><strong>Form Name</strong></th>
+                                          <th scope="col">View</th>
+                                          <th scope="col">Create</th>
+                                          <th scope="col">Delete</th>
+                                          <th scope="col">Print</th>
+                                          <th scope="col">Edit</th>
+                                          <th scope="col">All</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @if (Model != null)
+                                      {
+                                          for (int i = 0; i < Model.EzwareRights.Count; i++)
+                                          {
+                                              @Html.HiddenFor(m => Model.EzwareRights[i].form_name)
+
+                                              <tr>
+                                                  <td style="font-size:large">@(Model.EzwareRights[i].form_name)</td>
+                                                  <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].View)</td>
+                                                  <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Create)</td>
+                                                  <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Print)</td>
+                                                  <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Delete)</td>
+                                                  <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Edit)</td>
+                                                  <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].All)</td>
+                                              </tr>
+                                          }
+                                      }
+                                  </tbody>
+                              </table>
+                          </td>
+                      </tr>
+                      @if (ViewBag.ADUser != null)
+                      {
+                          <tr>
+                              <td colspan="2" style="font-size:large">
+                                  @Html.AJESADDropdownList("SubmitTo", ViewBag.ADUser as List<UserDetail>, ForemanCode)
+                              </td>
+                          </tr>
+                          <tr>
+                              <td colspan="2">
+                                  <input type="button" id="btnprocess" value="Submit" class="btn btn-success " />
+                              </td>
+                          </tr>
+                      }
+                  </table>
+
+            </div>
+
+        </div>
+        }
+    </div>
+</div>
+
+
+<div class="col-lg-12">
+
+</div>
+
+
+<div class="col-lg-6 pull-right">
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="AdjustmentModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick="Cancel()">  &times;</button>
+                <h3 class="modal-title">Confirm Save </h3>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <h4>Are you sure ? you want to save.</h4>
+
+                <div style="text-align:center;display:none" id="loaderDiv">
+                    <img src="~/Content/Images/Spinner.gif" width="150" />
+                    <p style="color:red">Please wait.....</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning cancelbtn" data-dismiss="modal" onclick="Cancel()">Close</button>
+                <button type="button" class="btn btn-success submitBtn" onclick="Save()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="ErrorModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick="Cancel()">  &times;</button>
+                <h3 class="modal-title">Invalid Employee </h3>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <h4></h4>
+
+                <div style="text-align:center">
+
+                    <p style="color:red;font-size:large">Please Select Employee No.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -11,10 +11,10 @@ using Dapper;
 
 namespace Services.Helper
 {
-  
+
     public class Common
     {
-      
+
 
 
 
@@ -27,8 +27,8 @@ namespace Services.Helper
                         " ezBusDb.Employee.DesignationCode = ezBusDb.Designation.Code" +
                         " INNER JOIN ezBusDb.Project ON ezBusDb.Employee.CmpyCode = ezBusDb.Project.cmpycode AND " +
                         " ezBusDb.Employee.ProjectCode = ezBusDb.Project.Code" +
-                        " Left outer Join ezBusDb.Department on ezBusDb.Employee.DepartmentCode=ezBusDb.Department.Code" + 
-                        " where ezBusDb.employee.empcode = '" + EmpNo +"' and ezbusdb.employee.cmpycode = '01'";
+                        " Left outer Join ezBusDb.Department on ezBusDb.Employee.DepartmentCode=ezBusDb.Department.Code" +
+                        " where ezBusDb.employee.empcode = '" + EmpNo + "' and ezbusdb.employee.cmpycode = '01'";
 
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStrEZWARE"].ConnectionString))
             {
@@ -149,7 +149,7 @@ namespace Services.Helper
         public static void AddTemplate()
         {
 
-          
+
 
         }
 
@@ -257,15 +257,15 @@ namespace Services.Helper
             }
 
         }
-        
 
-          public static bool ShowEmployeeFetchButton(int CategoryID)
+
+        public static bool ShowEmployeeFetchButton(int CategoryID)
         {
 
             using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
             {
 
-                var obj= connection.Query(string.Format("Select EmployeeFetch from CFM_tblCategory Where ID= {0}", CategoryID)).SingleOrDefault();
+                var obj = connection.Query(string.Format("Select EmployeeFetch from CFM_tblCategory Where ID= {0}", CategoryID)).SingleOrDefault();
 
                 if (obj != null)
                 {
@@ -312,7 +312,7 @@ namespace Services.Helper
 
 
 
-        public static string GetDocumentNumber( string DocumentCode)
+        public static string GetDocumentNumber(string DocumentCode)
         {
 
             using (IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
@@ -320,29 +320,29 @@ namespace Services.Helper
                 try
                 {
                     int LastNumber;
-                   
+
                     string NewLastNumber;
                     string sql;
-                
 
-                     sql = "Select LastNumber from SD_docinfo where Code='" + DocumentCode + "'";
+
+                    sql = "Select LastNumber from SD_docinfo where Code='" + DocumentCode + "'";
 
                     var obj = db.Query<AutoGenerateNumber>(sql).SingleOrDefault();
 
                     if (obj != null)
                     {
-                       
+
                         LastNumber = obj.LastNumber + 1;
-                       
-
-                        NewLastNumber = DocumentCode +"-" + LastNumber.ToString("000000") ;
 
 
-                            //Update last generated Number 
+                        NewLastNumber = DocumentCode + "-" + LastNumber.ToString("000000");
+
+
+                        //Update last generated Number 
                         sql = "Update SD_docinfo Set LastNumber='" + LastNumber.ToString("000000") + "' where Code='" + DocumentCode + "'";
-                            db.Execute(sql);
-                            return NewLastNumber;
-                        
+                        db.Execute(sql);
+                        return NewLastNumber;
+
                     }
                 }
                 catch (Exception ex)
@@ -355,19 +355,19 @@ namespace Services.Helper
         }
 
 
-    
+
 
         public static decimal GetConsolidatePaidByPocket(int CompanyID)
         {
             string sql = " Select SUM(b.CashPaid) as Amount   from cfm_claims A ,CFM_ClaimDetails  B " +
                          " WHERE a.ClaimID = b.ClaimID " +
                          " and a.PaymentStatus = 'T' and a.status<>-99 And a.CompanyID =" + CompanyID;
-                         
+
 
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
             {
                 var obj = connection.Query(sql).ToArray();
-                if (obj.Count() > 0 )
+                if (obj.Count() > 0)
                 {
                     return Convert.ToDecimal(obj[0].Amount);
                 }
@@ -387,8 +387,8 @@ namespace Services.Helper
             }
 
         }
-        
-            public static int IsPaidFromAnotherCompany(int ClaimID)
+
+        public static int IsPaidFromAnotherCompany(int ClaimID)
         {
             string sql = "Select PaidFromCompanyID from CFM_Claims WHERE ClaimID=" + ClaimID;
 
@@ -401,13 +401,22 @@ namespace Services.Helper
 
         }
 
-    
-     
-    }
+        public static IList<T> GetProject<T>()
+        {
+            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                string sql = " select Code,Name  from AjePayroll.ezBusDb.Project where ActiveYN='Y' AND cmpycode='01' ORDER BY Name";
 
-    public class AutoGenerateNumber
-    {
-        public int  LastNumber { get; set; }
-        public int nYear { get; set; }
+                var obj = connection.Query<T>(sql).ToList();
+                return obj;
+            }
+
+        }
+
+        public class AutoGenerateNumber
+        {
+            public int LastNumber { get; set; }
+            public int nYear { get; set; }
+        }
     }
 }
