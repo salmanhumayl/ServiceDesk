@@ -1,18 +1,23 @@
 ﻿using AJCCFM.Core;
-using AJCCFM.Models.EzwareRequest;
+
 using Core.Domain;
+using Core.Domain.EzwareRequest;
+using Model;
+using Model.EzwareProject;
+using Services.EzwareProject;
 using Services.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using static AJCCFM.Models.Extention;
 
 namespace AJCCFM.Controllers
 {
     public class EzwareFormController : Controller
     {
-        
+        EzwareProjectService _EzwareProjectServices;
         List<RightModel> rights = new List<RightModel>();
 
         public ActionResult Index()
@@ -75,14 +80,16 @@ namespace AJCCFM.Controllers
         [HttpPost]
         public ActionResult SubmitRequest(EzwareModel model, string forwardto, string forwardName)
         {
-      
             string EmpEmailAddress = AJESActiveDirectoryInterface.AJESAD.GetEmpEmail(model.empdetail.EmpCode);
             string SubmittToAddress = AJESActiveDirectoryInterface.AJESAD.GetEmailAddress(forwardto);
             string[] Name = forwardName.Split('-');
-          
+            _EzwareProjectServices = new EzwareProjectService();
+            IResponse result = _EzwareProjectServices.SubmitRequest(model, forwardto, EmpEmailAddress, SubmittToAddress);
+            if (result.ErrorMessage != null)
+            {
+                return RedirectToAction("Index");
+            }
             return RedirectToAction("Index", "Dashboard");
-
-
 
         }
 

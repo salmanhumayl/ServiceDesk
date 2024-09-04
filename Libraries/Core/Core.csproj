@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\EzwareProject\RightModel.cs" />
     <Compile Include="Domain\GroupRequest\Cart.cs" />
     <Compile Include="Domain\GroupRequest\EmployeeDetail.cs" />
     <Compile Include="Domain\GroupRequest\GroupDetail.cs" />

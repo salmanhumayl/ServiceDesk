@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace AJCCFM.Models.EzwareRequest
+namespace Core.Domain.EzwareRequest
 {
     public class RightModel
     {
@@ -21,18 +21,6 @@ namespace AJCCFM.Models.EzwareRequest
     }
 
 
-    public class EzwareModel
-    {
-        public List<RightModel> EzwareRights   { get; set; }
-
-        public AJCCFM.Core.EmployeeDetail empdetail { get; set; }
-
-        public string ToProject { get; set; }
-
-    }
-    public class ProjectDetail
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-    }
+    
+    
 }

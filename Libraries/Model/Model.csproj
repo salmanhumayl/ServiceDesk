@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EzwareProject\EzwareRequest.cs" />
     <Compile Include="IResponse.cs" />
     <Compile Include="JDE\JDEModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

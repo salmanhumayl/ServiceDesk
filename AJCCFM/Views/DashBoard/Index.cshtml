@@ -88,6 +88,20 @@
             @{Html.RenderAction("JDEProgress", "Dashboard");}
         </div>
     </div>
+
+    <div class="col-lg-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+
+                <h3 class="panel-title"><b>Ezware Access Request In Progress</b></h3>
+            </div>
+
+            @{Html.RenderAction("EzwareProgress", "Dashboard");}
+        </div>
+    </div>
+
+
+
 </div>
 
     <div class="row">
@@ -122,6 +136,19 @@
                 @{Html.RenderAction("JDEPending", "Dashboard");}
             </div>
         </div>
+
+        <div class="col-lg-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title"><b>Ezware Pending Request Approval</b></h3>
+                </div>
+
+                @{Html.RenderAction("EzwarePending", "Dashboard");}
+            </div>
+        </div>
+
+
     </div>
 
     @if (User.IsInRole("ITShareFolder"))

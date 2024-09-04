@@ -18,6 +18,7 @@ using AJCCFM.Models.Reports;
 using AJCCFM.Models.Service;
 using Newtonsoft.Json;
 using Services.AJESServices;
+using Services.EzwareProject;
 using Services.GroupRequest;
 using Services.Helper;
 using Services.JDE;
@@ -37,6 +38,7 @@ namespace AJCCFM.Controllers
         private IGroupRequest _GroupRequest;
         private IServices _Services;
         private IJDE _JDEService;
+        private IEzwareProject _EzwareProject;
 
         // GET: DashBoard
 
@@ -174,6 +176,31 @@ namespace AJCCFM.Controllers
 
             return View("_JDEPending", obj);
         }
+
+
+        public ActionResult EzwareProgress()
+        {
+            _EzwareProject = new EzwareProjectService();
+
+            var obj = _EzwareProject.EzwareProjectProgress<EzwareProgress>(System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""));
+
+            return View("_EzwareProgress", obj);
+        }
+
+
+        public ActionResult EzwarePending()
+        {
+            _EzwareProject = new EzwareProjectService();
+            var obj = _EzwareProject.EzwareProjectPending<EzwarePending>(System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""));
+
+            return View("_EzwarePending", obj);
+        }
+
+
+
+
+
+
         public ActionResult ApprovedShareFolderRequest()
         {
             _GroupRequest = new GroupRequestService();

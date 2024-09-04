@@ -199,7 +199,8 @@
     <Compile Include="Control\AJESHelper.cs" />
     <Compile Include="EmailManager.cs" />
     <Compile Include="FolderComparer.cs" />
-    <Compile Include="Models\EzwareRequest\RightModel.cs" />
+    <Compile Include="Models\Extention.cs" />
+    <Compile Include="Models\EzwareRequest\Ezware.cs" />
     <Compile Include="Models\Folder.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -762,6 +763,8 @@
     <Content Include="Views\Shared\AllJDERequest.cshtml" />
     <Content Include="Views\Shared\MyJDERequest.cshtml" />
     <Content Include="Views\EzwareForm\Index.cshtml" />
+    <Content Include="Views\Shared\_EzwarePending.cshtml" />
+    <Content Include="Views\Shared\_EzwareProgress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />
