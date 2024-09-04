@@ -13,4 +13,27 @@ namespace Model.EzwareProject
         public AJCCFM.Core.EmployeeDetail empdetail { get; set; }
         public string ToProject { get; set; }
     }
+
+    public class EzwareViewModel
+    {
+        public List<RightModel> EzwareRights { get; set; }
+        public RequestHeader empdetail { get; set; }
+        
+    }
+
+    public class RequestHeader
+    {
+        public int ID  { get; set; }
+        public int Status { get; set; }
+        public string RefNo { get; set; }
+        public string EmpCode { get; set; }
+        public string Name { get; set; }
+
+        public string Position { get; set; }
+        public string Project { get; set; }
+        public string ProjectCode { get; set; }
+
+        public string AssignedProject { get; set; }
+        public string Email { get; set; }
+    }
 }

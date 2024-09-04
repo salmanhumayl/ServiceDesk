@@ -1,4 +1,5 @@
-﻿using Model;
+﻿using Core.Domain.EzwareRequest;
+using Model;
 using Model.EzwareProject;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,7 @@ namespace Services.EzwareProject
             throw new NotImplementedException();
         }
 
+
         public Task<bool> RejectForm(int ID, string Remarks, string ServiceCode)
         {
             throw new NotImplementedException();
@@ -77,9 +79,18 @@ namespace Services.EzwareProject
             return IRepository.SubmitRequest(model, SubmittedTo, EmpEmail, SubmittedToEmail);
         }
 
-        public T ViewRequest<T>(int TransactionID)
+        public EzwareViewModel ViewRequest<T>(int TransactionID)
         {
-            throw new NotImplementedException();
+           RequestHeader obj = IRepository.ViewRequest<RequestHeader>(TransactionID);
+           var Detail = IRepository.ViewRequestDetail<RightModel>(TransactionID);
+
+            EzwareViewModel EzwareModel = new EzwareViewModel();
+            EzwareModel.empdetail  = obj;
+            EzwareModel.EzwareRights = Detail;
+
+            return EzwareModel;
+
+
         }
     }
 }

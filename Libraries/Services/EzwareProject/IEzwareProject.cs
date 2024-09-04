@@ -26,15 +26,15 @@ namespace Services.EzwareProject
         Task<int> DeleteDetailRecord(int RecordID);
 
         IResponse SubmitRequest(EzwareModel model, string SubmittedTo, string EmpEmail, string SubmittedToEmail);
-        T ViewRequest<T>(int TransactionID);
+        EzwareViewModel ViewRequest<T>(int TransactionID);
 
-      
+
         IEnumerable<T> GetLogHistory<T>(int RecordID, string Doc_Code);
 
 
         IEnumerable<T> EzwareProjectPending<T>(string username);
         IEnumerable<T> EzwareProjectProgress<T>(string username);
 
-
+        
     }
 }

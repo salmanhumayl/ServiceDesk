@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using Model.EzwareProject;
 using Services.Helper;
 using System.Data;
+using Core.Domain.EzwareRequest;
 
 namespace Services.EzwareProject
 {
@@ -98,8 +99,35 @@ namespace Services.EzwareProject
 
         }
 
+        public T ViewRequest<T>(int TransactionID)
+        {
 
-        public IEnumerable<T> EzwareProjectPending<T>(string username)
+            string sql = " Select * FROM SD_EzwereRequest  a " +
+                         " Where a.ID=" + TransactionID;
+
+            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                var obj = connection.Query<T>(sql).SingleOrDefault();
+                return obj;
+            }
+        }
+
+        public List<T> ViewRequestDetail<T>(int TransactionID)
+        {
+
+            string sql = " Select * FROM SD_EzwereRequestDetail  a " +
+                         " Where a.RequestId=" + TransactionID;
+
+            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                var obj = connection.Query<T>(sql).ToList();
+                return obj;
+            }
+        }
+
+
+     
+            public IEnumerable<T> EzwareProjectPending<T>(string username)
         {
          
 
@@ -172,5 +200,8 @@ namespace Services.EzwareProject
             }
         }
 
+        
+
+     
     }
 }

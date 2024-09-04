@@ -1,14 +1,21 @@
 ﻿using AJCCFM.Core;
-
+using AJESeForm.Models;
 using Core.Domain;
 using Core.Domain.EzwareRequest;
+using iTextSharp.text;
+using iTextSharp.text.html.simpleparser;
+using iTextSharp.text.pdf;
 using Model;
 using Model.EzwareProject;
 using Services.EzwareProject;
+using Services.GroupRequest;
 using Services.Helper;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using static AJCCFM.Models.Extention;
@@ -17,8 +24,10 @@ namespace AJCCFM.Controllers
 {
     public class EzwareFormController : Controller
     {
+        private IGroupRequest _GroupRequest;
         EzwareProjectService _EzwareProjectServices;
         List<RightModel> rights = new List<RightModel>();
+        private string mailcontent;
 
         public ActionResult Index()
         {
@@ -78,19 +87,193 @@ namespace AJCCFM.Controllers
 
 
         [HttpPost]
-        public ActionResult SubmitRequest(EzwareModel model, string forwardto, string forwardName)
+        public async Task<ActionResult> SubmitRequest(EzwareModel model, string forwardto, string forwardName)
         {
+            if (model.empdetail == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            _GroupRequest = new GroupRequestService();
+            _EzwareProjectServices = new EzwareProjectService();
             string EmpEmailAddress = AJESActiveDirectoryInterface.AJESAD.GetEmpEmail(model.empdetail.EmpCode);
             string SubmittToAddress = AJESActiveDirectoryInterface.AJESAD.GetEmailAddress(forwardto);
             string[] Name = forwardName.Split('-');
-            _EzwareProjectServices = new EzwareProjectService();
+         
             IResponse result = _EzwareProjectServices.SubmitRequest(model, forwardto, EmpEmailAddress, SubmittToAddress);
             if (result.ErrorMessage != null)
             {
                 return RedirectToAction("Index");
             }
+
+            // Send Email.....
+            string body;
+            string mGuid = Guid.NewGuid().ToString();
+            string url = System.Configuration.ConfigurationManager.AppSettings.Get("Url");
+            await _GroupRequest.LogEmail(result.RecordID, mGuid, "EZP");
+
+            string Link = url + "/JDE/ShowRequest?token=" + mGuid + "&Mode=E";
+
+            EmailManager VCTEmailService = new EmailManager();
+            body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewEzwareRequest-DH.html");
+            mailcontent = body.Replace("@ReqNo", result.RequestNo); //Replace Contenct...
+            mailcontent = mailcontent.Replace("@urllink", Link); //Replace Contenct...
+            VCTEmailService.Body = mailcontent;
+            VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectEzWare");
+            VCTEmailService.ReceiverAddress = "salman.mazhar@ajes.ae";
+            await VCTEmailService.SendEmail();
+
+
+            if (!string.IsNullOrEmpty(EmpEmailAddress))
+            {
+                //Send Email to requestor
+                EmailManager VCTEmailServiceInit = new EmailManager();
+                body = VCTEmailServiceInit.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewEzwareRequest-Init.html");
+                mailcontent = body.Replace("@forwardto", Name[0]); //Replace Contenct...
+                mailcontent = mailcontent.Replace("@ReqNo", result.RequestNo); //Replace Contenct...
+                VCTEmailServiceInit.Body = mailcontent;
+                VCTEmailServiceInit.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectEzWare");
+                VCTEmailServiceInit.ReceiverAddress = EmpEmailAddress;
+                VCTEmailServiceInit.ReceiverDisplayName = model.empdetail.EmpName;
+                await VCTEmailServiceInit.SendEmail();
+            }
+            else
+            {
+                EmailManager VCTEmailServiceInit = new EmailManager();
+
+                VCTEmailServiceInit.Body = "Update Employee No In Active Direcotry:" + model.empdetail.EmpCode;
+                VCTEmailServiceInit.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectJDE");
+                VCTEmailServiceInit.ReceiverAddress = "ithelpdesk@ajes.ae";
+                VCTEmailServiceInit.ReceiverDisplayName = "IT HELP DESK";
+                await VCTEmailServiceInit.SendEmail();
+            }
+
+
             return RedirectToAction("Index", "Dashboard");
 
+        }
+
+
+        public async Task<ActionResult> ShowRequest(string token, string Mode)
+        {
+            _GroupRequest = new GroupRequestService();
+            _EzwareProjectServices = new EzwareProjectService();
+            
+            int TransactionID = await _GroupRequest.GetToken(token, "EZP");
+
+            if (TransactionID > 0)
+            {
+                return RedirectToAction("ViewRequest", new { TransactionID = TransactionID });
+            }
+            else
+            {
+                ViewBag.Token = token;
+                return View("Processed");
+            }
+        }
+
+
+        public ActionResult ViewRequest(int TransactionID, string mode)
+        {
+            ViewBag.Mode = mode;
+            _EzwareProjectServices = new EzwareProjectService();
+            var obj = _EzwareProjectServices.ViewRequest<RequestHeader>(TransactionID);
+            return View(obj);
+        }
+
+        public FileResult GeneratePDF(int RecordID)
+        {
+            _EzwareProjectServices = new EzwareProjectService();
+            StringBuilder sb = new StringBuilder();
+           
+            string url = System.Configuration.ConfigurationManager.AppSettings.Get("Url");
+
+            url = url + "/content/images/logo.png";
+
+            var obj = _EzwareProjectServices.ViewRequest<RequestHeader>(RecordID);
+
+          
+
+            sb.Append("<header class='clearfix'>");
+            sb.Append("<img src='" + url + "' > ");
+            sb.Append("<br>");
+     
+
+            sb.Append("<h3> Al Jaber Energy Services</h3>");
+            sb.Append("<br>");
+            sb.Append("<h3> EzBusiness User Rights <h3>");
+            sb.Append("<br>");
+            sb.Append("<h3> RefNo:" + obj.empdetail.RefNo + " </h3>");
+            sb.Append("<br>");
+            sb.Append("<table border='1'>");
+            sb.Append("<tr>");
+            sb.Append("<td> Employee Code </td>");
+            sb.Append("<td>" + obj.empdetail.EmpCode + "</td>");
+            sb.Append("</tr>");
+            sb.Append("<tr>");
+            sb.Append("<td> Employee Name </td>");
+            sb.Append("<td>" + obj.empdetail.Name + "</td>");
+            sb.Append("<td> Designation </td>");
+            sb.Append("<td>" + obj.empdetail.Position + "</td>");
+            sb.Append("</tr>");
+            sb.Append("<tr>");
+            sb.Append("<td> Project </td>");
+            sb.Append("<td>" + obj.empdetail.AssignedProject + "</td>");
+            sb.Append("</tr>");
+            sb.Append("</table>");
+            sb.Append("<br>");
+            sb.Append("<table border='1'>");
+
+            sb.Append("<thead>");
+            sb.Append("<tr>");
+            sb.Append("<th scope = 'col' width='40%'>Form Name</th>");
+            sb.Append("<th scope = 'col' > All </ th >");
+            sb.Append("<th scope='col'>Create</th>");
+            sb.Append("<th scope = 'col' > View </ th >");
+            sb.Append("<th scope='col'>Edit</th>");
+            sb.Append("<th scope = 'col' > Delete </ th >");
+            sb.Append("<th scope='col'>Print</th>");
+            sb.Append("</tr>");
+            sb.Append("</thead>");
+            sb.Append("<tbody>");
+
+            foreach (var item in obj.EzwareRights)
+            {
+                   
+                    sb.Append("<tr>");
+                    sb.Append("<td>" + item.form_name + "</td>");
+                    sb.Append("<td>" + ((bool)item.All ? "Y" : "N") + "</td>");
+                    sb.Append("<td>" + ((bool)item.Create ? "Y" : "N") + "</td>");
+                    sb.Append("<td>" + ((bool)item.View ? "Y" : "N") + "</td>");
+                    sb.Append("<td>" + ((bool)item.Edit ? "Y" : "N") + "</td>");
+                    sb.Append("<td>" + ((bool)item.Delete ? "Y" : "N") + "</td>");
+                    sb.Append("<td>" + ((bool)item.Print ? "Y" : "N") + "</td>");
+                    sb.Append("</tr>");
+            }
+            sb.Append("</tbody>");
+            sb.Append("</table>");
+            sb.Append("<br>");
+            sb.Append("</main>");
+            sb.Append("<footer>");
+            sb.Append("<br>");
+            sb.Append("Document was created on a computer and is valid without the signature and seal.");
+            sb.Append("</footer>");
+
+            StringReader sr = new StringReader(sb.ToString());
+            Document pdfDoc = new Document(PageSize.EXECUTIVE);
+            HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
+                pdfDoc.Open();
+
+                htmlparser.Parse(sr);
+                pdfDoc.Close();
+
+                byte[] bytes = memoryStream.ToArray();
+                memoryStream.Close();
+                return File(bytes, "application/pdf", "UserRights-" + obj.empdetail.RefNo + ".PDF");
+            }
         }
 
 

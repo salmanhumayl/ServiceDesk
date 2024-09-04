@@ -277,7 +277,9 @@
   <ItemGroup>
     <Content Include="AJCJS\ClaimIndex.js" />
     <Content Include="App_Data\Templates\NewGroupRequest-Init.html" />
+    <Content Include="App_Data\Templates\NewEzwareRequest-DH.html" />
     <Content Include="App_Data\Templates\NewJDERequest-DH.html" />
+    <Content Include="App_Data\Templates\NewEzwareRequest-Init.html" />
     <Content Include="App_Data\Templates\NewJDERequest-ITNotification.html" />
     <Content Include="App_Data\Templates\NewServiceRequest-DH.html" />
     <Content Include="App_Data\Templates\NewJDERequest-Init.html" />
@@ -765,6 +767,7 @@
     <Content Include="Views\EzwareForm\Index.cshtml" />
     <Content Include="Views\Shared\_EzwarePending.cshtml" />
     <Content Include="Views\Shared\_EzwareProgress.cshtml" />
+    <Content Include="Views\EzwareForm\ViewRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />
