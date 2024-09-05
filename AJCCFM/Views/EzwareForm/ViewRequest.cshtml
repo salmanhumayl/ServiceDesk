@@ -12,11 +12,37 @@
 <script src="~/Scripts/jquery-1.12.4.min.js"></script>
 <script src="~/Scripts/bootstrap.js"></script>
 
+<style>
+    .fixTableHead {
+        overflow-y: auto;
+        height: 550px;
+    }
+
+        .fixTableHead thead th {
+            position: sticky;
+            top: 0;
+        }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 8px 15px;
+        border: 0px solid #529432;
+    }
+
+    th {
+        background: #ABDD93;
+    }
+</style>
 
 <script type="text/javascript">
 
     $(document).ready(function () {
-       
+
 
         $('#btnprocess').click(
 
@@ -38,7 +64,7 @@
 
     var Save = function () {
 
-            
+
 
         $('#loaderDiv').show();
         $('.cancelbtn').attr("disabled", "disabled");
@@ -100,9 +126,7 @@
             <h3 class="panel-title">
                 <b>
                     EzBusiness User Right Request <span style="color:red;font-size:large">@Model.empdetail.RefNo</span>
-                
                 </b>
-
             </h3>
         </div>
 
@@ -112,16 +136,12 @@
                 {
                     <input type="hidden" id="remarks" name="remarks" />
                     <table class="table table-bordered">
-                        <input type="hidden" id="ID" name="ID" value="@Model.empdetail.ID" />
-                        <input type="hidden" id="Status" name="Status" value="@Model.empdetail.Status" />
-                        <input type="hidden" id="RefNo" name="RefNo" value="@Model.empdetail.RefNo" />
-                        <input type="hidden" id="Email" name="Email" value="@Model.empdetail.Email" />
-
-
-                      
-
-
+                        
                         <tr>
+                            <input type="hidden" id="ID" name="ID" value="@Model.empdetail.ID" />
+                            <input type="hidden" id="Status" name="Status" value="@Model.empdetail.Status" />
+                            <input type="hidden" id="RefNo" name="RefNo" value="@Model.empdetail.RefNo" />
+                            <input type="hidden" id="Email" name="Email" value="@Model.empdetail.Email" />
                             <td style="background-color:lightgray">
                                 EmpCode
                             </td>
@@ -140,58 +160,60 @@
                             <td style="color:red;font-size:large"><b>@Model.empdetail.AssignedProject</b></td>
 
                         </tr>
-                        <tr>
-                            <td colspan="8">
-                                <table class="table table-bordered">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th scope='col' class="w-auto"><strong>Form Name</strong></th>
-                                            <th scope="col">View</th>
-                                            <th scope="col">Create</th>
-                                            <th scope="col">Delete</th>
-                                            <th scope="col">Print</th>
-                                            <th scope="col">Edit</th>
-                                            <th scope="col">All</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if (Model != null)
-                                        {
-                                            for (int i = 0; i < Model.EzwareRights.Count; i++)
-                                            {
-                                                @Html.HiddenFor(m => Model.EzwareRights[i].form_name)
+                     </table>
+                    <div class="fixTableHead">
 
-                                                <tr>
-                                                    <td style="font-size:large">@(Model.EzwareRights[i].form_name)</td>
-                                                    <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].View)</td>
-                                                    <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Create)</td>
-                                                    <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Print)</td>
-                                                    <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Delete)</td>
-                                                    <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Edit)</td>
-                                                    <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].All)</td>
-                                                </tr>
-                                            }
-                                        }
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-
-                        <tr>
-
-                            <td>
-                                @if (Model.empdetail.Status == -1)
+                        <table class="table table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope='col' class="w-auto"><strong>Form Name</strong></th>
+                                    <th scope="col">View</th>
+                                    <th scope="col">Create</th>
+                                    <th scope="col">Delete</th>
+                                    <th scope="col">Print</th>
+                                    <th scope="col">Edit</th>
+                                    <th scope="col">All</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
                                 {
-                                    if (User.IsInRole("ITShareFolder"))
+                                    for (int i = 0; i < Model.EzwareRights.Count; i++)
                                     {
-                                        @Html.ActionLink("Download", "GeneratePDF", "Ezwareform", new { RecordID = Model.empdetail.ID }, new { @class = "btn btn-success btn-sm" })
+                                        @Html.HiddenFor(m => Model.EzwareRights[i].form_name)
+
+                                        <tr>
+                                            <td style="font-size:large">@(Model.EzwareRights[i].form_name)</td>
+                                            <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].View)</td>
+                                            <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Create)</td>
+                                            <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Print)</td>
+                                            <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Delete)</td>
+                                            <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Edit)</td>
+                                            <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].All)</td>
+                                        </tr>
                                     }
                                 }
-                            </td>
-                        </tr>
-                    </table>
-                }
-            </div>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr />
+                        <table border="0">
+
+                            <tr>
+
+                                <td>
+                                    @if (Model.empdetail.Status == -1)
+                                    {
+                                        if (User.IsInRole("ITShareFolder"))
+                                        {
+                                            @Html.ActionLink("Download", "GeneratePDF", "Ezwareform", new { RecordID = Model.empdetail.ID }, new { @class = "btn btn-success btn-sm" })
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                 }
+                    </div>
 
         </div>
     </div>

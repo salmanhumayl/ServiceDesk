@@ -103,7 +103,6 @@ namespace AJCCFM.Controllers
             {
                 return RedirectToAction("Index");
             }
-
             _GroupRequest = new GroupRequestService();
             _EzwareProjectServices = new EzwareProjectService();
             string EmpEmailAddress = AJESActiveDirectoryInterface.AJESAD.GetEmpEmail(model.empdetail.EmpCode);
@@ -115,7 +114,7 @@ namespace AJCCFM.Controllers
             {
                 return RedirectToAction("Index");
             }
-
+            
             // Send Email.....
             string body;
             string mGuid = Guid.NewGuid().ToString();
@@ -226,7 +225,7 @@ namespace AJCCFM.Controllers
 
 
 
-        public async Task<ActionResult> RejectForm(int ID, string Remarks, string ServiceCode)
+        public async Task<ActionResult> RejectForm(int ID, string Remarks)
         {
             string returnURL = "";
 
