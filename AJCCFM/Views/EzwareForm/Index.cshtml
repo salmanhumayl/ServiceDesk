@@ -89,6 +89,12 @@
 
     var Save = function () {
 
+
+        if ($('#ToProject :selected').text() == "Please Select Project") {
+            alert("Please select a project from list");
+            return;
+        }
+
         if ($('#SubmitTo :selected').text() == "Please Select") {
             alert("Please select a name from list");
             return;
@@ -118,6 +124,7 @@
         </div>
         @using (Html.BeginForm("GetEmployee", "EzwareForm", FormMethod.Post))
         {
+            <input type="hidden" value="@ViewBag.Mode" id="Mode" name="Mode" />
             <table class="table">
                 <tr>
                     <td>@Html.EmployeeCode(EmpCode) </td>
@@ -159,19 +166,19 @@
                       </td>
                       @if (Model != null)
                       {
-                        <tr>
+                      <tr>
                           <td style="background-color:#056cd5;color:White;font-size:medium">
                               Select Project<span style="color:red"> * </span> :
                           </td>
-                        </tr>
-                  
-                          <tr>
-                              <td>
-                                  @Html.DropDownListFor(model => Model.ToProject, ViewBag.ToProject as SelectList, "Please Select Project", new { @class = "form-control" })
-                              </td>
-                          </tr>
-                      }
-                      
+                      </tr>
+
+                      <tr>
+                          <td>
+                              @Html.DropDownListFor(model => Model.ToProject, ViewBag.ToProject as SelectList, new { @class = "form-control" })
+                          </td>
+                      </tr>
+                  }
+
                       <tr>
                           <td>
                               <table class="table table-bordered">
@@ -210,6 +217,10 @@
                       </tr>
                       @if (ViewBag.ADUser != null)
                       {
+                          <tr>
+                              <td><b>Submit to</b></td>
+
+                          </tr>
                           <tr>
                               <td colspan="2" style="font-size:large">
                                   @Html.AJESADDropdownList("SubmitTo", ViewBag.ADUser as List<UserDetail>, ForemanCode)

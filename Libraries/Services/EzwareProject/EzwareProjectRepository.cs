@@ -112,6 +112,67 @@ namespace Services.EzwareProject
             }
         }
 
+
+        public async Task<bool> SubmitForApproval(int ID, string remarks)
+        {
+            using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                try
+                {
+                    var affectedrows = await connection.ExecuteAsync("Update SD_EzwereRequest Set Status=-1  Where ID=@RecordID", new { RecordID = ID });
+
+                    AddLogHistory(ID, "A", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), "", remarks, "EZP");
+                    
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='EZP'", new { RecordID =ID });
+
+                }
+                catch (Exception e)
+                {
+                    string tes = e.Message;
+                }
+                return true;
+            }
+        }
+
+        public async Task<bool> RejectForm(int ID, string Remarks)
+        {
+
+            using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                try
+                {
+                    var affectedrows = await connection.ExecuteAsync("Update SD_EzwereRequest Set Status=-100  Where ID=@RecordID", new { RecordID = ID });
+                    var affectedrows1 = await connection.ExecuteAsync("Update SD_ApplicationEmailLog Set Status='C' Where TransactionID=@RecordID And DocCode='EZP'", new { RecordID = ID });
+
+                    AddLogHistory(ID, "R", System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""), "", Remarks,"EZP");
+                }
+                catch (Exception e)
+                {
+
+                    string tes = e.Message;
+
+
+                }
+                return true;
+
+            }
+        }
+
+
+        public async Task<int> ArchiveRecord(string AssetsNo, int RecordID)
+        {
+
+            string sql = " Update SD_EzwereRequest Set Archive=1,AssystNo='" + AssetsNo + "' where ID=" + RecordID;
+            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                connection.Open();
+
+                await connection.ExecuteAsync(sql);
+
+                return 1;
+            }
+
+        }
         public List<T> ViewRequestDetail<T>(int TransactionID)
         {
 
@@ -126,8 +187,25 @@ namespace Services.EzwareProject
         }
 
 
-     
-            public IEnumerable<T> EzwareProjectPending<T>(string username)
+        public IEnumerable<T> AllEzwareRequest<T>()
+        {
+            string sql = " Select id, RefNo, EmpCode,Name,CreatedOn,Createdby,AssystNo,Project,status," +
+                         " Status =case when Status = -1 then 'Approved' when Status = -100 then 'Rejected'" +
+                         " when Status = 0 then 'Pending' when Status = 1 then 'Pending' end " +
+                         " From SD_EzwereRequest Where status in (-1, -100,0,1)";
+
+
+
+            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                var obj = connection.Query<T>(sql);
+                return obj.ToList();
+            }
+
+        }
+
+
+        public IEnumerable<T> EzwareProjectPending<T>(string username)
         {
          
 
@@ -142,6 +220,8 @@ namespace Services.EzwareProject
             }
 
         }
+
+
 
 
         public IEnumerable<T> EzwareProjectProgress<T>(string username)

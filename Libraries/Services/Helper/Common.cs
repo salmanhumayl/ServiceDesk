@@ -401,11 +401,19 @@ namespace Services.Helper
 
         }
 
-        public static IList<T> GetProject<T>()
+        public static IList<T> GetProject<T>(string mproject)
         {
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
             {
-                string sql = " select Code,Name  from AjePayroll.ezBusDb.Project where ActiveYN='Y' AND cmpycode='01' ORDER BY Name";
+                string sql = " select Code,Name  from AjePayroll.ezBusDb.Project where ActiveYN='Y' AND cmpycode='01' and Code not in ('8000') " +
+                             " Union ALL Select '1' as Code, 'Please Select Project' " +
+                             " ORDER BY Code,Name";
+
+                if (mproject == "S")
+                {
+                    sql = " select Code,Name  from AjePayroll.ezBusDb.Project where Code='8000' AND cmpycode='01'";
+
+                }
 
                 var obj = connection.Query<T>(sql).ToList();
                 return obj;

@@ -16,34 +16,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        //$("#Others").attr("disabled", "disabled");
-        $("#Others").attr("readonly", true)
-
-
-        $('#AccessType').change(
-
-            function () {
-
-                $("#Others").val('');
-                if ($('#ServiceCode').val() == "SD_SUA" || $('#ServiceCode').val() == "SD_IRL" || $('#ServiceCode').val() == "SD_Monitor" || $('#ServiceCode').val() == "SD_USB") {
-                    if ($('#AccessType').val() == "Others") {
-                        $("#Others").removeAttr("readonly", false)
-
-                    }
-
-                    else {
-                        $("#Others").attr("readonly", true)
-                      //$("#Others").attr("disabled", "disabled");
-
-                    }
-                }
-                else {
-                    $("#Others").attr("readonly", true)
-                   //("#Others").attr("disabled", "disabled");
-                }
-
-            });
-
+       
 
         $('#btnprocess').click(
 
@@ -65,29 +38,7 @@
 
     var Save = function () {
 
-            if ($('#AccessType').val() == '') {
-                alert("Please Select  ");
-                $('#btnprocess').removeAttr("disabled", "disabled");
-                $('#btnprocess').attr("value", "Approve");
-                $('#AdjustmentModal').modal("hide");
-                return;
-
-            }
-
-        var isDisable = $('#Others').prop('readonly')
-
-        if (isDisable == false) {
-            if ($('#Others').val() == '')
-            {
-                alert("Please specify Others");
-                $('#Others').focus();
-                $('#btnprocess').removeAttr("disabled", "disabled");
-                $('#btnprocess').attr("value", "Approve");
-                $('#AdjustmentModal').modal("hide");
-                return;
-            }
-
-        }
+            
 
         $('#loaderDiv').show();
         $('.cancelbtn').attr("disabled", "disabled");
@@ -121,9 +72,9 @@
 
         $.ajax({
             type: "POST",
-            url: '@Url.Action("RejectForm", "Services")',
+            url: '@Url.Action("RejectForm", "EzwareForm")',
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ 'ID': ID, 'Remarks': message, 'ServiceCode': $('#ServiceCode').val()}),
+            data: JSON.stringify({ 'ID': ID, 'Remarks': message}),
             dataType: "json",
 
            // data: 'name=' + name + '&email=' + email + '&message=' + message,
@@ -141,7 +92,7 @@
 
     }
 </script>
-</script>
+
 
 <div class="col-lg-12">
     <div class="panel panel-default">
@@ -157,16 +108,17 @@
 
         <div class="panel-body">
             <div class="table-responsive">
-                @using (Html.BeginForm("ApproveRequest", "EzwareProject", FormMethod.Post, new { id = "ShowForm" }))
+                @using (Html.BeginForm("ApproveRequest", "EzwareForm", FormMethod.Post, new { id = "ShowForm" }))
                 {
                     <input type="hidden" id="remarks" name="remarks" />
                     <table class="table table-bordered">
+                        <input type="hidden" id="ID" name="ID" value="@Model.empdetail.ID" />
+                        <input type="hidden" id="Status" name="Status" value="@Model.empdetail.Status" />
+                        <input type="hidden" id="RefNo" name="RefNo" value="@Model.empdetail.RefNo" />
+                        <input type="hidden" id="Email" name="Email" value="@Model.empdetail.Email" />
 
-                        @Html.HiddenFor(modelItem => Model.empdetail.ID)
-                        @Html.HiddenFor(modelItem => Model.empdetail.Status)
 
-                        @Html.HiddenFor(modelItem => Model.empdetail.RefNo)
-                        @Html.HiddenFor(modelItem => Model.empdetail.Email)
+                      
 
 
                         <tr>
@@ -184,9 +136,9 @@
                         <tr>
                             <td colspan="2" style="background-color:darkkhaki;font-size:larger">Required Project Access
 
-                           
+
                             <td style="color:red;font-size:large"><b>@Model.empdetail.AssignedProject</b></td>
-                            
+
                         </tr>
                         <tr>
                             <td colspan="8">

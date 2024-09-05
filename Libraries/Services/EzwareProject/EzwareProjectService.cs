@@ -23,6 +23,11 @@ namespace Services.EzwareProject
             throw new NotImplementedException();
         }
 
+        public IEnumerable<T> AllEzwareRequest<T>()
+        {
+            return IRepository.AllEzwareRequest<T>();
+        }
+
         public IEnumerable<T> ApprovedEzwareProjectRequest<T>()
         {
             throw new NotImplementedException();
@@ -64,14 +69,14 @@ namespace Services.EzwareProject
         }
 
 
-        public Task<bool> RejectForm(int ID, string Remarks, string ServiceCode)
+        public async Task<bool> RejectForm(int ID, string Remarks)
         {
-            throw new NotImplementedException();
+            return await IRepository.RejectForm(ID, Remarks);
         }
 
-        public Task<bool> SubmitForApproval(AJCCFM.Core.Domain.SD_JDE.JDE model, string remarks)
+        public Task<bool> SubmitForApproval(int ID, string remarks)
         {
-            throw new NotImplementedException();
+            return IRepository.SubmitForApproval(ID, remarks);
         }
 
         public IResponse SubmitRequest(EzwareModel model, string SubmittedTo, string EmpEmail, string SubmittedToEmail)

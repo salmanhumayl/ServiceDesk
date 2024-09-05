@@ -30,7 +30,7 @@ namespace AJCCFM.Models.Service
         public DateTime CreatedOn { get; set; }
         public string Createdby { get; set; }
 
-        public int Status { get; set; }
+        public string Status { get; set; }
 
 
         public string StatusDescription { get; set; }

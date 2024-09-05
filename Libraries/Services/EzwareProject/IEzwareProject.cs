@@ -17,8 +17,8 @@ namespace Services.EzwareProject
         Task<IList<T>> GeneratePDF<T>(int RequestID);
 
         IEnumerable<T> ApprovedEzwareProjectRequest<T>();
-        Task<bool> SubmitForApproval(AJCCFM.Core.Domain.SD_JDE.JDE model, string remarks);
-        Task<bool> RejectForm(int ID, string Remarks, string ServiceCode);
+        Task<bool> SubmitForApproval(int ID, string remarks);
+        Task<bool> RejectForm(int ID, string Remarks);
 
 
         Task<int> ArchiveRecord(string AssetsNo, int RecordID);
@@ -35,6 +35,6 @@ namespace Services.EzwareProject
         IEnumerable<T> EzwareProjectPending<T>(string username);
         IEnumerable<T> EzwareProjectProgress<T>(string username);
 
-        
+        IEnumerable<T> AllEzwareRequest<T>();
     }
 }

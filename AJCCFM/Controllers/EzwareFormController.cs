@@ -1,4 +1,5 @@
 ﻿using AJCCFM.Core;
+using AJCCFM.Models.Service;
 using AJESeForm.Models;
 using Core.Domain;
 using Core.Domain.EzwareRequest;
@@ -29,7 +30,7 @@ namespace AJCCFM.Controllers
         List<RightModel> rights = new List<RightModel>();
         private string mailcontent;
 
-        public ActionResult Index()
+        public ActionResult Index(string Mode)
         {
             List<UserDetail> lADUser;
             if (TempData["EmpCode"] != null)
@@ -39,15 +40,22 @@ namespace AJCCFM.Controllers
                 EmployeeDetail empDetail = new EmployeeDetail();
 
                 ViewBag.IsEmployeeExist = false;
-                rights = GetBlankUserRights();
+                if (TempData["Mode"].ToString() == "P")
+                {
+                    rights = GetBlankUserRights();
+                }
+                else
+                {
+                    rights = GetBlankSOUserRights();
+                }
                 empDetail = Services.Helper.Common.GetEmpData<EmployeeDetail>(TempData["EmpCode"].ToString());
-                objProject = Common.GetProject<ProjectDetail>().ToList();
-                ViewBag.ToProject = new SelectList(objProject, "Code", "Name");
-
+                objProject = Common.GetProject<ProjectDetail>(TempData["Mode"].ToString()).ToList();
+                 ViewBag.ToProject = new SelectList(objProject, "Code", "Name");
+               
                 ViewBag.EmpCode = TempData["EmpCode"].ToString();
                 if (empDetail != null)
                 {
-                    if (empDetail.ProjectCode == "8000" || empDetail.ProjectCode == "8000_1")
+                    if (TempData["Mode"].ToString() == "S")
                     {
                         AJESActiveDirectoryInterface.AJESAD.RoleID = 1036; //Support office HOD 
                         lADUser = AJESActiveDirectoryInterface.AJESAD.GetADUsers();
@@ -72,14 +80,16 @@ namespace AJCCFM.Controllers
                }
 
             }
+            ViewBag.Mode = Mode;
             return View();
         }
 
-        public ActionResult GetEmployee(string AJESEmpCode)
+        public ActionResult GetEmployee(string AJESEmpCode,string Mode)
         {
             if (AJESEmpCode != "")
             {
                 TempData["EmpCode"] = AJESEmpCode;
+                TempData["Mode"] = Mode;
             }
 
             return RedirectToAction("Index");
@@ -120,7 +130,7 @@ namespace AJCCFM.Controllers
             mailcontent = mailcontent.Replace("@urllink", Link); //Replace Contenct...
             VCTEmailService.Body = mailcontent;
             VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectEzWare");
-            VCTEmailService.ReceiverAddress = "salman.mazhar@ajes.ae";
+            VCTEmailService.ReceiverAddress = EmpEmailAddress;
             await VCTEmailService.SendEmail();
 
 
@@ -179,6 +189,72 @@ namespace AJCCFM.Controllers
             _EzwareProjectServices = new EzwareProjectService();
             var obj = _EzwareProjectServices.ViewRequest<RequestHeader>(TransactionID);
             return View(obj);
+        }
+
+
+
+
+        [HttpPost]
+        public async Task<ActionResult> ApproveRequest(int ID, string RefNo, string Email, string remarks)
+        {
+            _EzwareProjectServices = new EzwareProjectService();
+            _GroupRequest = new GroupRequestService();
+            
+            var affectedRows = await _EzwareProjectServices.SubmitForApproval(ID, remarks);
+
+            //Send Email to 
+            string body;
+            if (!string.IsNullOrEmpty(Email))
+                 {
+                    EmailManager VCTEmailService = new EmailManager();
+                    body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewEZStatusUpdate-Processed.html");
+                    mailcontent = body.Replace("@ReqNo", RefNo); //Replace Contenct...
+                    VCTEmailService.Body = mailcontent;
+                    VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectEzWare");
+                    VCTEmailService.ReceiverAddress = Email;
+                    await VCTEmailService.SendEmail();
+                 }
+                    EmailManager VCTEmailServiceIT = new EmailManager();
+                    body = VCTEmailServiceIT.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewEZRequestStatus-Approved(IT).html");
+                    mailcontent = body.Replace("@ReqNo", RefNo); //Replace Contenct...
+                    VCTEmailServiceIT.Body = mailcontent;
+                    VCTEmailServiceIT.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectEzWare");
+                    VCTEmailServiceIT.ReceiverAddress = System.Configuration.ConfigurationManager.AppSettings.Get("groupdistribution");
+                    await VCTEmailServiceIT.SendEmail();
+                    return RedirectToAction("Index", "Dashboard");
+        }
+
+
+
+        public async Task<ActionResult> RejectForm(int ID, string Remarks, string ServiceCode)
+        {
+            string returnURL = "";
+
+            _EzwareProjectServices = new EzwareProjectService();
+
+            var obj = _EzwareProjectServices.ViewRequest<RequestHeader>(ID);
+           
+            if (ID > 0)
+            {
+                var affectedRows = await _EzwareProjectServices.RejectForm(ID, Remarks);
+                EmailManager VCTEmailService = new EmailManager();
+                string body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewEZStatusUpdate-Rejected.html");
+                mailcontent = body.Replace("@ReqNo", obj.empdetail.RefNo); //Replace Contenct...
+                mailcontent = mailcontent.Replace("@Reason", Remarks); //Replace Contenct.
+                VCTEmailService.Body = mailcontent;
+                VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectRejectEZ");
+                if (!string.IsNullOrEmpty(obj.empdetail.Email))
+                {
+                    VCTEmailService.ReceiverAddress = obj.empdetail.Email;
+                    VCTEmailService.ReceiverDisplayName = obj.empdetail.Name;
+                    await VCTEmailService.SendEmail();
+                }
+                returnURL = Url.Action("Index", "Dashboard");
+
+
+            }
+            return Json(new { Result = returnURL });
+
         }
 
         public FileResult GeneratePDF(int RecordID)
@@ -276,7 +352,14 @@ namespace AJCCFM.Controllers
             }
         }
 
+        public ActionResult AllEzwareRequest()
+        {
+            _EzwareProjectServices = new EzwareProjectService();
 
+            var obj = _EzwareProjectServices.AllEzwareRequest<EzwarePending>();
+
+            return PartialView("AllEZRequest", obj);
+        }
         public List<RightModel> GetBlankUserRights()
         {
             RightModel obj;
@@ -471,6 +554,7 @@ namespace AJCCFM.Controllers
             "T13 - Subcontractor Timesheet",
             "T03 - Foreman Timesheet",
             "T04 - Missing Timesheet",
+            "T04 - Absence Report for Day",
             "T06 - Employee at Site",
             "T07 - Absence Report for Month",
             "T08 - Daily Manpower by Location",
@@ -490,5 +574,134 @@ namespace AJCCFM.Controllers
             "Transfer Not Yet Recieved"
             };
         }
+
+        // Support OFFICE 
+        public List<RightModel> GetBlankSOUserRights()
+        {
+            RightModel obj;
+            foreach (String s in this.GetFormsHR())
+            {
+                obj = new RightModel();
+                obj.View = false;
+                obj.Delete = false;
+                obj.Create = false;
+                obj.Print = false;
+                obj.Edit = false;
+                obj.All = false;
+                obj.form_name = "Forms - HR: " + s;
+                rights.Add(obj);
+
+            }
+
+            foreach (String s in this.GetReportTimeKeepingSO())
+            {
+                obj = new RightModel();
+                obj.View = false;
+                obj.Delete = false;
+                obj.Create = false;
+                obj.Print = false;
+                obj.Edit = false;
+                obj.All = false;
+                obj.form_name = "Report - Time Keeper: " + s;
+                rights.Add(obj);
+
+            }
+
+            foreach (String s in this.GetReportPersonal())
+            {
+                obj = new RightModel();
+                obj.View = false;
+                obj.Delete = false;
+                obj.Create = false;
+                obj.Print = false;
+                obj.Edit = false;
+                obj.All = false;
+                obj.form_name = "Report - Personal: " + s;
+                rights.Add(obj);
+
+            }
+
+            foreach (String s in this.GetReportHumanResource())
+            {
+                obj = new RightModel();
+                obj.View = false;
+                obj.Delete = false;
+                obj.Create = false;
+                obj.Print = false;
+                obj.Edit = false;
+                obj.All = false;
+                obj.form_name = "Report - Human Resource: " + s;
+                rights.Add(obj);
+
+            }
+            return rights;
+
+
+        }
+        private List<String> GetFormsHR()
+        {
+            return new List<String> {
+                "Employee",
+                "Salary Proposal",
+                "Salary Approval",
+                "Ticket Payment",            };
+        }
+
+        private List<String> GetReportTimeKeepingSO()
+        {
+            return new List<String> {
+                "T01 - Employee List",
+                "T02 - Monthly TimeSheet",
+                "T13 - Subcontractor Timesheet",
+                "T03 - Foreman Timesheet",
+                "T04 - Missing Timesheet",
+                "T04 - Absence Report for Day",
+                "T06 - Employee at Site",
+                "T07 - Absence Report for Month",
+                "T08 - Daily Manpower by Location",
+                "T09 - Daily Manpower by Designation",
+                "T10 - Man-hour Summat (All Emp)",
+                "T11 - Leave Register",
+                "T12 - Employee Transfer History",
+                "T13 - Offshore Worked Days",
+                "T14 - Productive Incentive",
+                "T15 - Productive Incentive Date",
+                "T16 - Absent Days",
+                "T17 - Overtime",
+                "Employee Transfers",
+                "Sick Leave Details",
+                "Employee Transfer (To AJE)",
+                "Employee Transfer (From AJE)",
+                "Transfer Not Yet Recieved"
+            };
+      }
+
+        private List<String> GetReportPersonal()
+        {
+            return new List<String> {
+                "Expiry Of Documents",
+                "Absconding List",
+                "Employee To Rejoin"
+            };
+        }
+
+        private List<String> GetReportHumanResource()
+        {
+            return new List<String> {
+                "Employee Details",
+                "T01 - Employee List",
+                "Terminated Employee List",
+                "T11 - Leave Register",
+                "T09 - Daily Manpower by Desingation",
+                "Designation List",
+                "Promotion List",
+                "Salary History",
+                "Current Salary",
+                "Air Ticket Payment",
+            };
+        }
+
+
+
     }
 }

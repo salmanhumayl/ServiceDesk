@@ -84,6 +84,12 @@ namespace AJCCFM.Controllers
         {
             return View();
         }
+
+        public ActionResult EzwareActivity()
+        {
+            return View();
+        }
+        
         public ActionResult ProjectJDEActivity()
         {
             return View();
