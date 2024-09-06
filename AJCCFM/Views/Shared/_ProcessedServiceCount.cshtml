@@ -5,43 +5,70 @@
     Layout = null;
 }
 
+<style>
+    .fixTableHeadService {
+        overflow-y: auto;
+        height: 600px;
+    }
 
+        .fixTableHeadService thead th {
+            position: sticky;
+            top: 0;
+        }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 8px 15px;
+        border: 0px solid #529432;
+    }
+
+    th {
+        background: #808080;
+    }
+</style>
 
 
 <div class="panel-body">
     <div class="table-responsive">
-        <table class="table table-bordered table-hover table-striped">
-            <thead>
-                <tr>
-                    <th>Project</th>
-                    <th>Service</th>
-                    <th>Total</th>
-
-
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+        <div class="fixTableHeadService">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
                     <tr>
+                        <th>Project</th>
+                        <th>Service</th>
+                        <th>Total</th>
 
 
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Project)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ServiceName)
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Total)
-                        </td>
-
-                          
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Project)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ServiceName)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Total)
+                            </td>
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
