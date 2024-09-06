@@ -65,14 +65,14 @@ namespace Services.EzwareProject
                     {
                        // if (obj.Parent == 0)
                        // {
-                            sql = "INSERT INTO SD_EzwereRequestDetail(RequestId, Parent,form_name, [View], [Delete], [Create], [Print], [Edit], [All]) VALUES " +
+                            sql = "INSERT INTO SD_EzwereRequestDetail(RequestId, Parent,form_name, [All],[Create],[View],Edit,[Delete],[Print]) VALUES " +
                             " (" + RequestID + "," + obj.Parent + ",'" + obj.form_name + "', " +
-                           " " + (Convert.ToBoolean(obj.View) ? 1 : 0) + "," +
-                           " " + (Convert.ToBoolean(obj.Delete) ? 1 : 0) + "," +
+                           " " + (Convert.ToBoolean(obj.All) ? 1 : 0) + "," +
                            " " + (Convert.ToBoolean(obj.Create) ? 1 : 0) + "," +
-                           " " + (Convert.ToBoolean(obj.Print) ? 1 : 0) + "," +
+                           " " + (Convert.ToBoolean(obj.View) ? 1 : 0) + "," +
                            " " + (Convert.ToBoolean(obj.Edit) ? 1 : 0) + "," +
-                           " " + (Convert.ToBoolean(obj.All) ? 1 : 0) + ")";
+                           " " + (Convert.ToBoolean(obj.Delete) ? 1 : 0) + "," +
+                           " " + (Convert.ToBoolean(obj.Print) ? 1 : 0) + ")";
 
 
                             connection.Execute(sql);

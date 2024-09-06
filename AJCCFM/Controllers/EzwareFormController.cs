@@ -302,13 +302,13 @@ namespace AJCCFM.Controllers
 
             sb.Append("<thead>");
             sb.Append("<tr>");
-            sb.Append("<th scope = 'col' width='35%'>Form Name</th>");
-            sb.Append("<th scope = 'col' > All </ th >");
-            sb.Append("<th scope='col'>Create</th>");
-            sb.Append("<th scope = 'col' > View </ th >");
-            sb.Append("<th scope='col'>Edit</th>");
-            sb.Append("<th scope = 'col' > Delete </ th >");
-            sb.Append("<th scope='col'>Print</th>");
+            sb.Append("<th width='35%'>Form Name</th>");
+            sb.Append("<th  > All </ th >");
+            sb.Append("<th >Create</th>");
+            sb.Append("<th  > View </ th >");
+            sb.Append("<th >Edit</th>");
+            sb.Append("<th > Delete </ th >");
+            sb.Append("<th >Print</th>");
             sb.Append("</tr>");
             sb.Append("</thead>");
             sb.Append("<tbody>");
@@ -325,12 +325,12 @@ namespace AJCCFM.Controllers
                 {
 
                     sb.Append("<td style=font-size:small;font-weight:bold>" + obj[i].form_name + "</td>");
-                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].All ? "Y" : "N") + "</td>");
-                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].Create ? "Y" : "N") + "</td>");
-                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].View ? "Y" : "N") + "</td>");
-                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].Edit ? "Y" : "N") + "</td>");
-                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].Delete ? "Y" : "N") + "</td>");
-                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].Print ? "Y" : "N") + "</td>");
+                    sb.Append("<td style=font-size:large;font-weight:bold>" + ((bool)obj[i].All ? "Y" : "") + "</td>");
+                    sb.Append("<td style=font-size:large;font-weight:bold>" + ((bool)obj[i].Create ? "Y" : "") + "</td>");
+                    sb.Append("<td style=font-size:large;font-weight:bold>" + ((bool)obj[i].View ? "Y" : "") + "</td>");
+                    sb.Append("<td style=font-size:large;font-weight:bold>" + ((bool)obj[i].Edit ? "Y" : "") + "</td>");
+                    sb.Append("<td style=font-size:large;font-weight:bold>" + ((bool)obj[i].Delete ? "Y" : "") + "</td>");
+                    sb.Append("<td style=font-size:large;font-weight:bold>" + ((bool)obj[i].Print ? "Y" : "") + "</td>");
                 }
                     sb.Append("</tr>");
             }
