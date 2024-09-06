@@ -10,7 +10,7 @@ using System.Data.SqlClient;
 using Model.EzwareProject;
 using Services.Helper;
 using System.Data;
-using Core.Domain.EzwareRequest;
+
 
 namespace Services.EzwareProject
 {
@@ -63,20 +63,21 @@ namespace Services.EzwareProject
 
                     foreach (var obj in model.EzwareRights)
                     {
+                       // if (obj.Parent == 0)
+                       // {
+                            sql = "INSERT INTO SD_EzwereRequestDetail(RequestId, Parent,form_name, [View], [Delete], [Create], [Print], [Edit], [All]) VALUES " +
+                            " (" + RequestID + "," + obj.Parent + ",'" + obj.form_name + "', " +
+                           " " + (Convert.ToBoolean(obj.View) ? 1 : 0) + "," +
+                           " " + (Convert.ToBoolean(obj.Delete) ? 1 : 0) + "," +
+                           " " + (Convert.ToBoolean(obj.Create) ? 1 : 0) + "," +
+                           " " + (Convert.ToBoolean(obj.Print) ? 1 : 0) + "," +
+                           " " + (Convert.ToBoolean(obj.Edit) ? 1 : 0) + "," +
+                           " " + (Convert.ToBoolean(obj.All) ? 1 : 0) + ")";
 
-                        sql = "INSERT INTO SD_EzwereRequestDetail(RequestId, form_name, [View], [Delete], [Create], [Print], [Edit], [All]) VALUES " +
-                        " (" + RequestID + ",'" + obj.form_name + "', " +
-                       " " + (Convert.ToBoolean(obj.View) ? 1 : 0) + "," +
-                       " " + (Convert.ToBoolean(obj.Delete) ? 1 : 0) + "," +
-                       " " + (Convert.ToBoolean(obj.Create) ? 1 : 0) + "," +
-                       " " + (Convert.ToBoolean(obj.Print) ? 1 : 0) + "," +
-                       " " + (Convert.ToBoolean(obj.Edit) ? 1 : 0) + "," +
-                       " " + (Convert.ToBoolean(obj.All) ? 1 : 0) + ")";
 
+                            connection.Execute(sql);
 
-                        connection.Execute(sql);
-
-                        
+                       // }
 
                     }
                     AddLogHistory(RequestID, "S", Createdby.Trim(), SubmittedTo, "", "EZP");
@@ -217,6 +218,23 @@ namespace Services.EzwareProject
             {
                 var obj = connection.Query<T>(sql).ToList();
                 return obj;
+            }
+
+        }
+
+        public async Task<IEnumerable<T>> GenerateServicePDF<T>(int RecordID)
+        {
+            string sql = " Select a.*,d.*,Users.FullName as ApprovedBy ,b.ProcessOn as ApprovedOn FROM SD_EzwereRequest  a  " +
+                         " Inner join SD_EzwereRequestDetail D on a.id = d.RequestId " +
+                         " Inner join SD_WorkFlowLogHistory b on a.id = b.TransactionID "+
+                         " Inner Join Users on b.ProcessBy = users.LoginName " +
+                         " Where a.id = " + RecordID + "  and b.Doc_Code = 'EZP' and b.Status = 'A' and a.status=-1";
+
+            using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                var obj = await connection.QueryAsync<T>(sql);
+                return obj.ToList();
+
             }
 
         }

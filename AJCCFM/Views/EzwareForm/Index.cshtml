@@ -223,15 +223,23 @@
                                      for (int i = 0; i < Model.EzwareRights.Count; i++)
                                      {
                                          @Html.HiddenFor(m => Model.EzwareRights[i].form_name)
+                                         @Html.HiddenFor(m => Model.EzwareRights[i].Parent)
 
                                          <tr>
-                                             <td style="font-size:large">@(Model.EzwareRights[i].form_name)</td>
-                                             <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].View)</td>
-                                             <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Create)</td>
-                                             <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Print)</td>
-                                             <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Delete)</td>
-                                             <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Edit)</td>
-                                             <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].All)</td>
+                                             @if (Model.EzwareRights[i].Parent == 1)
+                                             {
+                                                 <td style="font-size:large;background-color:burlywood;font-style:italic;font-weight:bold" colspan="7">@(Model.EzwareRights[i].form_name)</td>
+                                             }
+                                             else
+                                             {
+                                                 <td style="font-size:large">@(Model.EzwareRights[i].form_name)</td>
+                                                 <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].View)</td>
+                                                 <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Create)</td>
+                                                 <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Print)</td>
+                                                 <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Delete)</td>
+                                                 <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].Edit)</td>
+                                                 <td>@Html.CheckBoxFor(x => Model.EzwareRights[i].All)</td>
+                                             }
                                          </tr>
                                      }
                                  }

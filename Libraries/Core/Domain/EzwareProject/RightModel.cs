@@ -8,7 +8,7 @@ namespace Core.Domain.EzwareRequest
     public class RightModel
     {
 
-         
+        public int Parent { get; set; }
         public string form_name { get; set; }
         public bool View { get; set; }
         public bool Delete { get; set; }

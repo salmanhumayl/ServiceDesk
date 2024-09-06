@@ -58,9 +58,9 @@ namespace Services.EzwareProject
             return IRepository.EzwareProjectProgress<T>(username);
         }
 
-        public Task<IList<T>> GeneratePDF<T>(int RequestID)
+        public async Task<IList<T>> GeneratePDF<T>(int RequestID)
         {
-            throw new NotImplementedException();
+            return (IList<T>)await IRepository.GenerateServicePDF<T>(RequestID);
         }
 
         public IEnumerable<T> GetLogHistory<T>(int RecordID, string Doc_Code)

@@ -28,6 +28,7 @@ namespace AJCCFM.Controllers
         private IGroupRequest _GroupRequest;
         EzwareProjectService _EzwareProjectServices;
         List<RightModel> rights = new List<RightModel>();
+        RightModel objMain=null;
         private string mailcontent;
 
         public ActionResult Index(string Mode)
@@ -121,7 +122,7 @@ namespace AJCCFM.Controllers
             string url = System.Configuration.ConfigurationManager.AppSettings.Get("Url");
             await _GroupRequest.LogEmail(result.RecordID, mGuid, "EZP");
 
-            string Link = url + "/JDE/ShowRequest?token=" + mGuid + "&Mode=E";
+            string Link = url + "/EzwareForm/ShowRequest?token=" + mGuid + "&Mode=E";
 
             EmailManager VCTEmailService = new EmailManager();
             body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewEzwareRequest-DH.html");
@@ -129,8 +130,8 @@ namespace AJCCFM.Controllers
             mailcontent = mailcontent.Replace("@urllink", Link); //Replace Contenct...
             VCTEmailService.Body = mailcontent;
             VCTEmailService.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectEzWare");
-            VCTEmailService.ReceiverAddress = EmpEmailAddress;
-            await VCTEmailService.SendEmail();
+            VCTEmailService.ReceiverAddress = SubmittToAddress;
+             await VCTEmailService.SendEmail();
 
 
             if (!string.IsNullOrEmpty(EmpEmailAddress))
@@ -144,7 +145,7 @@ namespace AJCCFM.Controllers
                 VCTEmailServiceInit.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectEzWare");
                 VCTEmailServiceInit.ReceiverAddress = EmpEmailAddress;
                 VCTEmailServiceInit.ReceiverDisplayName = model.empdetail.EmpName;
-                await VCTEmailServiceInit.SendEmail();
+               await VCTEmailServiceInit.SendEmail();
             }
             else
             {
@@ -256,7 +257,7 @@ namespace AJCCFM.Controllers
 
         }
 
-        public FileResult GeneratePDF(int RecordID)
+        public async Task<FileResult> GeneratePDF(int RecordID)
         {
             _EzwareProjectServices = new EzwareProjectService();
             StringBuilder sb = new StringBuilder();
@@ -265,11 +266,11 @@ namespace AJCCFM.Controllers
 
             url = url + "/content/images/logo.png";
 
-            var obj = _EzwareProjectServices.ViewRequest<RequestHeader>(RecordID);
+            var obj = await _EzwareProjectServices.GeneratePDF<rptReportModel>(RecordID);
 
           
 
-            sb.Append("<header class='clearfix'>");
+          
             sb.Append("<img src='" + url + "' > ");
             sb.Append("<br>");
      
@@ -278,22 +279,22 @@ namespace AJCCFM.Controllers
             sb.Append("<br>");
             sb.Append("<h3> EzBusiness User Rights <h3>");
             sb.Append("<br>");
-            sb.Append("<h3> RefNo:" + obj.empdetail.RefNo + " </h3>");
+            sb.Append("<h3> RefNo:" + obj[0].RefNo + " </h3>");
             sb.Append("<br>");
             sb.Append("<table border='1'>");
             sb.Append("<tr>");
             sb.Append("<td> Employee Code </td>");
-            sb.Append("<td>" + obj.empdetail.EmpCode + "</td>");
+            sb.Append("<td>" + obj[0].EmpCode + "</td>");
             sb.Append("</tr>");
             sb.Append("<tr>");
             sb.Append("<td> Employee Name </td>");
-            sb.Append("<td>" + obj.empdetail.Name + "</td>");
+            sb.Append("<td>" + obj[0].Name + "</td>");
             sb.Append("<td> Designation </td>");
-            sb.Append("<td>" + obj.empdetail.Position + "</td>");
+            sb.Append("<td>" + obj[0].Position + "</td>");
             sb.Append("</tr>");
             sb.Append("<tr>");
             sb.Append("<td> Project </td>");
-            sb.Append("<td>" + obj.empdetail.AssignedProject + "</td>");
+            sb.Append("<td>" + obj[0].AssignedProject + "</td>");
             sb.Append("</tr>");
             sb.Append("</table>");
             sb.Append("<br>");
@@ -301,7 +302,7 @@ namespace AJCCFM.Controllers
 
             sb.Append("<thead>");
             sb.Append("<tr>");
-            sb.Append("<th scope = 'col' width='40%'>Form Name</th>");
+            sb.Append("<th scope = 'col' width='35%'>Form Name</th>");
             sb.Append("<th scope = 'col' > All </ th >");
             sb.Append("<th scope='col'>Create</th>");
             sb.Append("<th scope = 'col' > View </ th >");
@@ -312,28 +313,52 @@ namespace AJCCFM.Controllers
             sb.Append("</thead>");
             sb.Append("<tbody>");
 
-            foreach (var item in obj.EzwareRights)
+            for (int i = 0; i <= obj.Count - 1; i++)
             {
                    
-                    sb.Append("<tr>");
-                    sb.Append("<td>" + item.form_name + "</td>");
-                    sb.Append("<td>" + ((bool)item.All ? "Y" : "N") + "</td>");
-                    sb.Append("<td>" + ((bool)item.Create ? "Y" : "N") + "</td>");
-                    sb.Append("<td>" + ((bool)item.View ? "Y" : "N") + "</td>");
-                    sb.Append("<td>" + ((bool)item.Edit ? "Y" : "N") + "</td>");
-                    sb.Append("<td>" + ((bool)item.Delete ? "Y" : "N") + "</td>");
-                    sb.Append("<td>" + ((bool)item.Print ? "Y" : "N") + "</td>");
+                sb.Append("<tr>");
+                if (obj[i].Parent == 1)
+                {
+                    sb.Append("<td style=font-size:large;font-style:italic;font-weight:bold colspan=7>" + obj[i].form_name + "</td>");
+                }
+                else
+                {
+
+                    sb.Append("<td style=font-size:small;font-weight:bold>" + obj[i].form_name + "</td>");
+                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].All ? "Y" : "N") + "</td>");
+                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].Create ? "Y" : "N") + "</td>");
+                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].View ? "Y" : "N") + "</td>");
+                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].Edit ? "Y" : "N") + "</td>");
+                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].Delete ? "Y" : "N") + "</td>");
+                    sb.Append("<td style=font-size:small>" + ((bool)obj[i].Print ? "Y" : "N") + "</td>");
+                }
                     sb.Append("</tr>");
             }
             sb.Append("</tbody>");
             sb.Append("</table>");
             sb.Append("<br>");
-            sb.Append("</main>");
-            sb.Append("<footer>");
+
+            sb.Append("<table border='1'>");
+
+            sb.Append("<tr>");
+            sb.Append("<td >Prepared By</th>");
+            sb.Append("<td >Approved By</th>");
+            sb.Append("</tr>");
+            sb.Append("<tr>");
+            sb.Append("<td>" + obj[0].Createdby +  "</th>");
+            sb.Append("<td>" + obj[0].ApprovedBy + "</th>");
+            sb.Append("</tr>");
+
+            sb.Append("<tr>");
+            sb.Append("<td>" + obj[0].CreatedOn.ToString("dd/MM/yyyy hh:mm:ss") + "</th>");
+            sb.Append("<td>" + obj[0].ApprovedOn.ToString("dd/MM/yyyy hh:mm:ss") + "</th>");
+            sb.Append("</tr>");
+
+            sb.Append("</table>");
+
             sb.Append("<br>");
             sb.Append("Document was created on a computer and is valid without the signature and seal.");
-            sb.Append("</footer>");
-
+            
             StringReader sr = new StringReader(sb.ToString());
             Document pdfDoc = new Document(PageSize.EXECUTIVE);
             HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
@@ -347,7 +372,7 @@ namespace AJCCFM.Controllers
 
                 byte[] bytes = memoryStream.ToArray();
                 memoryStream.Close();
-                return File(bytes, "application/pdf", "UserRights-" + obj.empdetail.RefNo + ".PDF");
+                return File(bytes, "application/pdf", "UserRights-" + obj[0].RefNo + ".PDF");
             }
         }
 
@@ -361,9 +386,15 @@ namespace AJCCFM.Controllers
         }
         public List<RightModel> GetBlankUserRights()
         {
+           
             RightModel obj;
+            objMain = new RightModel();
+            objMain.form_name = "Forms TimeKeeper";
+            objMain.Parent = 1;
+            rights.Add(objMain);
             foreach (String s in this.GetFormsTimeKeeper())
             {
+             
                 obj = new RightModel();
                 obj.View = false;
                 obj.Delete = false;
@@ -371,11 +402,15 @@ namespace AJCCFM.Controllers
                 obj.Print = false;
                 obj.Edit = false;
                 obj.All = false;
-                obj.form_name = "Forms - Time Keeper: " + s;
+                obj.form_name =  s;
                 rights.Add(obj);
                
             }
-
+        
+            objMain = new RightModel();
+            objMain.form_name = " Forms Cost Control";
+            objMain.Parent = 1;
+            rights.Add(objMain);
             foreach (String s in this.GetFormsCostControl())
             {
                 obj = new RightModel();
@@ -385,10 +420,14 @@ namespace AJCCFM.Controllers
                 obj.Print = false;
                 obj.Edit = false;
                 obj.All = false;
-                obj.form_name = "Forms - Cost Control: " + s;
+                obj.form_name = s;
                 rights.Add(obj);
                 
             }
+            objMain = new RightModel();
+            objMain.form_name = " Reports TimeKeeper";
+            objMain.Parent = 1;
+            rights.Add(objMain);
 
             foreach (String s in this.GetReportsTimeKeeper())
             {
@@ -399,10 +438,14 @@ namespace AJCCFM.Controllers
                 obj.Print = false;
                 obj.Edit = false;
                 obj.All = false;
-                obj.form_name = "Reports - Time Keeper: " + s;
+                obj.form_name =  s;
                 rights.Add(obj);
             }
 
+            objMain = new RightModel();
+            objMain.form_name = " Reports Cost Control";
+            objMain.Parent = 1;
+            rights.Add(objMain);
             foreach (String s in this.GetReportsCostControl())
             {
                 obj = new RightModel();
@@ -412,10 +455,15 @@ namespace AJCCFM.Controllers
                 obj.Print = false;
                 obj.Edit = false;
                 obj.All = false;
-                obj.form_name = "Reports - Cost Control: " + s;
+                obj.form_name =  s;
                 rights.Add(obj);
             }
 
+
+            objMain = new RightModel();
+            objMain.form_name = " Reports Equipment";
+            objMain.Parent = 1;
+            rights.Add(objMain);
             foreach (String s in this.GetReportsEquipments())
             {
                 obj = new RightModel();
@@ -425,7 +473,7 @@ namespace AJCCFM.Controllers
                 obj.Print = false;
                 obj.Edit = false;
                 obj.All = false;
-                obj.form_name = "Reports - Equipment: " + s;
+                obj.form_name =  s;
                 rights.Add(obj);
                 
             }
@@ -448,7 +496,7 @@ namespace AJCCFM.Controllers
                 "Activity Change",
                 "Timesheet Query",
                 "Employee Transfer Out",
-                "Employee Transfer Out",
+                "Employee Transfer In",
                 "Transfer To Al Jaber EST",
                 "Transfer From Al Jaber EST",
                 "Transfer To Qatar",
@@ -509,11 +557,11 @@ namespace AJCCFM.Controllers
                 "Item List",
                 "New Activity List",
                 "Project Sub Activty List",
-                "D01 - Prject Diesel Distrubution",
-                "D02 - Monthly Diesel Distrubution",
-                "D03 - Daily Disiel Distrubution",
-                "D04 - Equipment Disiel Consumption",
-                "D05 - Disiel Summary"
+                "D01 - Project Diesel Delivery",
+                "D02 - Monthly Diesel Distribution",
+                "D03 - Daily Diesel Distribution",
+                "D04 - Equipment Diesel Consumption",
+                "D05 - Diesel Summary"
 
             };
         }
@@ -563,7 +611,7 @@ namespace AJCCFM.Controllers
             "T12 - Employee Transfer History",
             "T13 - Offshore Worked Days",
             "T14 - Productive Incentive",
-            "T15 - Productive Incentive Date",
+            "T15 - Productive Incentive Date Wise",
             "T16 - Absent Days",
             "T17 - Overtime",
             "Employee Transfers",
@@ -578,6 +626,11 @@ namespace AJCCFM.Controllers
         public List<RightModel> GetBlankSOUserRights()
         {
             RightModel obj;
+            RightModel objMain;
+            objMain = new RightModel();
+            objMain.form_name = "Forms HRM";
+            objMain.Parent = 1;
+            rights.Add(objMain);
             foreach (String s in this.GetFormsHR())
             {
                 obj = new RightModel();
@@ -587,11 +640,16 @@ namespace AJCCFM.Controllers
                 obj.Print = false;
                 obj.Edit = false;
                 obj.All = false;
-                obj.form_name = "Forms - HR: " + s;
+                obj.form_name = s;
                 rights.Add(obj);
 
             }
 
+           
+            objMain = new RightModel();
+            objMain.form_name = "Report - Time Keeper";
+            objMain.Parent = 1;
+            rights.Add(objMain);
             foreach (String s in this.GetReportTimeKeepingSO())
             {
                 obj = new RightModel();
@@ -601,10 +659,14 @@ namespace AJCCFM.Controllers
                 obj.Print = false;
                 obj.Edit = false;
                 obj.All = false;
-                obj.form_name = "Report - Time Keeper: " + s;
+                obj.form_name =  s;
                 rights.Add(obj);
 
             }
+            objMain = new RightModel();
+            objMain.form_name = "Report - Personal";
+            objMain.Parent = 1;
+            rights.Add(objMain);
 
             foreach (String s in this.GetReportPersonal())
             {
@@ -620,6 +682,11 @@ namespace AJCCFM.Controllers
 
             }
 
+            objMain = new RightModel();
+            objMain.form_name = "Report - Human Resource";
+            objMain.Parent = 1;
+            rights.Add(objMain);
+
             foreach (String s in this.GetReportHumanResource())
             {
                 obj = new RightModel();
@@ -629,7 +696,7 @@ namespace AJCCFM.Controllers
                 obj.Print = false;
                 obj.Edit = false;
                 obj.All = false;
-                obj.form_name = "Report - Human Resource: " + s;
+                obj.form_name = s;
                 rights.Add(obj);
 
             }
@@ -664,7 +731,7 @@ namespace AJCCFM.Controllers
                 "T12 - Employee Transfer History",
                 "T13 - Offshore Worked Days",
                 "T14 - Productive Incentive",
-                "T15 - Productive Incentive Date",
+                "T15 - Productive Incentive Date Wise",
                 "T16 - Absent Days",
                 "T17 - Overtime",
                 "Employee Transfers",
