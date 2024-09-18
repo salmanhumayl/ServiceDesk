@@ -549,8 +549,9 @@ namespace AJCCFM.Controllers
             {
                 "E01 - Equipment List",
                 "E02 - Monthly Equipment Timesheet",
-                "E04 - Equipment Cost Analysis - s...",
-                "E05 - Equipment Cost Analysis - s...",
+                "E04 - Equipment Cost Analysis - sorted by Activity & Location",
+                "E05 - Equipment Cost Analysis - sorted by Equipment & Location",
+                "E06 - Equipment Cost Analysis - sorted by Equipment & SubLocation",
                 "Disciplie List",
                 "Activity List",
                 "Sub Activity List",
@@ -560,7 +561,7 @@ namespace AJCCFM.Controllers
                 "D01 - Project Diesel Delivery",
                 "D02 - Monthly Diesel Distribution",
                 "D03 - Daily Diesel Distribution",
-                "D04 - Equipment Diesel Consumption",
+                "D04 - Equipment Diesel Consumption - sorted by Activity & Location",
                 "D05 - Diesel Summary"
 
             };
@@ -571,24 +572,24 @@ namespace AJCCFM.Controllers
         {
             return new List<string> {
             "C01 - Basic Project Information",
-            "C02 - Cumalative Man-hours - sorted",
-            "C03 - Cumalative Man-hours - sorted",
-            "C04 - Man-hour Summary - sorted",
-            "C05 - Man-hour Summary - sorted",
-            "C06 - Man-hour Summary - sorted",
-            "C07 - Man-hour Cost Summary - sorted",
-            "C08 - Cumalative Man-hous Cost ...",
-            "C09 - Man-hour Cost - Sorted by A...",
-            "C10 - Company/Projects Monthly ...",
-            "C20 - Subcontracted Man-hour Cost",
+            "C02 - Cumalative Man-hours - sorted by Designation & Location",
+            "C03 - Cumalative Man-hours - sorted by Activity & Location",
+            "C04 - Man-hour Summary - sorted by Designation & Location",
+            "C05 - Man-hour Summary - sorted by Activity & Location",
+            "C06 - Man-hour Summary - sorted by Activity,Location & Sub Location",
+            "C07 - Man-hour Cost Summary - sorted by Activity & Location",
+            "C08 - Cumalative Man-hous Cost sorted by Activity & Location",
+            "C09 - Man-hour Cost - sorted by Activity,Location & Sub Location",
+            "C10 - Company/Projects Monthly Cost Analysis",
+            "C20 - Subcontracted Man-hour Cost Summary",
             "C11 - Budget vs Actual Manhours",
             "C12 - Designation Actual Unit Rate",
             "C13 - Activity Actual Unit Rate",
-            "C14 - Company/Project Actual Work",
+            "C14 - Company/Project Actual Work Force",
             "C15 - Weekly Productivity Report",
             "C16 - Support Office Timesheet",
-            "C17 - Support Office Timesheet Su...",
-            "C18 - Support Office Timesheet Su..."
+            "C17 - Support Office Timesheet Summary...",
+            "C18 - Support Office Timesheet Summary (Dept Wise)"
             };
         }
 
