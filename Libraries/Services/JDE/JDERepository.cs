@@ -58,8 +58,8 @@ namespace Services.JDE
                     RefNo = Common.GetDocumentNumber("JR");
                          
                             sql = " Insert into SD_JDERequest" +
-                                  " (RefNo,Status,Name,EmpCode,Position,Department,ProjectCode,Project,Createdby,Email,SubmittedTo,Reason,SubmittedToEmail) " +
-                                  " Values (@RefNo,0,@EmpName,@EmpCode,@Position,@Department,@ProjectCode,@Project,@Createdby,@EmpEmailAddress,@SubmittedTo,@Reason,'" + SubmittToAddress + "')" +
+                                  " (RefNo,Status,Name,EmpCode,Position,Department,ProjectCode,Project,Createdby,Email,SubmittedTo,Reason,Justification,SubmittedToEmail) " +
+                                  " Values (@RefNo,0,@EmpName,@EmpCode,@Position,@Department,@ProjectCode,@Project,@Createdby,@EmpEmailAddress,@SubmittedTo,@Reason,@Justification,'" + SubmittToAddress + "')" +
                                   " Select Cast(SCOPE_IDENTITY() AS int)";
 
 
@@ -73,6 +73,7 @@ namespace Services.JDE
                                 model.empdetail.ProjectCode,
                                 model.empdetail.Project,
                                 model.jde.Reason,
+                                model.jde.Justification,
                                 Createdby,
                                 EmpEmailAddress,
                                 SubmittedTo

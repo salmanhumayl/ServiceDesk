@@ -25,6 +25,9 @@ namespace AJCCFM.Core.Domain.SD_JDE
 
         [Required(ErrorMessage = "Required")]
         public string Reason { get; set; }
+
+        [Required(ErrorMessage = "Required")]
+        public string Justification { get; set; }
         public string JDEAddressNO { get; set; }
 
         public int Status { get; set; }

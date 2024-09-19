@@ -405,8 +405,14 @@ namespace AJCCFM.Controllers
             sb.Append("<td>" + obj[0].Position + "</td>");
             sb.Append("<td>Project</td>");
             sb.Append("<td>" + obj[0].ProjectCode + "</td>");
+            sb.Append("<tr>");
+            sb.Append("<tr>");
             sb.Append("<td>JDE Role & Security</td>");
             sb.Append("<td colspan=3>" + obj[0].Reason + "</td>");
+            sb.Append("</tr>");
+            sb.Append("<tr>");
+            sb.Append("<td>Justification</td>");
+            sb.Append("<td colspan=3>" + obj[0].Justification + "</td>");
             sb.Append("</tr>");
             sb.Append("<tr>");
             sb.Append("<td>JDE Address No </td>");
@@ -477,6 +483,7 @@ namespace AJCCFM.Controllers
             sb.Append("<tr><td style='border: 1px solid black'>Department</td><td style='border: 1px solid black'>" + model.Department + "</td></tr>");
             sb.Append("<tr><td style='border: 1px solid black'>Project Code</td><td style='border: 1px solid black'>" + model.ProjectCode  + "</td></tr>");
             sb.Append("<tr><td style='border: 1px solid black'>JDE Role & Security</td><td style='border: 1px solid black'>" + model.Reason + "</td></tr>");
+            sb.Append("<tr><td style='border: 1px solid black'>Justification</td><td style='border: 1px solid black'>" + model.Justification + "</td></tr>");
             sb.Append("<tr><td style='border: 1px solid black'>JDE Address Number</td><td style='border: 1px solid black'>&nbsp;&nbsp</td></tr></table>");
             return sb.ToString();
 

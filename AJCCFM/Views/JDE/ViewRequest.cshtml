@@ -133,6 +133,7 @@
                     @Html.HiddenFor(modelItem => Model.Project)
                     @Html.HiddenFor(modelItem => Model.ProjectCode)
                     @Html.HiddenFor(modelItem => Model.Reason)
+                    @Html.HiddenFor(modelItem => Model.Justification)
 
 
 
@@ -152,6 +153,12 @@
                     <tr>
                         <td style="background-color:#056cd5;color:White;font-size:large">JDE Role & Security </td>
                         <td colspan="4"><textarea rows="3" cols="70" style="font-weight:bold">@Model.Reason</textarea> </td>
+
+                    </tr>
+
+                    <tr>
+                        <td style="background-color:#056cd5;color:White;font-size:large">Justitication </td>
+                        <td colspan="4"><textarea rows="3" cols="70" style="font-weight:bold">@Model.Justification</textarea> </td>
 
                     </tr>
                     <tr>

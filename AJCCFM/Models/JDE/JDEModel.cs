@@ -58,6 +58,7 @@ namespace AJCCFM.Models.Service
 
 
         public string Reason { get; set; }
+        public string Justification { get; set; }
         public string JDEAddressNO { get; set; }
 
         public int Status { get; set; }
