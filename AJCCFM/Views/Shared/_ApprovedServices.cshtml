@@ -1,5 +1,32 @@
 ﻿@model IEnumerable<AJCCFM.Models.Service.ServicePending>
 
+<style>
+    .fixTableHeadServiceCat {
+        overflow-y: auto;
+        height: 600px;
+    }
+
+        .fixTableHeadServiceCat thead th {
+            position: sticky;
+            top: 0;
+        }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 8px 15px;
+        border: 0px solid #529432;
+    }
+
+    th {
+        background: #808080;
+    }
+</style>
+
 <script>
     $(document).ready(function () {
         $('.archiveservice').attr('href', 'javascript://');
@@ -33,7 +60,7 @@
 
                                 var mAssetsNo = $("#txtAssestNoService").val();
 
-                                var _parameters = { AssetsNo: mAssetsNo, RecordID:  nRecordID };
+                                var _parameters = { AssetsNo: mAssetsNo, RecordID: nRecordID };
 
                                 $.ajax({
                                     url: url,
@@ -67,51 +94,53 @@
 <div id="deleteitemservice" data-request-url="@Url.Action("ArchiveFolderReturnPartialView", "Services")"></div>
 
 <div class="panel-body">
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover table-striped" id="tblservice">
-            <thead>
-                <tr>
-                    <th>RefNo</th>
-                    <th>Service</th>
-                    <th>Document</th>
-                    <th>Archive</th>
-
-
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr id="row_@item.ID">
-
-
-                        <td>
-                            <b>
-                                @Html.ActionLink(item.RefNo, "ViewRequest", "Services", new { TransactionID = item.ID, Service = item.ServiceCode, Status = item.Status, Mode = "V" }, new { @class = "btn btn-link btn-sm" })
-
-                            </b>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ServiceName)
-                        </td>
-
-
-
-                        <td>@Html.ActionLink("Download", "GeneratePDF", "Services", new { RecordID = item.ID, ServiceCode = item.ServiceCode }, new { @class = "btn btn-success btn-sm" })</td>
-                        <td>
-                            <a class="archiveservice" Recordid="@item.ID"><img src="~/Content/images/archive-icon.png" style="width:40px;height:40px" /></a>
-                        </td>
-
+    <div class="fixTableHeadServiceCat">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped" id="tblservice">
+                <thead>
+                    <tr>
+                        <th>RefNo</th>
+                        <th>Service</th>
+                        <th>Document</th>
+                        <th>Archive</th>
 
 
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.ID">
+
+
+                            <td>
+                                <b>
+                                    @Html.ActionLink(item.RefNo, "ViewRequest", "Services", new { TransactionID = item.ID, Service = item.ServiceCode, Status = item.Status, Mode = "V" }, new { @class = "btn btn-link btn-sm" })
+
+                                </b>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ServiceName)
+                            </td>
+
+
+
+                            <td>@Html.ActionLink("Download", "GeneratePDF", "Services", new { RecordID = item.ID, ServiceCode = item.ServiceCode }, new { @class = "btn btn-success btn-sm" })</td>
+                            <td>
+                                <a class="archiveservice" Recordid="@item.ID"><img src="~/Content/images/archive-icon.png" style="width:40px;height:40px" /></a>
+                            </td>
+
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        </div>
     </div>
-</div>
 
-<div id="dialogServiceClosing" style="display:none">
+    <div id="dialogServiceClosing" style="display:none">
 
-    <p>Assyst No : <input type="text" id="txtAssestNoService" /></p>
-</div>
+        <p>Assyst No : <input type="text" id="txtAssestNoService" /></p>
+    </div>

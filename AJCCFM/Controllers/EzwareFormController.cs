@@ -506,6 +506,7 @@ namespace AJCCFM.Controllers
                 "Foreman Transfer",
                 "Budgets",
                 "Productivity",
+                "Offshore Master"
             };
         }
 
@@ -619,7 +620,8 @@ namespace AJCCFM.Controllers
             "Sick Leave Details",
             "Employee Transfer (To AJE)",
             "Employee Transfer (From AJE)",
-            "Transfer Not Yet Recieved"
+            "Transfer Not Yet Recieved",
+            "Offshore Register"
             };
         }
 
