@@ -684,7 +684,7 @@ namespace AJCCFM.Controllers
                 body = VCTEmailServiceIT.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\RequestStatus-Approved(IT).html");
                 mailcontent = body.Replace("@ReqNo", obj.RefNo); //Replace Contenct...
                 VCTEmailServiceIT.Body = mailcontent;
-                VCTEmailServiceIT.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectApproved");
+                VCTEmailServiceIT.Subject = System.Configuration.ConfigurationManager.AppSettings.Get("SubjectApproved") + "-" + obj.RefNo; ;
                 VCTEmailServiceIT.ReceiverAddress = System.Configuration.ConfigurationManager.AppSettings.Get("groupdistribution");
                 VCTEmailServiceIT.ReceiverDisplayName = obj.Name;
                 await VCTEmailServiceIT.SendEmail();

@@ -335,7 +335,7 @@ namespace Services.Helper
                         LastNumber = obj.LastNumber + 1;
 
 
-                        NewLastNumber = DocumentCode + "-" + LastNumber.ToString("000000");
+                        NewLastNumber = "SF" + "-" + LastNumber.ToString("000000");
 
 
                         //Update last generated Number 
@@ -354,6 +354,48 @@ namespace Services.Helper
             return "";
         }
 
+
+        public static string GetDocumentNumberService(string DocumentCode)
+        {
+
+            using (IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
+            {
+                try
+                {
+                    int LastNumber;
+
+                    string NewLastNumber;
+                    string sql;
+
+
+                    sql = "Select LastNumber from SD_docinfo where Code='" + DocumentCode + "'";
+
+                    var obj = db.Query<AutoGenerateNumber>(sql).SingleOrDefault();
+
+                    if (obj != null)
+                    {
+
+                        LastNumber = obj.LastNumber + 1;
+
+
+                        NewLastNumber = "SR" + "-" + LastNumber.ToString("000000");
+
+
+                        //Update last generated Number 
+                        sql = "Update SD_docinfo Set LastNumber='" + LastNumber.ToString("000000") + "' where Code='" + DocumentCode + "'";
+                        db.Execute(sql);
+                        return NewLastNumber;
+
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+            return "";
+        }
 
 
 

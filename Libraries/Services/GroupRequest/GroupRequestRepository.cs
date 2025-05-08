@@ -159,7 +159,7 @@ namespace Services.GroupRequest
         {
             string sql = " Select d.RecordId,ROW_NUMBER() OVER(ORDER BY  d.RecordId ASC) AS SNo," +
                          " d.Group_Name, RequiredAccess=case when d.RequiredAccess = 'R' then 'Read Only' " +
-                         " When d.RequiredAccess='F' then 'Full Access' end,d.Remarks,d.Reason,d.ProcessOwner from SD_Cart as d Where CartId='" + CartId+ "'";
+                         " When d.RequiredAccess='F' then 'Full Access' When d.RequiredAccess='N' then 'Not Applicable' end,d.Remarks,d.Reason,d.ProcessOwner from SD_Cart as d Where CartId='" + CartId+ "'";
 
 
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))
@@ -283,7 +283,7 @@ namespace Services.GroupRequest
 
         public T ViewRequest<T>(int TransactionID)
         {
-            string sql = " Select a.*,b.Group_Name ,b.Remarks,b.Reason,RequiredAccess=case when  b.RequiredAccess = 'R' then 'Read Only'  when b.RequiredAccess='F' then 'Full Access' end " +
+            string sql = " Select a.*,b.Group_Name ,b.Remarks,b.Reason,RequiredAccess=case when  b.RequiredAccess = 'R' then 'Read Only'  when b.RequiredAccess='F' then 'Full Access' When b.RequiredAccess='N' then 'Not Applicable' end " +
                          " FROM SD_GroupRequest  a " +
                          " Inner join SD_GroupReqDetail b on a.ID = b.RequestID " +
                          " Where a.ID=" + TransactionID;
@@ -302,7 +302,7 @@ namespace Services.GroupRequest
         {
             string sql = " Select ROW_NUMBER() OVER(ORDER BY  d.Id ASC) AS SNo," +
                          " d.Group_Name, RequiredAccess=case when   d.RequiredAccess = 'R' then 'Read Only' " +
-                         " when d.RequiredAccess='F' then 'Full Access' end, " +
+                         " when d.RequiredAccess='F' then 'Full Access' When d.RequiredAccess='N' then 'Not Applicable' end, " +
                          " d.Remarks,d.Reason from SD_GroupReqDetail as d where RequestID=" + TransactionID;
 
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))

@@ -84,6 +84,11 @@
         $('#btnProcess').click
             (
                 function () {
+                   
+                    if ($("#Access").val() == "Not Applicable"){
+                        alert("To change the required access,Please click the Review button")
+                        return;
+                    }
                     $("#AdjustmentModal").modal("show");
                     $('#btnProcess').attr("disabled", "disabled");
                     $("#btnProcess").attr('value', 'Processing...');

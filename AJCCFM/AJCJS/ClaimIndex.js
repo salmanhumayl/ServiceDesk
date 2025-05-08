@@ -308,7 +308,14 @@ var ConfirmSubmit = function () {
         $('#Reason').focus();
         return;
     }
-
+    var mode = $('input[name=rdoAccess]:checked').val();
+    if (typeof mode == 'undefined') {
+        alert("Please Specify Required Access");
+       // $('#rdoAccess').focus();
+        return;
+    }
+  
+  
  
     var url = $('#newclaim').data('request-url');
     var claim = new Object(); //Javascript Object
@@ -347,6 +354,7 @@ var ConfirmSubmit = function () {
                     $('#message').html("Saved Successfully...");
                     $('#Remarks').val('');
                     $('#Reason').val('');
+                    $('input:radio').attr("checked",false);
                     
 
                 }
@@ -375,6 +383,7 @@ var ConfirmSubmitService = function () {
         $('#Remarks').focus();
         return;
     }
+
 
 
     if ($('#cmbServices').val() == 'SD_SUA' || $('#cmbServices').val() == 'SD_SFC' || $('#cmbServices').val() == 'SD_DBR' || $('#cmbServices').val() == "SD_Soft" || $('#cmbServices').val() == "SD_Misc" ) {

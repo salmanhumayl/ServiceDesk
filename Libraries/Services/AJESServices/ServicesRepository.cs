@@ -104,7 +104,7 @@ namespace Services.AJESServices
                         {
                            // if (items.TableName == "SD_VPN" || items.TableName == "SD_IA" || items.TableName == "SD_USB" || items.TableName == "SD_RWA")
                             //{
-                                RefNo = Common.GetDocumentNumber("GR");
+                                RefNo = Common.GetDocumentNumberService("GR");
                             string Remarks = items.Remarks;
                             string Path = items.Path;
                                 sql = " Insert into SD_VPN" +
