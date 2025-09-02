@@ -73,7 +73,7 @@ namespace Services.LogIncedent
                 try
                 {
                     connection.Open();
-                    RefNo = Common.GetDocumentNumber("LG");
+                    RefNo = Common.GetDocumentNumber("I");
 
                     sql = " Insert into SD_LogIncident" +
                           " (RefNo,Status,Name,EmpCode,Position,Department,ProjectCode,Project,Createdby,Email,SubmittedTo,Reason,SubmittedToEmail) " +
@@ -97,7 +97,7 @@ namespace Services.LogIncedent
 
                     }).SingleOrDefault();
 
-                    AddLogHistory(RequestID, "S", Createdby.Trim(), SubmittedTo, "", "LG");
+                    AddLogHistory(RequestID, "S", Createdby.Trim(), SubmittedTo, "", "I");
 
 
 

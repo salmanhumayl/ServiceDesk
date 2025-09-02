@@ -87,14 +87,16 @@ namespace AJCCFM.Controllers
                 return RedirectToAction("Index");
             }
             string EmpEmailAddress = AJESActiveDirectoryInterface.AJESAD.GetEmpEmail(model.empdetail.EmpCode);
-            string SubmittToAddress = "salman.mazhar.ajes.ae";
 
-          
+            string SubmittToAddress = System.Configuration.ConfigurationManager.AppSettings.Get("ProcessOwnerEmailIT");
+
+
             _LogService = new LogService();
             _GroupRequest = new GroupRequestService();
 
+            string SubmittTo = System.Configuration.ConfigurationManager.AppSettings.Get("ProcessOwnerLoginIDIT");
 
-            IResponse result = _LogService.SubmitJDERequest(model, "smazhar", EmpEmailAddress, SubmittToAddress);
+            IResponse result = _LogService.SubmitJDERequest(model, SubmittTo, EmpEmailAddress, SubmittToAddress);
             if (result.ErrorMessage != null)
             {
                 return RedirectToAction("Index");
@@ -115,8 +117,10 @@ namespace AJCCFM.Controllers
                 EmailManager VCTEmailServiceInit = new EmailManager();
                 body = VCTEmailServiceInit.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\NewLogRequest-Init.html");
                 mailcontent = body.Replace("@ReqNo", result.RequestNo); //Replace Contenct...
+                mailcontent = mailcontent.Replace("@AffectedUser", model.empdetail.EmpName); //Replace Contenct...
+                mailcontent = mailcontent.Replace("@Remarks", model.log.Reason); //Replace Contenct...
                 VCTEmailServiceInit.Body = mailcontent;
-                VCTEmailServiceInit.Subject = "Log Request";
+                VCTEmailServiceInit.Subject = "Incident " + result.RequestNo + " has been logged" ;
                 VCTEmailServiceInit.ReceiverAddress = EmpEmailAddress;
                 VCTEmailServiceInit.ReceiverDisplayName = model.empdetail.EmpName;
                 await VCTEmailServiceInit.SendEmail();
@@ -128,7 +132,8 @@ namespace AJCCFM.Controllers
                mailcontent = body.Replace("@ReqNo", result.RequestNo); //Replace Contenct...
                mailcontent = mailcontent.Replace("@urllink", Link); //Replace Contenct...
                VCTEmailService.Body = mailcontent;
-               VCTEmailService.ReceiverAddress = "salman.mazhar@ajes.ae";
+               VCTEmailService.Subject = "Incident " + result.RequestNo  + " has been initiated";
+               VCTEmailService.ReceiverAddress = SubmittToAddress;
                VCTEmailService.ReceiverDisplayName = "IT HELP DESK";
                await VCTEmailService.SendEmail();
                 return RedirectToAction("Processed");
@@ -194,7 +199,7 @@ namespace AJCCFM.Controllers
         }
 
 
-        public async Task<ActionResult> Completed(int ID, string Remarks, string RefNo,string Email,string Name)
+        public async Task<ActionResult> Completed(int ID, string Remarks, string RefNo,string Email,string Name,string Reason)
         {
             _LogService = new LogService();
             string body = "";
@@ -205,9 +210,11 @@ namespace AJCCFM.Controllers
 
             body = VCTEmailService.GetBody(Server.MapPath("~/") + "\\App_Data\\Templates\\LogCompleted.html");
             mailcontent = body.Replace("@ReqNo", RefNo); //Replace Contenct...
-            mailcontent = mailcontent.Replace("@Remarks", Remarks); //Replace Contenct...
+            mailcontent = mailcontent.Replace("@AffectedUser", Name); //Replace Contenct...
+            mailcontent = mailcontent.Replace("@Remarks", Reason); //Replace Contenct...
+            mailcontent = mailcontent.Replace("@CRemarks", Remarks); //Replace Contenct...
             VCTEmailService.Body = mailcontent;
-            VCTEmailService.Subject = "Incident " + RefNo + " has been Completed";
+            VCTEmailService.Subject = "Incident " + RefNo + " is Closed";
             VCTEmailService.ReceiverAddress = Email;
             VCTEmailService.ReceiverDisplayName = Name;
             await VCTEmailService.SendEmail();

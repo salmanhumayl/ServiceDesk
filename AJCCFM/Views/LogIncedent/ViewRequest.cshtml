@@ -48,14 +48,16 @@
             $("#loaderDiv").show();
             var nRecordID = $('#ID').val();
             var RefNo = $('#RefNo').val();
-            var Name= $('#Name').val();
+            var Name = $('#Name').val();
+          
+           
             var ProcessOwner = $('#cmbProcessOwner :selected').text();
-            var Remarks = message;
+           
          }
         
 
        url = '@Url.Action("Assignment", "LogIncedent")'
-        data = JSON.stringify({ 'ID': nRecordID, 'ProcessOwner': ProcessOwner, 'Remarks': Remarks, 'RefNo': RefNo,'AffectedUser' :Name })
+        data = JSON.stringify({ 'ID': nRecordID, 'ProcessOwner': ProcessOwner, 'Remarks': message, 'RefNo': RefNo, 'AffectedUser': Name })
 
         $.ajax
             ({
@@ -97,11 +99,13 @@
           var RefNo = $('#RefNo').val();
           var Email = $('#Email').val();
           var Name = $('#Name').val();
+          var Reason = $('#Reason').val();
+          
         $.ajax({
             type: "POST",
             url: '@Url.Action("Completed", "LogIncedent")',
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ 'ID': ID, 'Remarks': message, 'RefNo': RefNo, 'Email': Email,'Name' :Name}),
+            data: JSON.stringify({ 'ID': ID, 'Remarks': message, 'RefNo': RefNo, 'Email': Email, 'Name': Name, "Reason": Reason}),
             dataType: "json",
 
            // data: 'name=' + name + '&email=' + email + '&message=' + message,
@@ -126,7 +130,7 @@
         <div class="panel-heading">
             <h3 class="panel-title">
                 <span style="color:green;font-size:xx-large">
-                  Log Request
+                    Log Incident
                 </span> <span style="color:red;font-size:large">@Model.RefNo</span>
                 @if (Model.Status == 1)
                 {
@@ -218,7 +222,7 @@
         <div class="panel-heading" style="background-color:#056cd5;color:White;">
             <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>Work Flow Log History</h3>
         </div>
-        @{Html.RenderAction("GetLogHistory", "Dashboard", new { RecordID = Model.ID, Doc_Code = "LG" });}
+        @{Html.RenderAction("GetLogHistory", "Dashboard", new { RecordID = Model.ID, Doc_Code = "I" });}
 
     </div>
 </div>

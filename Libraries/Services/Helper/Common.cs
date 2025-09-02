@@ -342,9 +342,9 @@ namespace Services.Helper
                         {
                             NewLastNumber = "JR" + "-" + LastNumber.ToString("000000");
                         }
-                        else if (DocumentCode == "LG")
+                        else if (DocumentCode == "I")
                         {
-                            NewLastNumber = "LG" + "-" + LastNumber.ToString("000000");
+                            NewLastNumber = "I" + "-" + LastNumber.ToString("000000");
                         }
                         else
                         {

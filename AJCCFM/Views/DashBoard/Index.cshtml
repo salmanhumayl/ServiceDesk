@@ -47,19 +47,21 @@
             @{Html.RenderAction("ApprovedJDERequest", "Dashboard");}
         </div>
     </div>
+    
+   
 
+        <div class="col-lg-6">
+            <div class="panel panel-green">
+                <div class="panel panel-heading">
 
-    <div class="col-lg-6">
-        <div class="panel panel-green">
-            <div class="panel panel-heading">
+                    <h3 class="panel-title"><b>Log Incident</b></h3>
+                </div>
 
-                <h3 class="panel-title"><b>Log Request</b></h3>
+                @{Html.RenderAction("LOGRequest", "Dashboard");}
             </div>
-
-            @{Html.RenderAction("LOGRequest", "Dashboard");}
         </div>
+                    
     </div>
-</div>
 
 
 }
