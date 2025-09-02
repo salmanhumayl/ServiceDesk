@@ -1,0 +1,185 @@
+﻿@model IEnumerable<AJCCFM.Models.Service.ServicePending>
+
+<script>
+    $(document).ready(function () {
+        $('.archiveJDE').attr('href', 'javascript://');
+        $('.JDEAddress').attr('href', 'javascript://');
+
+        $('.archiveJDE').click(function () {
+            var url = $('#deletejdeservice').data('jde-url');
+            var nRecordID = $(this).attr('RecordID');
+            var $dialog = $('<div/>')
+                .html("Warning: <br/><br/>Do you wish to continue?")
+            $("#dialogJDEClosing")
+                .dialog({
+                    autoOpen: true,
+                    resizable: false,
+                    width: 300,
+                    height: 200,
+                    modal: true,
+                    title: 'Assets No',
+
+                    buttons: [
+                        {
+                            text: "Continue",
+                            id: "continuebtn",
+                            click: function () {
+
+                                if ($('#txtAssestNoJDE').val() == '') {
+                                    alert("Enter Assyst No");
+                                    ('#txtAssestNoJDE').focus();
+                                    return;
+                                }
+
+
+                                var mAssetsNo = $("#txtAssestNoJDE").val();
+
+                                var _parameters = { AssetsNo: mAssetsNo, RecordID: nRecordID };
+
+                                $.ajax({
+                                    url: url,
+                                    type: "post",
+                                    data: _parameters,
+                                    success: function (data, textStatus, jqXHR) {
+
+                                        $("#row_" + nRecordID).remove();
+                                    }
+                                });
+                                $(this).dialog('close');
+                            }
+                        },
+                        {
+                            text: "Cancel",
+                            id: "cancelbtn",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }]
+
+                });
+        });
+
+
+        $('.JDEAddress').click(function () {
+            var url = $('#deletejdeaddressno').data('address-url');
+            var nRecordID = $(this).attr('RecordID');
+            var $dialog = $('<div/>')
+                .html("Warning: <br/><br/>Do you wish to continue?")
+            $("#dialogJDEAddressNoClosing")
+                .dialog({
+                    autoOpen: true,
+                    resizable: false,
+                    width: 300,
+                    height: 200,
+                    modal: true,
+                    title: 'JDE Address No',
+
+                    buttons: [
+                        {
+                            text: "Continue",
+                            id: "continuebtn",
+                            click: function () {
+
+                                if ($('#txtJDENo').val() == '') {
+                                    alert("Enter Address No");
+                                    ('#txtJDENo').focus();
+                                   
+                                    return;
+                                }
+
+                              
+                                var mJDENo = $("#txtJDENo").val();
+                            
+                                var _parameters = { JDENo: mJDENo, RecordID: nRecordID };
+
+                                $.ajax({
+                                    url: url,
+                                    type: "post",
+                                    data: _parameters,
+                                    success: function (data) {
+                                      //  alert(data.Result);
+                                        window.location.href = data.Result;
+                                      //$("#row_" + nRecordID).remove();
+                                    }
+                                });
+                                $(this).dialog('close');
+                            }
+                        },
+                        {
+                            text: "Cancel",
+                            id: "cancelbtn",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }]
+
+                });
+        });
+    });
+</script>
+@{
+    Layout = null;
+}
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+
+<div id="deletejdeservice" data-jde-url="@Url.Action("ArchiveJDEReturnPartialView", "JDE")"></div>
+
+<div id="deletejdeaddressno" data-address-url="@Url.Action("AddressNoReturnPartialView", "JDE")"></div>
+
+
+<div class="panel-body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped" id="tblservice">
+            <thead>
+                <tr>
+                    <th>RefNo</th>
+                    <th>Requested By</th>
+                    <th>Status</th>
+                    <th>Archive</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr id="row_@item.ID">
+
+
+                    <td>
+                        <b>
+                            @Html.ActionLink(item.RefNo, "ViewRequest", "LogIncedent", new { TransactionID = item.ID }, new { @class = "btn btn-link btn-sm" })
+
+                        </b>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StatusDescription)
+                    </td>
+
+
+
+                    <td>
+                        <a class="archiveJDE" Recordid="@item.ID"><img src="~/Content/images/archive-icon.png" style="width:40px;height:40px" /></a>
+                    </td>
+
+
+
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="dialogJDEClosing" style="display:none">
+
+    <p>Assyst No : <input type="text" id="txtAssestNoJDE" /></p>
+</div>
+
+<div id="dialogJDEAddressNoClosing" style="display:none">
+
+    <p>JDE Address No : <input type="text" id="txtJDENo" /></p>
+</div>

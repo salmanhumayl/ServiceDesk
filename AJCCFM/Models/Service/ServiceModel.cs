@@ -42,5 +42,7 @@ namespace AJCCFM.Models.Service
         public string Project { get; set; }
         public string JDEAddressNO { get; set; }
 
+        public string Reason { get; set; }
+
     }
 }

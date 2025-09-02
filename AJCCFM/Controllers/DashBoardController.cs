@@ -22,6 +22,7 @@ using Services.EzwareProject;
 using Services.GroupRequest;
 using Services.Helper;
 using Services.JDE;
+using Services.LogIncedent;
 using static AJCCFM.Models.GroupRequest.SharefolderModel;
 using static AJCCFM.Models.Reports.MISReport;
 
@@ -38,6 +39,7 @@ namespace AJCCFM.Controllers
         private IGroupRequest _GroupRequest;
         private IServices _Services;
         private IJDE _JDEService;
+        private ILog _LogService;
         private IEzwareProject _EzwareProject;
 
         // GET: DashBoard
@@ -89,7 +91,12 @@ namespace AJCCFM.Controllers
         {
             return View();
         }
-        
+
+        public ActionResult LogIncidentActivity()
+        {
+            return View();
+        }
+
         public ActionResult ProjectJDEActivity()
         {
             return View();
@@ -234,6 +241,17 @@ namespace AJCCFM.Controllers
             var obj = _JDEService.ApprovedJDERequest<ServicePending>();
 
             return View("_ApprovedJDERequest", obj);
+        }
+
+
+
+        public ActionResult LogRequest()
+        {
+            _LogService = new LogService();
+
+            var obj = _LogService.ApprovedJDERequest<ServicePending>();
+
+            return View("_LogRequest", obj);
         }
         public ActionResult GetLedger(int CompanyID = 0)
         {

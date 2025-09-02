@@ -334,8 +334,22 @@ namespace Services.Helper
 
                         LastNumber = obj.LastNumber + 1;
 
-
-                        NewLastNumber = "SF" + "-" + LastNumber.ToString("000000");
+                        if (DocumentCode == "EZ")
+                        {
+                            NewLastNumber = "EZ" + "-" + LastNumber.ToString("000000");
+                        }
+                        else if (DocumentCode == "JR")
+                        {
+                            NewLastNumber = "JR" + "-" + LastNumber.ToString("000000");
+                        }
+                        else if (DocumentCode == "LG")
+                        {
+                            NewLastNumber = "LG" + "-" + LastNumber.ToString("000000");
+                        }
+                        else
+                        {
+                            NewLastNumber = "SF" + "-" + LastNumber.ToString("000000");
+                        }
 
 
                         //Update last generated Number 

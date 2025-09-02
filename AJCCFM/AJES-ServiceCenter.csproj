@@ -194,6 +194,7 @@
     <Compile Include="Controllers\GroupRequestController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\JDEController.cs" />
+    <Compile Include="Controllers\LogIncedentController.cs" />
     <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\UnauthorisedController.cs" />
     <Compile Include="Control\AJESHelper.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Models\GroupRequest\SharefolderModel.cs" />
     <Compile Include="Models\JDE\JDEModel.cs" />
     <Compile Include="Models\LogHistoryModel.cs" />
+    <Compile Include="Models\Log\LogModel.cs" />
     <Compile Include="Models\Services.cs" />
     <Compile Include="Models\Project\Project.cs" />
     <Compile Include="Models\Reports\MISReport.cs" />
@@ -278,8 +280,11 @@
     <Content Include="AJCJS\ClaimIndex.js" />
     <Content Include="App_Data\Templates\NewGroupRequest-Init.html" />
     <Content Include="App_Data\Templates\NewEzwareRequest-DH.html" />
+    <Content Include="App_Data\Templates\NewLogAssignment.html" />
+    <Content Include="App_Data\Templates\NewLogRequest-IT.html" />
     <Content Include="App_Data\Templates\NewJDERequest-DH.html" />
     <Content Include="App_Data\Templates\NewEzwareRequest-Init.html" />
+    <Content Include="App_Data\Templates\NewLogRequest-Init.html" />
     <Content Include="App_Data\Templates\NewJDERequest-ITNotification.html" />
     <Content Include="App_Data\Templates\NewEZStatusUpdate-Processed.html" />
     <Content Include="App_Data\Templates\NewEZRequestStatus-Approved%28IT%29.html" />
@@ -292,6 +297,7 @@
     <Content Include="App_Data\Templates\NewJDEStatusUpdate-Approved.html" />
     <Content Include="App_Data\Templates\NewJDEStatusUpdate-Processed.html" />
     <Content Include="App_Data\Templates\NewJDERequestStatus-Approved%28IT%29.html" />
+    <Content Include="App_Data\Templates\LogCompleted.html" />
     <Content Include="App_Data\Templates\NewServiceStatusUpdate-Processed.html" />
     <Content Include="App_Data\Templates\NewServiceStatusUpdate-Approved.html" />
     <Content Include="App_Data\Templates\NewJDEStatusUpdate-Rejected.html" />
@@ -750,6 +756,7 @@
     <Content Include="Views\DashBoard\ProjectFolderActivity.cshtml" />
     <Content Include="Views\DashBoard\ProjectJDEActivity.cshtml" />
     <Content Include="Views\DashBoard\EzwareActivity.cshtml" />
+    <Content Include="Views\DashBoard\LogIncidentActivity.cshtml" />
     <None Include="Views\DashBoard\ProjectServiceActivity.cshtml" />
     <Content Include="Views\GroupRequest\Processed.cshtml" />
     <Content Include="Views\Services\Processed.cshtml" />
@@ -774,6 +781,12 @@
     <Content Include="Views\EzwareForm\ViewRequest.cshtml" />
     <Content Include="Views\EzwareForm\Processed.cshtml" />
     <Content Include="Views\Shared\AllEZRequest.cshtml" />
+    <Content Include="Views\LogIncedent\_NewClaim.cshtml" />
+    <Content Include="Views\LogIncedent\Index.cshtml" />
+    <Content Include="Views\LogIncedent\Processed.cshtml" />
+    <Content Include="Views\LogIncedent\ViewRequest.cshtml" />
+    <Content Include="Views\Shared\_LogRequest.cshtml" />
+    <Content Include="Views\Shared\AllLog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\" />

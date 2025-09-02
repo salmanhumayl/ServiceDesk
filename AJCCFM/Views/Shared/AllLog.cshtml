@@ -1,0 +1,132 @@
+﻿
+@model IEnumerable<AJCCFM.Models.Service.LogIncident>
+@{
+
+    Layout = null;
+}
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/buttons.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/AJCDataTables/jquery.dataTables.min.js"></script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#tblALLJDE').DataTable({
+            "iDisplayLength": 50,
+            "aaSorting": [[0, "desc"]]
+        });
+
+        
+    });
+
+ 
+ 
+
+</script>
+
+
+
+
+
+
+<div class="panel-body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped" id="tblALLJDE">
+            <thead>
+                <tr>
+
+                    <th>
+                        Ref No
+                    </th>
+
+                    <th>
+                        Emp No
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Project
+                    </th>
+
+                    <th>
+                        Created On
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        AssignedTo
+                    </th>
+                    <th>
+                        AssignedOn
+                    </th>
+                    <th>
+                        Completedon
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+
+                <tr id="row_@item.ID" style='background-color: @(item.Status == "Pending" ? "yellow" : "white");'>
+
+
+
+                    <td>
+                        @Html.ActionLink(item.RefNo, "ViewRequest", "LogIncedent", new { TransactionID = item.ID }, new { @class = "btn btn-success btn-sm" })
+
+
+                    </td>
+
+                    <td>
+                        <b>@Html.DisplayFor(modelItem => item.EmpCode)</b>
+                    </td>
+
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Project)
+                    </td>
+
+
+                    <td>
+                        @item.CreatedOn.ToString("dd/MMM/yyyy")
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Assignedto)
+                    </td>
+                    <td>
+                        @item.AssignedOn.ToString("dd/MMM/yyyy")
+                    </td>
+                    <td>
+                        @item.Completedon.ToString("dd/MMM/yyyy")
+                    </td>
+
+                    
+                </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+
+

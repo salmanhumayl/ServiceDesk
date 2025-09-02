@@ -34,20 +34,33 @@
 
 
 </div>
-    <div class="row">
+<div class="row">
 
-       
-        <div class="col-lg-12">
-            <div class="panel panel-green">
-                <div class="panel panel-heading">
 
-                    <h3 class="panel-title"><b>JDE Awaiting Address Number</b></h3>
-                </div>
+    <div class="col-lg-6">
+        <div class="panel panel-green">
+            <div class="panel panel-heading">
 
-                @{Html.RenderAction("ApprovedJDERequest", "Dashboard");}
+                <h3 class="panel-title"><b>JDE Awaiting Address Number</b></h3>
             </div>
+
+            @{Html.RenderAction("ApprovedJDERequest", "Dashboard");}
         </div>
     </div>
+
+
+    <div class="col-lg-6">
+        <div class="panel panel-green">
+            <div class="panel panel-heading">
+
+                <h3 class="panel-title"><b>Log Request</b></h3>
+            </div>
+
+            @{Html.RenderAction("LOGRequest", "Dashboard");}
+        </div>
+    </div>
+</div>
+
 
 }
 
