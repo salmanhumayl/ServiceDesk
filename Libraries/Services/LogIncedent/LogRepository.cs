@@ -310,12 +310,12 @@ namespace Services.LogIncedent
             }
 
         }
-        public IEnumerable<T> ApprovedJDERequest<T>()
+        public IEnumerable<T> ApprovedJDERequest<T>(string username)
         {
 
             string sql = " Select id, RefNo, Name,Reason,Status," +
                          " StatusDescription =case when Status = 0 then 'New' when Status = 1 then 'Assigned' end from SD_LogIncident  Where  status in (0,1) " +
-                         " and Archive=0";
+                         " and Submittedto='" + username + "'";
 
 
             using (var connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConStr"].ConnectionString))

@@ -57,9 +57,9 @@ namespace Services.LogIncedent
             return IRepository.SubmitForApproval(model, remarks);
         }
 
-        public IEnumerable<T> ApprovedJDERequest<T>()
+        public IEnumerable<T> ApprovedJDERequest<T>(string username)
         {
-            return IRepository.ApprovedJDERequest<T>();
+            return IRepository.ApprovedJDERequest<T>(username);
         }
 
         public async Task<bool> RejectForm(int ID, string Remarks, string ServiceCode)
@@ -82,10 +82,7 @@ namespace Services.LogIncedent
             return await IRepository.ArchiveRecord(AssetsNo, RecordID);
         }
 
-        public IEnumerable<T> MyJDERequest<T>(string UserName)
-        {
-            return IRepository.MyJDERequest<T>(UserName);
-        }
+      
 
         public IEnumerable<T> AllJDERequest<T>()
         {

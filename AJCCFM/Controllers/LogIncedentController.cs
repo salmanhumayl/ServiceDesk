@@ -152,12 +152,12 @@ namespace AJCCFM.Controllers
             _LogServices = new LogService();
             var obj = _LogServices.ViewRequest<Core.Domain.Log.Log>(TransactionID);
             Dictionary<string, string> lstProjectManager = new Dictionary<string, string>();
-            lstProjectManager.Add("knazeer", "Kashif Nazir");
+            lstProjectManager.Add("knazeer", "Kashif Nazeer");
             lstProjectManager.Add("apasha", "Ashraf Pasha");
-            lstProjectManager.Add("rdeveraj", "Roshan");
-            lstProjectManager.Add("rkrishna", "Rama Krishna");
+            lstProjectManager.Add("rdeveraj", "Roshan Devarajan");
+            lstProjectManager.Add("rkrishna", "Rama Krishna Kontheti");
             lstProjectManager.Add("aansari", "Amir Ansari");
-            lstProjectManager.Add("ithelpdesk", "Bushra Murtuza");
+            lstProjectManager.Add("ithelpdesk", "IT HELP DESK");
             lstProjectManager.Add("smazhar", "Salman Mazhar");
 
             ViewBag.ProcessOwner = new SelectList(lstProjectManager, "Key", "Value");

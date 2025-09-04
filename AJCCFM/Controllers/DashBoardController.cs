@@ -208,13 +208,7 @@ namespace AJCCFM.Controllers
 
             return View("_EzwarePending", obj);
         }
-
-
-
-
-
-
-        public ActionResult ApprovedShareFolderRequest()
+         public ActionResult ApprovedShareFolderRequest()
         {
             _GroupRequest = new GroupRequestService();
 
@@ -249,7 +243,7 @@ namespace AJCCFM.Controllers
         {
             _LogService = new LogService();
 
-            var obj = _LogService.ApprovedJDERequest<ServicePending>();
+            var obj = _LogService.ApprovedJDERequest<ServicePending>(System.Web.HttpContext.Current.User.Identity.Name.Replace("AJES\\", ""));
 
             return View("_LogRequest", obj);
         }

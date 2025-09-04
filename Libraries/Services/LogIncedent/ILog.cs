@@ -9,14 +9,14 @@ namespace Services.LogIncedent
    public interface ILog
     {
         Task<bool> Assignment(int ID, string ProcessOwner, string Remarks);
-        IEnumerable<T> MyJDERequest<T>(string UserName);
+     
         IEnumerable<T> AllLogRequest<T>();
 
         IEnumerable<T> ServiceProcessCount<T>();
 
         Task<IList<T>> GeneratePDF<T>(int RequestID);
 
-        IEnumerable<T> ApprovedJDERequest<T>();
+        IEnumerable<T> ApprovedJDERequest<T>(string username);
         Task<bool> SubmitForApproval(AJCCFM.Core.Domain.SD_JDE.JDE model, string remarks);
         Task<bool> RejectForm(int ID, string Remarks, string ServiceCode);
 
