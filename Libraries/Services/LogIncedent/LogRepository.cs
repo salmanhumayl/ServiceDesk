@@ -22,7 +22,7 @@ namespace Services.LogIncedent
         public IEnumerable<T> AllLogRequest<T>()
         {
             string sql = " Select id, RefNo, EmpCode,Name,CreatedOn,Project,AssignedTo,AssignedOn,Completedon," +
-                         " Status =case when Status = 0 then 'New' when Status = 1 then 'Assigned'" +
+                         " Status =case when Status = 0 then 'Logged' when Status = 1 then 'Assigned'" +
                          " when Status = 2 then 'Completed'  end " +
                          " From SD_LogIncident";
 

@@ -28,7 +28,7 @@ namespace AJCCFM.Controllers
         // GET: LogIncedent
         public ActionResult Index()
         {
-            List<UserDetail> lADUser;
+           // List<UserDetail> lADUser;
 
             EmployeeDetail empDetail = new EmployeeDetail();
             LogModel logmodel = new LogModel();
@@ -43,21 +43,21 @@ namespace AJCCFM.Controllers
                 {
                     if (empDetail.ProjectCode == "8000" || empDetail.ProjectCode == "8000_1")
                     {
-                        AJESActiveDirectoryInterface.AJESAD.RoleID = 1036; //Support office HOD 
-                        lADUser = AJESActiveDirectoryInterface.AJESAD.GetADUsers();
-                        ViewBag.ForemanCode = empDetail.ForemanCode;
+                       // AJESActiveDirectoryInterface.AJESAD.RoleID = 1036; //Support office HOD 
+                        //lADUser = AJESActiveDirectoryInterface.AJESAD.GetADUsers();
+                        //ViewBag.ForemanCode = empDetail.ForemanCode;
                     }
                     else
                     {
-                        AJESActiveDirectoryInterface.AJESAD.RoleID = 1037;
-                        lADUser = AJESActiveDirectoryInterface.AJESAD.GetADUsers();
+                       // AJESActiveDirectoryInterface.AJESAD.RoleID = 1037;
+                       // lADUser = AJESActiveDirectoryInterface.AJESAD.GetADUsers();
 
                     }
-                    UserDetail userdetail = new UserDetail();
-                    userdetail.DisplayText = "Please Select";
+                    //UserDetail userdetail = new UserDetail();
+                    //userdetail.DisplayText = "Please Select";
                     // userdetail.LoginName = "X";
-                    lADUser.Add(userdetail);
-                    ViewBag.ADUser = lADUser;
+                   // lADUser.Add(userdetail);
+                   // ViewBag.ADUser = lADUser;
                     ViewBag.IsEmployeeExist = true;
                     logmodel.empdetail = empDetail;
 
